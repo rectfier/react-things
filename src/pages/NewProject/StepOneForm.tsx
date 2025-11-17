@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button } from 'primereact/button';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
+import { Calendar, CalendarChangeEvent } from '../../ui/Calendar';
+import { Dropdown, DropdownChangeEvent } from '../../ui/Dropdown';
+import { InputText } from '../../ui/Input';
+import { InputTextarea } from '../../ui/Textarea';
 
 import FormField from '../../ui/FormField/FormField';
 
@@ -288,29 +288,23 @@ const StepOneForm: React.FC = () => {
             label="Start Date"
             tooltip="Select the project start date"
           >
-            <span className="p-input-icon-left full-width">
-              <i className="pi pi-calendar" />
-              <Calendar
-                value={formData.startDate}
-                onChange={handleDateChange('startDate')}
-                dateFormat="mm/dd/yyyy"
-                className="full-width"
-              />
-            </span>
+            <Calendar
+              value={formData.startDate}
+              onChange={handleDateChange('startDate')}
+              dateFormat="mm/dd/yyyy"
+              className="full-width"
+            />
           </FormField>
           <FormField 
             label="End Date"
             tooltip="Select the project end date"
           >
-            <span className="p-input-icon-left full-width">
-              <i className="pi pi-calendar" />
-              <Calendar
-                value={formData.endDate}
-                onChange={handleDateChange('endDate')}
-                dateFormat="mm/dd/yyyy"
-                className="full-width"
-              />
-            </span>
+            <Calendar
+              value={formData.endDate}
+              onChange={handleDateChange('endDate')}
+              dateFormat="mm/dd/yyyy"
+              className="full-width"
+            />
           </FormField>
         </div>
       </div>

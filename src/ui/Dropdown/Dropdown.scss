@@ -1,0 +1,125 @@
+@import '../../styles/variables';
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: $font-size-base;
+    line-height: 1.5;
+    color: $gray-900;
+    background-color: $white;
+    border: 1px solid $gray-200;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+
+    .dropdown-label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: $gray-900;
+
+      &.dropdown-placeholder {
+        color: $gray-400;
+      }
+    }
+
+    .dropdown-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0.5rem;
+      color: $gray-400;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    &:hover:not(.dropdown-disabled) {
+      border-color: $gray-300;
+    }
+  }
+
+  &.dropdown-open {
+    .dropdown-trigger {
+      border-color: $blue-600;
+      box-shadow: 0 0 0 3px rgba($blue-600, 0.1);
+
+      .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &:focus-within {
+    .dropdown-trigger {
+      border-color: $blue-600;
+      box-shadow: 0 0 0 3px rgba($blue-600, 0.1);
+    }
+  }
+
+  &.dropdown-disabled {
+    .dropdown-trigger {
+      cursor: not-allowed;
+      opacity: 0.5;
+      background-color: $gray-50;
+    }
+  }
+
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 15rem;
+    overflow-y: auto;
+    background-color: $white;
+    border: 1px solid $gray-200;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+
+    .dropdown-option {
+      padding: 0.5rem 0.75rem;
+      font-size: $font-size-base;
+      line-height: 1.5;
+      color: $gray-900;
+      cursor: pointer;
+      border-radius: 0.375rem;
+      transition: all 0.15s ease;
+
+      &:hover,
+      &.option-focused {
+        background-color: $gray-100;
+        color: $gray-900;
+      }
+
+      &.option-selected {
+        background-color: rgba($blue-600, 0.1);
+        color: $blue-600;
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+}
+
+

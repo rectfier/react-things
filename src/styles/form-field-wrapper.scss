@@ -16,20 +16,12 @@
     min-width: 0;
     flex: 1;
 
-    .p-inputtext,
-    .p-inputtextarea,
-    .p-calendar,
-    .p-calendar input,
-    .p-input-icon-right,
-    .p-input-icon-left {
+    .custom-input,
+    .custom-textarea,
+    .custom-calendar-wrapper,
+    .custom-dropdown {
       flex: 1;
       width: 100%;
-    }
-
-    .p-inputtext,
-    .p-inputtextarea,
-    .p-calendar input {
-      width: 100% !important;
     }
 
     .tooltip-icon {
