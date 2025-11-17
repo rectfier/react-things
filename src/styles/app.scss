@@ -1,0 +1,18 @@
+@import './variables';
+@import './mixins';
+@import './prime-inputs';
+
+.app-container {
+  min-height: 100vh;
+  background-color: $gray-50;
+}
+
+.home-page {
+  padding: $spacing-8;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+  }
+}
+

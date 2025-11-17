@@ -1,0 +1,61 @@
+@import './variables';
+
+.form-field-wrapper {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+
+  .input-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+
+    .p-inputtext,
+    .p-inputtextarea,
+    .p-calendar,
+    .p-calendar input,
+    .p-input-icon-right,
+    .p-input-icon-left {
+      flex: 1;
+      width: 100%;
+    }
+
+    .p-inputtext,
+    .p-inputtextarea,
+    .p-calendar input {
+      width: 100% !important;
+    }
+
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background-color: $gray-200;
+      cursor: help;
+      flex-shrink: 0;
+
+      i {
+        font-size: 0.75rem;
+        color: $gray-600;
+      }
+
+      &:hover {
+        background-color: $gray-300;
+        
+        i {
+          color: $gray-700;
+        }
+      }
+    }
+  }
+}
+
