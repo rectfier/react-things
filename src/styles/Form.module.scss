@@ -1,0 +1,113 @@
+@import './Variables.module.scss';
+@import './Mixins.module.scss';
+
+.form {
+  padding: $spacing-2 0;
+  
+  > * + * {
+    margin-top: 0;
+  }
+
+  // Custom components are styled in their own SCSS files
+  // This section ensures proper spacing and layout within forms
+}
+
+.formSection {
+  border-bottom: 1px solid $gray-200;
+  padding-bottom: $spacing-6;
+  margin-bottom: $spacing-6;
+
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-4;
+    text-align: left;
+    color: $gray-900;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4 $spacing-6;
+
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  &.threeColumns {
+    @media (min-width: $breakpoint-md) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .formField {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+.formField {
+  label {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-900;
+    margin-bottom: $spacing-2;
+  }
+
+}
+
+.formActions {
+  @include flex-between;
+  padding-top: $spacing-4;
+
+  .actionGroup {
+    display: flex;
+    gap: $spacing-3;
+    align-items: center;
+
+    .attachFileLink {
+      background: none;
+      border: none;
+      color: $blue-600;
+      text-decoration: none;
+      @include flex-center;
+      gap: $spacing-1;
+      cursor: pointer;
+      padding: 0;
+      font-size: inherit;
+
+      &:hover {
+        color: $blue-800;
+      }
+    }
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.colSpan2 {
+  @media (min-width: $breakpoint-md) {
+    grid-column: span 2;
+  }
+}
+
+.colSpanFull {
+  @media (min-width: $breakpoint-md) {
+    grid-column: 1 / -1;
+  }
+}
+

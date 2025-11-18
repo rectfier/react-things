@@ -1,0 +1,17 @@
+@import './Variables.module.scss';
+@import './Mixins.module.scss';
+
+.appContainer {
+  min-height: 100vh;
+  background-color: $gray-50;
+}
+
+.homePage {
+  padding: $spacing-8;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+  }
+}
+
