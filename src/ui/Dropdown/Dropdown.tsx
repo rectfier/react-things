@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import './Dropdown.scss';
+import styles from '../../styles/Dropdown.module.scss';
 
 export interface DropdownOption {
   label: string;
@@ -124,21 +124,21 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     return (
       <div
         ref={dropdownRef}
-        className={`custom-dropdown ${className} ${isOpen ? 'dropdown-open' : ''} ${disabled ? 'dropdown-disabled' : ''}`}
+        className={`${styles.customDropdown} ${className} ${isOpen ? styles.dropdownOpen : ''} ${disabled ? styles.dropdownDisabled : ''}`}
         onKeyDown={handleKeyDown}
         tabIndex={disabled ? -1 : 0}
       >
         <div
-          className="dropdown-trigger"
+          className={styles.dropdownTrigger}
           onClick={handleToggle}
           role="button"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
         >
-          <span className={`dropdown-label ${!selectedOption ? 'dropdown-placeholder' : ''}`}>
+          <span className={`${styles.dropdownLabel} ${!selectedOption ? styles.dropdownPlaceholder : ''}`}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
-          <span className="dropdown-arrow">
+          <span className={styles.dropdownArrow}>
             <svg
               width="12"
               height="12"
@@ -159,13 +159,13 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         {isOpen && options.length > 0 && (
           <ul
             ref={listRef}
-            className="dropdown-panel"
+            className={styles.dropdownPanel}
             role="listbox"
           >
             {options.map((option, index) => (
               <li
                 key={option.value}
-                className={`dropdown-option ${option.value === value ? 'option-selected' : ''} ${index === focusedIndex ? 'option-focused' : ''}`}
+                className={`${styles.dropdownOption} ${option.value === value ? styles.optionSelected : ''} ${index === focusedIndex ? styles.optionFocused : ''}`}
                 onClick={(e) => handleSelect(option, e)}
                 role="option"
                 aria-selected={option.value === value}

@@ -1,12 +1,12 @@
-@import './variables';
-@import './mixins';
+@import './variables.module.scss';
+@import './mixins.module.scss';
 
-.app-container {
+.appContainer {
   min-height: 100vh;
   background-color: $gray-50;
 }
 
-.home-page {
+.homePage {
   padding: $spacing-8;
 
   h1 {

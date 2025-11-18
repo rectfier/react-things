@@ -1,13 +1,13 @@
-@import '../../styles/variables';
+@import './variables.module.scss';
 
-.custom-calendar-wrapper {
+.customCalendarWrapper {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   min-width: 0;
 
-  .calendar-icon {
+  .calendarIcon {
     position: absolute;
     left: 0.75rem;
     display: flex;
@@ -24,7 +24,7 @@
     }
   }
 
-  .custom-calendar-input {
+  .customCalendarInput {
     display: flex;
     width: 100%;
     height: 2.5rem;
@@ -61,8 +61,8 @@
     }
   }
 
-  &.calendar-disabled {
-    .custom-calendar-input {
+  &.calendarDisabled {
+    .customCalendarInput {
       cursor: not-allowed;
       opacity: 0.5;
       background-color: $gray-50;

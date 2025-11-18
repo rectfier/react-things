@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import './Calendar.scss';
+import styles from '../../styles/Calendar.module.scss';
 
 export interface CalendarChangeEvent {
   value: Date | null;
@@ -96,9 +96,9 @@ const Calendar = forwardRef<HTMLInputElement, CalendarProps>(
     };
 
     return (
-      <div className={`custom-calendar-wrapper ${className} ${disabled ? 'calendar-disabled' : ''}`}>
+      <div className={`${styles.customCalendarWrapper} ${className} ${disabled ? styles.calendarDisabled : ''}`}>
         {showIcon && (
-          <span className="calendar-icon">
+          <span className={styles.calendarIcon}>
             <svg
               width="16"
               height="16"
@@ -119,7 +119,7 @@ const Calendar = forwardRef<HTMLInputElement, CalendarProps>(
         <input
           ref={ref || inputRef}
           type="text"
-          className="custom-calendar-input"
+          className={styles.customCalendarInput}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}

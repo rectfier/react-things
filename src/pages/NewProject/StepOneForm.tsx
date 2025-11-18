@@ -7,7 +7,7 @@ import { InputTextarea } from '../../ui/Textarea';
 
 import FormField from '../../ui/FormField/FormField';
 
-import '../../styles/form.scss';
+import styles from '../../styles/form.module.scss';
 
 interface StepOneFormData {
   name: string;
@@ -169,11 +169,11 @@ const StepOneForm: React.FC = () => {
   };
 
   return (
-    <div className="form">
+    <div className={styles.form}>
       {/* Information Section */}
-      <div className="form-section">
+      <div className={styles.formSection}>
         <h2>Information</h2>
-        <div className="form-grid three-columns">
+        <div className={`${styles.formGrid} ${styles.threeColumns}`}>
           <FormField 
             label="Name"
             tooltip="Enter the project name"
@@ -181,7 +181,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.name}
               onChange={handleTextChange('name')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -193,7 +193,7 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('owner')}
               options={ownerOptions}
               placeholder="Select owner"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -205,7 +205,7 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('buStakeholder')}
               options={buStakeholderOptions}
               placeholder="Select BU/Stakeholder"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -217,7 +217,7 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('team')}
               options={teamOptions}
               placeholder="Select team"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -229,7 +229,7 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('delegates')}
               options={delegatesOptions}
               placeholder="Select delegates"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -241,39 +241,39 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('category')}
               options={categoryOptions}
               placeholder="Select category"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Notifications" 
             tooltip="Enter notification preferences"
-            className="col-span-full"
+            className={styles.colSpanFull}
           >
             <InputText
               value={formData.notifications}
               onChange={handleTextChange('notifications')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Description" 
             tooltip="Enter project description"
-            className="col-span-full"
+            className={styles.colSpanFull}
           >
             <InputTextarea
               value={formData.description}
               onChange={handleTextareaChange('description')}
               rows={4}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
         </div>
       </div>
 
       {/* Calendar Details Section */}
-      <div className="form-section">
+      <div className={styles.formSection}>
         <h2>Calendar Details</h2>
-        <div className="form-grid three-columns">
+        <div className={`${styles.formGrid} ${styles.threeColumns}`}>
           <FormField 
             label="Planned Execution Year" 
             tooltip="Enter the planned execution year"
@@ -281,7 +281,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.plannedExecutionYear}
               onChange={handleTextChange('plannedExecutionYear')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -292,7 +292,7 @@ const StepOneForm: React.FC = () => {
               value={formData.startDate}
               onChange={handleDateChange('startDate')}
               dateFormat="mm/dd/yyyy"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -303,16 +303,16 @@ const StepOneForm: React.FC = () => {
               value={formData.endDate}
               onChange={handleDateChange('endDate')}
               dateFormat="mm/dd/yyyy"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
         </div>
       </div>
 
       {/* Attributes Section */}
-      <div className="form-section">
+      <div className={styles.formSection}>
         <h2>Attributes</h2>
-        <div className="form-grid three-columns">
+        <div className={`${styles.formGrid} ${styles.threeColumns}`}>
           <FormField 
             label="Product"
             tooltip="Enter the product name"
@@ -320,7 +320,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.product}
               onChange={handleTextChange('product')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -330,7 +330,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.clientRequestor}
               onChange={handleTextChange('clientRequestor')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -340,7 +340,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.otherClientParticipant}
               onChange={handleTextChange('otherClientParticipant')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -350,7 +350,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.buStakeholderAttr}
               onChange={handleTextChange('buStakeholderAttr')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -360,7 +360,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.therapeuticArea}
               onChange={handleTextChange('therapeuticArea')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -370,7 +370,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.researchType}
               onChange={handleTextChange('researchType')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -380,7 +380,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.methodology}
               onChange={handleTextChange('methodology')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -392,7 +392,7 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('markets')}
               options={marketsOptions}
               placeholder="Select markets"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -402,7 +402,7 @@ const StepOneForm: React.FC = () => {
             <InputText
               value={formData.regions}
               onChange={handleTextChange('regions')}
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
           <FormField 
@@ -414,14 +414,14 @@ const StepOneForm: React.FC = () => {
               onChange={handleDropdownChange('respondentType')}
               options={respondentTypeOptions}
               placeholder="Select respondent type"
-              className="full-width"
+              className={styles.fullWidth}
             />
           </FormField>
         </div>
       </div>
 
       {/* Notes Section */}
-      <div className="form-section">
+      <div className={styles.formSection}>
         <h2>Notes</h2>
         <FormField 
           label="Notes"
@@ -431,20 +431,20 @@ const StepOneForm: React.FC = () => {
             value={formData.notes}
             onChange={handleTextareaChange('notes')}
             rows={4}
-            className="full-width"
+            className={styles.fullWidth}
           />
         </FormField>
       </div>
 
       {/* Action Buttons */}
-      <div className="form-actions">
+      <div className={styles.formActions}>
         <Button
           label="Cancel"
           icon="pi pi-times"
           className="p-button-text"
         />
-        <div className="action-group">
-          <button type="button" className="attach-file-link">
+        <div className={styles.actionGroup}>
+          <button type="button" className={styles.attachFileLink}>
             <i className="pi pi-paperclip"></i>
             <span>Attach file</span>
           </button>

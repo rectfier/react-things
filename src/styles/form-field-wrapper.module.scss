@@ -1,6 +1,6 @@
-@import './variables';
+@import './variables.module.scss';
 
-.form-field-wrapper {
+.formFieldWrapper {
   position: relative;
   width: 100%;
   min-width: 0;
@@ -8,7 +8,7 @@
   align-items: center;
   gap: $spacing-2;
 
-  .input-with-tooltip {
+  .inputWithTooltip {
     display: flex;
     align-items: center;
     gap: $spacing-2;
@@ -16,15 +16,12 @@
     min-width: 0;
     flex: 1;
 
-    .custom-input,
-    .custom-textarea,
-    .custom-calendar-wrapper,
-    .custom-dropdown {
+    > * {
       flex: 1;
       width: 100%;
     }
 
-    .tooltip-icon {
+    .tooltipIcon {
       display: inline-flex;
       align-items: center;
       justify-content: center;

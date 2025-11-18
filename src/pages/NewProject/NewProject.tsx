@@ -3,14 +3,14 @@ import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
-import '../../styles/new-project.scss';
+import styles from '../../styles/new-project.module.scss';
 
 const NewProject: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
-    <div className="new-project-container">
-      <div className="new-project-card">
+    <div className={styles.newProjectContainer}>
+      <div className={styles.newProjectCard}>
         <h1>New Project</h1>
         <TabView 
           activeIndex={activeIndex} 

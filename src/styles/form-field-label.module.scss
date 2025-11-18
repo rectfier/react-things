@@ -1,18 +1,18 @@
-@import './variables';
+@import './variables.module.scss';
 
-.form-field-label {
+.formFieldLabel {
   display: flex;
   align-items: center;
   gap: $spacing-1;
   margin-bottom: $spacing-2;
 
-  .label-text {
+  .labelText {
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
     color: $gray-900;
   }
 
-  .required-indicator {
+  .requiredIndicator {
     color: #dc2626;
     margin-left: 2px;
   }

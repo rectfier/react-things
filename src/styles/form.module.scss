@@ -1,6 +1,5 @@
-@import './variables';
-@import './mixins';
-@import './form-field-wrapper';
+@import './variables.module.scss';
+@import './mixins.module.scss';
 
 .form {
   padding: $spacing-2 0;
@@ -13,7 +12,7 @@
   // This section ensures proper spacing and layout within forms
 }
 
-.form-section {
+.formSection {
   border-bottom: 1px solid $gray-200;
   padding-bottom: $spacing-6;
   margin-bottom: $spacing-6;
@@ -33,7 +32,7 @@
   }
 }
 
-.form-grid {
+.formGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-4 $spacing-6;
@@ -46,19 +45,19 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  &.three-columns {
+  &.threeColumns {
     @media (min-width: $breakpoint-md) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
-  .form-field {
+  .formField {
     min-width: 0;
     width: 100%;
   }
 }
 
-.form-field {
+.formField {
   label {
     display: block;
     font-size: $font-size-sm;
@@ -69,16 +68,16 @@
 
 }
 
-.form-actions {
+.formActions {
   @include flex-between;
   padding-top: $spacing-4;
 
-  .action-group {
+  .actionGroup {
     display: flex;
     gap: $spacing-3;
     align-items: center;
 
-    .attach-file-link {
+    .attachFileLink {
       background: none;
       border: none;
       color: $blue-600;
@@ -96,17 +95,17 @@
   }
 }
 
-.full-width {
+.fullWidth {
   width: 100%;
 }
 
-.col-span-2 {
+.colSpan2 {
   @media (min-width: $breakpoint-md) {
     grid-column: span 2;
   }
 }
 
-.col-span-full {
+.colSpanFull {
   @media (min-width: $breakpoint-md) {
     grid-column: 1 / -1;
   }

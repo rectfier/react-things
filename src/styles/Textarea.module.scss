@@ -1,6 +1,6 @@
-@import '../../styles/variables';
+@import './variables.module.scss';
 
-.custom-textarea {
+.customTextarea {
   display: flex;
   width: 100%;
   min-height: 4.5rem;

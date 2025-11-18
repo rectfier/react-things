@@ -1,5 +1,5 @@
 import React, { TextareaHTMLAttributes, forwardRef } from 'react';
-import './Textarea.scss';
+import styles from '../../styles/Textarea.module.scss';
 
 export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   value?: string;
@@ -12,7 +12,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         ref={ref}
-        className={`custom-textarea ${className}`}
+        className={`${styles.customTextarea} ${className}`}
         rows={rows}
         {...props}
       />

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/form-field-label.scss';
+import styles from '../../styles/form-field-label.module.scss';
 
 export interface FormFieldLabelProps {
   label: string;
@@ -11,10 +11,10 @@ const FormFieldLabel: React.FC<FormFieldLabelProps> = ({
   required 
 }) => {
   return (
-    <label className="form-field-label">
-      <span className="label-text">
+    <label className={styles.formFieldLabel}>
+      <span className={styles.labelText}>
         {label}
-        {required && <span className="required-indicator">*</span>}
+        {required && <span className={styles.requiredIndicator}>*</span>}
       </span>
     </label>
   );

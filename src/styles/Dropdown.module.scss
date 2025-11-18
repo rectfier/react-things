@@ -1,11 +1,11 @@
-@import '../../styles/variables';
+@import './variables.module.scss';
 
-.custom-dropdown {
+.customDropdown {
   position: relative;
   width: 100%;
   min-width: 0;
 
-  .dropdown-trigger {
+  .dropdownTrigger {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -24,19 +24,19 @@
     cursor: pointer;
     user-select: none;
 
-    .dropdown-label {
+    .dropdownLabel {
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       color: $gray-900;
 
-      &.dropdown-placeholder {
+      &.dropdownPlaceholder {
         color: $gray-400;
       }
     }
 
-    .dropdown-arrow {
+    .dropdownArrow {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,38 +51,38 @@
       }
     }
 
-    &:hover:not(.dropdown-disabled) {
+    &:hover:not(.dropdownDisabled) {
       border-color: $gray-300;
     }
   }
 
-  &.dropdown-open {
-    .dropdown-trigger {
+  &.dropdownOpen {
+    .dropdownTrigger {
       border-color: $blue-600;
       box-shadow: 0 0 0 3px rgba($blue-600, 0.1);
 
-      .dropdown-arrow {
+      .dropdownArrow {
         transform: rotate(180deg);
       }
     }
   }
 
   &:focus-within {
-    .dropdown-trigger {
+    .dropdownTrigger {
       border-color: $blue-600;
       box-shadow: 0 0 0 3px rgba($blue-600, 0.1);
     }
   }
 
-  &.dropdown-disabled {
-    .dropdown-trigger {
+  &.dropdownDisabled {
+    .dropdownTrigger {
       cursor: not-allowed;
       opacity: 0.5;
       background-color: $gray-50;
     }
   }
 
-  .dropdown-panel {
+  .dropdownPanel {
     position: absolute;
     top: calc(100% + 0.25rem);
     left: 0;
@@ -98,7 +98,7 @@
     padding: 0.25rem;
     list-style: none;
 
-    .dropdown-option {
+    .dropdownOption {
       padding: 0.5rem 0.75rem;
       font-size: $font-size-base;
       line-height: 1.5;
@@ -108,12 +108,12 @@
       transition: all 0.15s ease;
 
       &:hover,
-      &.option-focused {
+      &.optionFocused {
         background-color: $gray-100;
         color: $gray-900;
       }
 
-      &.option-selected {
+      &.optionSelected {
         background-color: rgba($blue-600, 0.1);
         color: $blue-600;
         font-weight: $font-weight-medium;
@@ -121,5 +121,4 @@
     }
   }
 }
-
 

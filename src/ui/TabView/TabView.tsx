@@ -1,5 +1,5 @@
 import React, { ReactElement, Children, useRef } from 'react';
-import '../../styles/tab-view.scss';
+import styles from '../../styles/tab-view.module.scss';
 import type { TabPanelProps } from './TabPanel';
 
 export interface TabViewProps {
@@ -43,8 +43,8 @@ const TabView: React.FC<TabViewProps> = ({
   });
 
   return (
-    <div className="tab-view">
-      <div className="tab-headers" role="tablist">
+    <div className={styles.tabView}>
+      <div className={styles.tabHeaders} role="tablist">
         {tabItems.map(({ child, index, isActive, isDisabled, tabId, panelId }) => {
           return (
             <button
@@ -58,14 +58,14 @@ const TabView: React.FC<TabViewProps> = ({
               aria-controls={panelId}
               aria-disabled={isDisabled}
               tabIndex={isActive ? 0 : -1}
-              className={`tab-button ${isActive ? 'active' : ''}`}
+              className={`${styles.tabButton} ${isActive ? styles.active : ''}`}
             >
-              <div className={`tab-content ${isActive ? 'active' : ''}`}>
+              <div className={`${styles.tabContent} ${isActive ? styles.active : ''}`}>
                 <i className={`pi ${child.props.isValidated ? 'pi-circle-fill' : 'pi-circle'}`}></i>
-                <div className="tab-header-text">
-                  <span className="tab-title">{child.props.header}</span>
+                <div className={styles.tabHeaderText}>
+                  <span className={styles.tabTitle}>{child.props.header}</span>
                   {child.props.subheader && (
-                    <span className="tab-subtitle">{child.props.subheader}</span>
+                    <span className={styles.tabSubtitle}>{child.props.subheader}</span>
                   )}
                 </div>
               </div>
@@ -74,7 +74,7 @@ const TabView: React.FC<TabViewProps> = ({
         })}
       </div>
 
-      <div className="tab-panel-content">
+      <div className={styles.tabPanelContent}>
         {tabItems.map(({ child, panelId, tabId, isActive }) => (
           <div
             key={panelId}

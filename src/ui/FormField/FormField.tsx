@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import FormFieldLabel from '../FormFieldLabel/FormFieldLabel';
-import '../../styles/form-field-wrapper.scss';
+import wrapperStyles from '../../styles/form-field-wrapper.module.scss';
+import formStyles from '../../styles/form.module.scss';
 
 export interface FormFieldProps {
   label: string;
@@ -18,9 +19,9 @@ const FormField: React.FC<FormFieldProps> = ({
   className = ''
 }) => {
   const content = tooltip ? (
-    <div className="input-with-tooltip">
+    <div className={wrapperStyles.inputWithTooltip}>
       {children}
-      <span className="tooltip-icon" title={tooltip}>
+      <span className={wrapperStyles.tooltipIcon} title={tooltip}>
         <i className="pi pi-question-circle"></i>
       </span>
     </div>
@@ -29,12 +30,12 @@ const FormField: React.FC<FormFieldProps> = ({
   );
 
   return (
-    <div className={`form-field ${className}`}>
+    <div className={`${formStyles.formField} ${className}`}>
       <FormFieldLabel 
         label={label} 
         required={required}
       />
-      <div className="form-field-wrapper">
+      <div className={wrapperStyles.formFieldWrapper}>
         {content}
       </div>
     </div>

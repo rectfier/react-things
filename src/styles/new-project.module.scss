@@ -1,13 +1,13 @@
-@import './variables';
-@import './mixins';
+@import './variables.module.scss';
+@import './mixins.module.scss';
 
-.new-project-container {
+.newProjectContainer {
   max-width: 72rem;
   margin: 0 auto;
   padding: $spacing-4 $spacing-8;
 }
 
-.new-project-card {
+.newProjectCard {
   background-color: $white;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);

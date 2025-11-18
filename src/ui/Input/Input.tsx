@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react';
-import './Input.scss';
+import styles from '../../styles/Input.module.scss';
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value?: string;
@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         ref={ref}
-        className={`custom-input ${className}`}
+        className={`${styles.customInput} ${className}`}
         {...props}
       />
     );
