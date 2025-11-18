@@ -1,12 +1,12 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react';
-import styles from '../../styles/Input.module.scss';
+import styles from '../styles/InputField.module.scss';
 
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ className = '', ...props }, ref) => {
     return (
       <input
@@ -18,7 +18,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = 'Input';
+InputField.displayName = 'InputField';
 
-export default Input;
+export default InputField;
 

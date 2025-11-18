@@ -1,5 +1,5 @@
-@import './Variables.module.scss';
-@import './Mixins.module.scss';
+@import './variables';
+@import './mixins';
 
 .newProjectContainer {
   max-width: 72rem;
@@ -19,6 +19,7 @@
     font-weight: $font-weight-bold;
     margin-bottom: $spacing-6;
     color: $gray-900;
+    text-align: center;
   }
 }
 

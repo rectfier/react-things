@@ -1,13 +1,13 @@
 import React, { TextareaHTMLAttributes, forwardRef } from 'react';
-import styles from '../../styles/Textarea.module.scss';
+import styles from '../styles/TextareaField.module.scss';
 
-export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
+export interface TextareaFieldProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   rows?: number;
 }
 
-const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
   ({ className = '', rows = 4, ...props }, ref) => {
     return (
       <textarea
@@ -20,7 +20,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   }
 );
 
-Textarea.displayName = 'Textarea';
+TextareaField.displayName = 'TextareaField';
 
-export default Textarea;
+export default TextareaField;
 

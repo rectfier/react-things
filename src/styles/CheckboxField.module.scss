@@ -1,0 +1,77 @@
+@import './variables';
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.checkboxInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+
+  &:checked ~ .checkboxCustom {
+    background-color: $primary;
+    border-color: $primary;
+
+    &::after {
+      display: block;
+    }
+  }
+
+  &:focus ~ .checkboxCustom {
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  &:disabled ~ .checkboxCustom {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:disabled ~ .checkboxText {
+    opacity: 0.5;
+  }
+}
+
+.checkboxCustom {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  border: 1px solid $gray-200;
+  border-radius: 0.5rem;
+  background-color: $off-white;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &::after {
+    content: '';
+    display: none;
+    width: 0.5rem;
+    height: 0.75rem;
+    border: solid $white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  &:hover {
+    border-color: $gray-300;
+  }
+}
+
+.checkboxText {
+  font-size: $font-size-input;
+  line-height: 1.5;
+  color: $gray-900;
+  font-weight: $font-weight-normal;
+}
+

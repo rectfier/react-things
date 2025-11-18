@@ -1,27 +1,27 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import styles from '../../styles/Dropdown.module.scss';
+import styles from '../styles/DropdownField.module.scss';
 
-export interface DropdownOption {
+export interface DropdownFieldOption {
   label: string;
   value: string | number;
 }
 
-export interface DropdownChangeEvent {
+export interface DropdownFieldChangeEvent {
   value: string | number | null;
   originalEvent: React.MouseEvent | React.KeyboardEvent;
 }
 
-export interface DropdownProps {
+export interface DropdownFieldProps {
   value?: string | number | null;
-  options?: DropdownOption[];
-  onChange?: (e: DropdownChangeEvent) => void;
+  options?: DropdownFieldOption[];
+  onChange?: (e: DropdownFieldChangeEvent) => void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   filter?: boolean;
 }
 
-const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
+const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
   ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false }, _ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -29,7 +29,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const listRef = useRef<HTMLUListElement>(null);
 
     // Find selected option using a loop for older browser compatibility
-    let selectedOption: DropdownOption | undefined;
+    let selectedOption: DropdownFieldOption | undefined;
     for (let i = 0; i < options.length; i++) {
       if (options[i].value === value) {
         selectedOption = options[i];
@@ -70,7 +70,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
     };
 
-    const handleSelect = (option: DropdownOption, event: React.MouseEvent) => {
+    const handleSelect = (option: DropdownFieldOption, event: React.MouseEvent) => {
       if (onChange) {
         onChange({
           value: option.value,
@@ -180,7 +180,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
   }
 );
 
-Dropdown.displayName = 'Dropdown';
+DropdownField.displayName = 'DropdownField';
 
-export default Dropdown;
+export default DropdownField;
 

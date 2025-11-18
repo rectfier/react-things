@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import styles from '../../styles/Calendar.module.scss';
+import styles from '../styles/CalendarField.module.scss';
 
-export interface CalendarChangeEvent {
+export interface CalendarFieldChangeEvent {
   value: Date | null;
   originalEvent: React.MouseEvent | React.ChangeEvent;
 }
 
-export interface CalendarProps {
+export interface CalendarFieldProps {
   value?: Date | null;
-  onChange?: (e: CalendarChangeEvent) => void;
+  onChange?: (e: CalendarFieldChangeEvent) => void;
   dateFormat?: string;
   className?: string;
   disabled?: boolean;
@@ -16,7 +16,7 @@ export interface CalendarProps {
   showIcon?: boolean;
 }
 
-const Calendar = forwardRef<HTMLInputElement, CalendarProps>(
+const CalendarField = forwardRef<HTMLInputElement, CalendarFieldProps>(
   ({ value, onChange, dateFormat = 'mm/dd/yyyy', className = '', disabled = false, placeholder, showIcon = true }, ref) => {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
@@ -131,7 +131,7 @@ const Calendar = forwardRef<HTMLInputElement, CalendarProps>(
   }
 );
 
-Calendar.displayName = 'Calendar';
+CalendarField.displayName = 'CalendarField';
 
-export default Calendar;
+export default CalendarField;
 

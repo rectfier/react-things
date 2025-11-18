@@ -1,0 +1,133 @@
+@import '../../styles/variables';
+
+.vendorCard {
+  background-color: $white;
+  border: 1px solid $gray-200;
+  border-radius: 0.75rem;
+  padding: $spacing-6;
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $gray-900;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  padding-bottom: $spacing-4;
+  border-bottom: 1px solid $gray-200;
+}
+
+.vendorIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: $gray-100;
+  margin: $spacing-2 0;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.4);
+}
+
+.vendorName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+  margin: 0;
+  text-align: center;
+}
+
+.scoreSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  width: 100%;
+  align-items: center;
+}
+
+.scoreHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-2;
+  width: 100%;
+}
+
+.scoreLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $gray-700;
+}
+
+.scoreValue {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $gray-900;
+}
+
+.scoreBar {
+  width: 70%;
+  height: 0.5rem;
+  background-color: $gray-200;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background-color: $primary;
+  border-radius: 0.25rem;
+  transition: width 0.3s ease;
+}
+
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding-top: $spacing-4;
+  border-top: 1px solid $gray-200;
+  width: 100%;
+}
+
+.summaryTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $gray-900;
+  margin: 0;
+  padding-bottom: $spacing-3;
+  border-bottom: 1px solid $gray-200;
+}
+
+.summaryText {
+  font-size: $font-size-sm;
+  line-height: 1.6;
+  color: $gray-600;
+  margin: 0;
+  padding-bottom: $spacing-3;
+  border-bottom: 1px solid $gray-200;
+}
+
+.viewProfileLink {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $primary;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  align-self: center;
+  width: 100%;
+  text-align: center;
+
+  &:hover {
+    color: $primary-hover;
+    text-decoration: underline;
+  }
+}
+

@@ -11,20 +11,27 @@ $gray-900: #111827;
 $blue-600: #2563eb;
 $blue-800: #1e40af;
 $white: #ffffff;
-$off-white: #fafafa;
+$off-white: #f5f5f5;
+
+// Primary and Secondary Colors
+$primary: #1e293b; // Dark navy blue for buttons and step headings
+$primary-hover: #334155;
+$secondary: #64748b; // Secondary color
+$secondary-hover: #475569;
 
 // Spacing
-$spacing-1: 0.25rem;
-$spacing-2: 0.5rem;
-$spacing-3: 0.75rem;
-$spacing-4: 1rem;
-$spacing-6: 1.5rem;
-$spacing-8: 2rem;
+$spacing-1: 0.2rem;
+$spacing-2: 0.4rem;
+$spacing-3: 0.6rem;
+$spacing-4: 0.8rem;
+$spacing-6: 1.2rem;
+$spacing-8: 1.6rem;
 
 // Typography
 $font-size-xs: 0.75rem;
-$font-size-sm: 0.875rem;
-$font-size-base: 1rem;
+$font-size-input: 0.8125rem; // 13px - for input fields
+$font-size-sm: 0.875rem; // 14px - for labels
+$font-size-base: 1rem; // 16px - for section headings
 $font-size-lg: 1.125rem;
 $font-size-xl: 1.25rem;
 $font-size-2xl: 1.5rem;

@@ -1,21 +1,19 @@
-@import './variables.module.scss';
+@import './variables';
 
-.customTextarea {
+.customInput {
   display: flex;
   width: 100%;
-  min-height: 4.5rem;
-  padding: 0.5rem 0.75rem;
-  font-size: $font-size-base;
+  height: 2rem;
+  padding: 0.375rem 0.75rem;
+  font-size: $font-size-input;
   line-height: 1.5;
   color: $gray-900;
-  background-color: $white;
+  background-color: $off-white;
   border: 1px solid $gray-200;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   box-sizing: border-box;
-  resize: vertical;
-  font-family: inherit;
 
   &::placeholder {
     color: $gray-400;
@@ -27,8 +25,8 @@
 
   &:focus {
     outline: none;
-    border-color: $blue-600;
-    box-shadow: 0 0 0 3px rgba($blue-600, 0.1);
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
   }
 
   &:disabled {
@@ -38,7 +36,7 @@
   }
 
   &:read-only {
-    background-color: $gray-50;
+    background-color: $off-white;
     cursor: default;
   }
 }

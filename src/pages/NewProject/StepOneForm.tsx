@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button } from 'primereact/button';
-import { Calendar, CalendarChangeEvent } from '../../ui/Calendar';
-import { Dropdown, DropdownChangeEvent } from '../../ui/Dropdown';
-import { InputText } from '../../ui/Input';
-import { InputTextarea } from '../../ui/Textarea';
+import CalendarField, { CalendarFieldChangeEvent } from '../../ui/CalendarField';
+import DropdownField, { DropdownFieldChangeEvent, DropdownFieldOption } from '../../ui/DropdownField';
+import InputField from '../../ui/InputField';
+import TextareaField from '../../ui/TextareaField';
 
 import FormField from '../../ui/FormField/FormField';
 
@@ -44,14 +44,14 @@ type TextareaChangeHandler = (
 
 type DateChangeHandler = (
   field: 'startDate' | 'endDate'
-) => (e: CalendarChangeEvent) => void;
+) => (e: CalendarFieldChangeEvent) => void;
 
 type DropdownChangeHandler = (
   field: keyof StepOneFormData
-) => (e: DropdownChangeEvent) => void;
+) => (e: DropdownFieldChangeEvent) => void;
 
 // Sample mock data for dropdowns
-const ownerOptions = [
+const ownerOptions: DropdownFieldOption[] = [
   { label: 'John Smith', value: 'john.smith' },
   { label: 'Sarah Johnson', value: 'sarah.johnson' },
   { label: 'Michael Brown', value: 'michael.brown' },
@@ -59,7 +59,7 @@ const ownerOptions = [
   { label: 'David Wilson', value: 'david.wilson' }
 ];
 
-const buStakeholderOptions = [
+const buStakeholderOptions: DropdownFieldOption[] = [
   { label: 'Global Oncology Marketing & Sales', value: 'global-oncology' },
   { label: 'Cardiovascular Business Unit', value: 'cardiovascular' },
   { label: 'Neurology Division', value: 'neurology' },
@@ -67,7 +67,7 @@ const buStakeholderOptions = [
   { label: 'Rare Diseases', value: 'rare-diseases' }
 ];
 
-const teamOptions = [
+const teamOptions: DropdownFieldOption[] = [
   { label: 'Research Team Alpha', value: 'team-alpha' },
   { label: 'Research Team Beta', value: 'team-beta' },
   { label: 'Clinical Operations', value: 'clinical-ops' },
@@ -75,7 +75,7 @@ const teamOptions = [
   { label: 'Data Analytics', value: 'data-analytics' }
 ];
 
-const delegatesOptions = [
+const delegatesOptions: DropdownFieldOption[] = [
   { label: 'Alice Cooper', value: 'alice.cooper' },
   { label: 'Bob Martinez', value: 'bob.martinez' },
   { label: 'Carol White', value: 'carol.white' },
@@ -83,7 +83,7 @@ const delegatesOptions = [
   { label: 'Fiona Green', value: 'fiona.green' }
 ];
 
-const categoryOptions = [
+const categoryOptions: DropdownFieldOption[] = [
   { label: 'Market Research', value: 'market-research' },
   { label: 'Clinical Trial', value: 'clinical-trial' },
   { label: 'Product Launch', value: 'product-launch' },
@@ -91,7 +91,7 @@ const categoryOptions = [
   { label: 'Regulatory Study', value: 'regulatory-study' }
 ];
 
-const marketsOptions = [
+const marketsOptions: DropdownFieldOption[] = [
   { label: 'Germany', value: 'germany' },
   { label: 'France', value: 'france' },
   { label: 'United Kingdom', value: 'uk' },
@@ -102,7 +102,7 @@ const marketsOptions = [
   { label: 'Japan', value: 'japan' }
 ];
 
-const respondentTypeOptions = [
+const respondentTypeOptions: DropdownFieldOption[] = [
   { label: 'Healthcare Professionals', value: 'hcp' },
   { label: 'Patients', value: 'patients' },
   { label: 'Caregivers', value: 'caregivers' },
@@ -178,7 +178,7 @@ const StepOneForm: React.FC = () => {
             label="Name"
             tooltip="Enter the project name"
           >
-            <InputText
+            <InputField
               value={formData.name}
               onChange={handleTextChange('name')}
               className={styles.fullWidth}
@@ -188,7 +188,7 @@ const StepOneForm: React.FC = () => {
             label="Owner" 
             tooltip="Select the project owner"
           >
-            <Dropdown
+            <DropdownField
               value={formData.owner}
               onChange={handleDropdownChange('owner')}
               options={ownerOptions}
@@ -200,7 +200,7 @@ const StepOneForm: React.FC = () => {
             label="BU/Stakeholder" 
             tooltip="Business unit or stakeholder"
           >
-            <Dropdown
+            <DropdownField
               value={formData.buStakeholder}
               onChange={handleDropdownChange('buStakeholder')}
               options={buStakeholderOptions}
@@ -212,7 +212,7 @@ const StepOneForm: React.FC = () => {
             label="Team" 
             tooltip="Select the team"
           >
-            <Dropdown
+            <DropdownField
               value={formData.team}
               onChange={handleDropdownChange('team')}
               options={teamOptions}
@@ -224,7 +224,7 @@ const StepOneForm: React.FC = () => {
             label="Delegates" 
             tooltip="Select delegates"
           >
-            <Dropdown
+            <DropdownField
               value={formData.delegates}
               onChange={handleDropdownChange('delegates')}
               options={delegatesOptions}
@@ -236,7 +236,7 @@ const StepOneForm: React.FC = () => {
             label="Category" 
             tooltip="Select category"
           >
-            <Dropdown
+            <DropdownField
               value={formData.category}
               onChange={handleDropdownChange('category')}
               options={categoryOptions}
@@ -249,7 +249,7 @@ const StepOneForm: React.FC = () => {
             tooltip="Enter notification preferences"
             className={styles.colSpanFull}
           >
-            <InputText
+            <InputField
               value={formData.notifications}
               onChange={handleTextChange('notifications')}
               className={styles.fullWidth}
@@ -260,7 +260,7 @@ const StepOneForm: React.FC = () => {
             tooltip="Enter project description"
             className={styles.colSpanFull}
           >
-            <InputTextarea
+            <TextareaField
               value={formData.description}
               onChange={handleTextareaChange('description')}
               rows={4}
@@ -278,7 +278,7 @@ const StepOneForm: React.FC = () => {
             label="Planned Execution Year" 
             tooltip="Enter the planned execution year"
           >
-            <InputText
+            <InputField
               value={formData.plannedExecutionYear}
               onChange={handleTextChange('plannedExecutionYear')}
               className={styles.fullWidth}
@@ -288,7 +288,7 @@ const StepOneForm: React.FC = () => {
             label="Start Date"
             tooltip="Select the project start date"
           >
-            <Calendar
+            <CalendarField
               value={formData.startDate}
               onChange={handleDateChange('startDate')}
               dateFormat="mm/dd/yyyy"
@@ -299,7 +299,7 @@ const StepOneForm: React.FC = () => {
             label="End Date"
             tooltip="Select the project end date"
           >
-            <Calendar
+            <CalendarField
               value={formData.endDate}
               onChange={handleDateChange('endDate')}
               dateFormat="mm/dd/yyyy"
@@ -317,7 +317,7 @@ const StepOneForm: React.FC = () => {
             label="Product"
             tooltip="Enter the product name"
           >
-            <InputText
+            <InputField
               value={formData.product}
               onChange={handleTextChange('product')}
               className={styles.fullWidth}
@@ -327,7 +327,7 @@ const StepOneForm: React.FC = () => {
             label="Client Requestor"
             tooltip="Enter the client requestor"
           >
-            <InputText
+            <InputField
               value={formData.clientRequestor}
               onChange={handleTextChange('clientRequestor')}
               className={styles.fullWidth}
@@ -337,7 +337,7 @@ const StepOneForm: React.FC = () => {
             label="Other Client participant"
             tooltip="Enter other client participants"
           >
-            <InputText
+            <InputField
               value={formData.otherClientParticipant}
               onChange={handleTextChange('otherClientParticipant')}
               className={styles.fullWidth}
@@ -347,7 +347,7 @@ const StepOneForm: React.FC = () => {
             label="B/U Stakeholder" 
             tooltip="Business unit stakeholder"
           >
-            <InputText
+            <InputField
               value={formData.buStakeholderAttr}
               onChange={handleTextChange('buStakeholderAttr')}
               className={styles.fullWidth}
@@ -357,7 +357,7 @@ const StepOneForm: React.FC = () => {
             label="Therapeutic Area"
             tooltip="Enter the therapeutic area"
           >
-            <InputText
+            <InputField
               value={formData.therapeuticArea}
               onChange={handleTextChange('therapeuticArea')}
               className={styles.fullWidth}
@@ -367,7 +367,7 @@ const StepOneForm: React.FC = () => {
             label="Research Type"
             tooltip="Enter the research type"
           >
-            <InputText
+            <InputField
               value={formData.researchType}
               onChange={handleTextChange('researchType')}
               className={styles.fullWidth}
@@ -377,7 +377,7 @@ const StepOneForm: React.FC = () => {
             label="Methodology"
             tooltip="Enter the methodology"
           >
-            <InputText
+            <InputField
               value={formData.methodology}
               onChange={handleTextChange('methodology')}
               className={styles.fullWidth}
@@ -387,7 +387,7 @@ const StepOneForm: React.FC = () => {
             label="Markets where study is being fielded"
             tooltip="Select markets where study is being fielded"
           >
-            <Dropdown
+            <DropdownField
               value={formData.markets}
               onChange={handleDropdownChange('markets')}
               options={marketsOptions}
@@ -399,7 +399,7 @@ const StepOneForm: React.FC = () => {
             label="Regions (If Applicable)"
             tooltip="Enter applicable regions"
           >
-            <InputText
+            <InputField
               value={formData.regions}
               onChange={handleTextChange('regions')}
               className={styles.fullWidth}
@@ -409,7 +409,7 @@ const StepOneForm: React.FC = () => {
             label="Respondent Type" 
             tooltip="Select respondent type"
           >
-            <Dropdown
+            <DropdownField
               value={formData.respondentType}
               onChange={handleDropdownChange('respondentType')}
               options={respondentTypeOptions}
@@ -427,7 +427,7 @@ const StepOneForm: React.FC = () => {
           label="Notes"
           tooltip="Enter additional notes"
         >
-          <InputTextarea
+          <TextareaField
             value={formData.notes}
             onChange={handleTextareaChange('notes')}
             rows={4}
@@ -458,7 +458,7 @@ const StepOneForm: React.FC = () => {
             label="Next Step"
             icon="pi pi-arrow-right"
             iconPos="right"
-            className="p-button-secondary"
+            className="p-button-primary"
             onClick={handleNextStep}
           />
         </div>

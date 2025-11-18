@@ -1,4 +1,4 @@
-@import './Variables.module.scss';
+@import './variables';
 
 .formFieldWrapper {
   position: relative;
@@ -16,9 +16,10 @@
     min-width: 0;
     flex: 1;
 
-    > * {
+    > *:first-child {
       flex: 1;
       width: 100%;
+      min-width: 0;
     }
 
     .tooltipIcon {
@@ -28,17 +29,17 @@
       width: 1.25rem;
       height: 1.25rem;
       border-radius: 50%;
-      background-color: $gray-200;
+      background-color: transparent;
       cursor: help;
       flex-shrink: 0;
 
       i {
-        font-size: 0.75rem;
+        font-size: $font-size-xs;
         color: $gray-600;
       }
 
       &:hover {
-        background-color: $gray-300;
+        background-color: transparent;
         
         i {
           color: $gray-700;
