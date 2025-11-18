@@ -3,7 +3,7 @@ import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
-import styles from '../../styles/new-project.module.scss';
+import styles from '../../styles/NewProject.module.scss';
 
 const NewProject: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);

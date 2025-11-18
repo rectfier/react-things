@@ -7,7 +7,7 @@ import { InputTextarea } from '../../ui/Textarea';
 
 import FormField from '../../ui/FormField/FormField';
 
-import styles from '../../styles/form.module.scss';
+import styles from '../../styles/Form.module.scss';
 
 interface StepOneFormData {
   name: string;

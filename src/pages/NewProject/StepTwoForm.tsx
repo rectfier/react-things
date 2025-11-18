@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/step-two-form.module.scss';
+import styles from '../../styles/StepTwoForm.module.scss';
 
 const StepTwoForm: React.FC = () => {
   return (
