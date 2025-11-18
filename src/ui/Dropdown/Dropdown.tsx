@@ -28,7 +28,14 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const dropdownRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
 
-    const selectedOption = options.find(opt => opt.value === value);
+    // Find selected option using a loop for older browser compatibility
+    let selectedOption: DropdownOption | undefined;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].value === value) {
+        selectedOption = options[i];
+        break;
+      }
+    }
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {

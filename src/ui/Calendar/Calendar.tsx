@@ -30,9 +30,17 @@ const Calendar = forwardRef<HTMLInputElement, CalendarProps>(
       }
     }, [value, dateFormat]);
 
+    const padStart = (str: string, length: number, padChar: string): string => {
+      str = String(str);
+      while (str.length < length) {
+        str = padChar + str;
+      }
+      return str;
+    };
+
     const formatDate = (date: Date, format: string): string => {
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = padStart(String(date.getMonth() + 1), 2, '0');
+      const day = padStart(String(date.getDate()), 2, '0');
       const year = date.getFullYear();
 
       return format
