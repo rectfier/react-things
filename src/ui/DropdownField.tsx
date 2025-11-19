@@ -19,10 +19,11 @@ export interface DropdownFieldProps {
   className?: string;
   disabled?: boolean;
   filter?: boolean;
+  invalid?: boolean;
 }
 
 const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
-  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false }, _ref) => {
+  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false, invalid = false }, _ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -134,6 +135,7 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
           role="button"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
+          aria-invalid={invalid}
         >
           <span className={`${styles.dropdownLabel} ${!selectedOption ? styles.dropdownPlaceholder : ''}`}>
             {selectedOption ? selectedOption.label : placeholder}

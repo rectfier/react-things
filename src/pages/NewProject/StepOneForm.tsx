@@ -140,13 +140,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="owner"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={ownerOptions}
-                  placeholder="Select owner"
-                  className={styles.fullWidth}
+              options={ownerOptions}
+              placeholder="Select owner"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -159,13 +160,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="buStakeholder"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={buStakeholderOptions}
-                  placeholder="Select BU/Stakeholder"
-                  className={styles.fullWidth}
+              options={buStakeholderOptions}
+              placeholder="Select BU/Stakeholder"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -178,13 +180,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="team"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={teamOptions}
-                  placeholder="Select team"
-                  className={styles.fullWidth}
+              options={teamOptions}
+              placeholder="Select team"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -197,13 +200,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="delegates"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={delegatesOptions}
-                  placeholder="Select delegates"
-                  className={styles.fullWidth}
+              options={delegatesOptions}
+              placeholder="Select delegates"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -216,13 +220,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="category"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={categoryOptions}
-                  placeholder="Select category"
-                  className={styles.fullWidth}
+              options={categoryOptions}
+              placeholder="Select category"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -276,11 +281,11 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
               name="startDate"
               control={control}
               render={({ field }) => (
-                <CalendarField
+            <CalendarField
                   value={field.value || undefined}
                   onChange={(e) => field.onChange(e.value || undefined)}
-                  dateFormat="mm/dd/yyyy"
-                  className={styles.fullWidth}
+              dateFormat="mm/dd/yyyy"
+              className={styles.fullWidth}
                 />
               )}
             />
@@ -294,11 +299,11 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
               name="endDate"
               control={control}
               render={({ field }) => (
-                <CalendarField
+            <CalendarField
                   value={field.value || undefined}
                   onChange={(e) => field.onChange(e.value || undefined)}
-                  dateFormat="mm/dd/yyyy"
-                  className={styles.fullWidth}
+              dateFormat="mm/dd/yyyy"
+              className={styles.fullWidth}
                 />
               )}
             />
@@ -388,13 +393,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="markets"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={marketsOptions}
-                  placeholder="Select markets"
-                  className={styles.fullWidth}
+              options={marketsOptions}
+              placeholder="Select markets"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />
@@ -417,13 +423,14 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
             <Controller
               name="respondentType"
               control={control}
-              render={({ field }) => (
-                <DropdownField
+              render={({ field, fieldState }) => (
+            <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={respondentTypeOptions}
-                  placeholder="Select respondent type"
-                  className={styles.fullWidth}
+              options={respondentTypeOptions}
+              placeholder="Select respondent type"
+              className={styles.fullWidth}
+              invalid={fieldState.invalid}
                 />
               )}
             />

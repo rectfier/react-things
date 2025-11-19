@@ -131,8 +131,8 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
                   name="procurementNotification"
                   control={control}
                   render={({ field }) => (
-                    <CheckboxField
-                      id="procurement-notification"
+                <CheckboxField
+                  id="procurement-notification"
                       checked={field.value || false}
                       onChange={(e) => field.onChange(e.target.checked)}
                     />
@@ -183,11 +183,11 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
                     name="searchQuery"
                     control={control}
                     render={({ field }) => (
-                      <input
-                        type="text"
+                  <input
+                    type="text"
                         {...field}
                         placeholder={`${mockVendors.length} Approved Vendors`}
-                        className={formStyles.searchInput}
+                    className={formStyles.searchInput}
                       />
                     )}
                   />
@@ -209,38 +209,38 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
               </div>
               
               {filteredVendors.length > 0 && (
-                <div className={formStyles.vendorList}>
-                  {filteredVendors.map((vendor) => (
-                    <div
-                      key={vendor}
+              <div className={formStyles.vendorList}>
+                {filteredVendors.map((vendor) => (
+                  <div
+                    key={vendor}
                       className={`${formStyles.vendorItem} ${selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
-                      onClick={() => handleVendorSelect(vendor)}
+                    onClick={() => handleVendorSelect(vendor)}
                       onMouseEnter={() => setHoveredVendor(vendor)}
                       onMouseLeave={() => setHoveredVendor(null)}
-                    >
-                      <span className={formStyles.vendorName}>{vendor}</span>
+                  >
+                    <span className={formStyles.vendorName}>{vendor}</span>
                       {selectedVendor === vendor && (
-                        <span className={formStyles.checkIcon}>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M13.3333 4L6 11.3333L2.66667 8"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                      <span className={formStyles.checkIcon}>
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M13.3333 4L6 11.3333L2.66667 8"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
               )}
             </div>
 

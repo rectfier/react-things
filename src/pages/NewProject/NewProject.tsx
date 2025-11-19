@@ -130,29 +130,29 @@ const NewProject: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className={styles.newProjectContainer}>
-        <div className={styles.newProjectCard}>
-          <h1>New Project</h1>
-          <TabView 
-            activeIndex={activeIndex} 
+    <div className={styles.newProjectContainer}>
+      <div className={styles.newProjectCard}>
+        <h1>New Project</h1>
+        <TabView 
+          activeIndex={activeIndex} 
             onTabChange={handleTabChange}
-          >
-            <TabPanel 
-              header="Step 1" 
-              subheader="Fill in Project Specifications"
+        >
+          <TabPanel 
+            header="Step 1" 
+            subheader="Fill in Project Specifications"
               isValidated={activeIndex > 0}
-            >
+          >
               <StepOneForm onNext={() => setActiveIndex(1)} />
-            </TabPanel>
-            <TabPanel 
-              header="Step 2" 
-              subheader="Fill in Financial Details and Select Vendor"
-            >
+          </TabPanel>
+          <TabPanel 
+            header="Step 2" 
+            subheader="Fill in Financial Details and Select Vendor"
+          >
               <StepTwoForm onSubmit={methods.handleSubmit(onSubmit)} />
-            </TabPanel>
-          </TabView>
-        </div>
+          </TabPanel>
+        </TabView>
       </div>
+    </div>
     </FormProvider>
   );
 };

@@ -55,6 +55,11 @@
     &:hover:not(.dropdownDisabled) {
       border-color: $gray-300;
     }
+
+    &[aria-invalid="true"] {
+      border-color: #dc2626 !important; // red-600
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
   }
 
   &.dropdownOpen {
@@ -65,6 +70,11 @@
       .dropdownArrow {
         transform: rotate(180deg);
       }
+
+      &[aria-invalid="true"] {
+        border-color: #dc2626 !important; // red-600
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+      }
     }
   }
 
@@ -72,6 +82,11 @@
     .dropdownTrigger {
       border-color: $primary;
       box-shadow: 0 0 0 3px rgba($primary, 0.1);
+
+      &[aria-invalid="true"] {
+        border-color: #dc2626 !important; // red-600
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+      }
     }
   }
 
