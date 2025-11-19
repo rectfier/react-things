@@ -47,5 +47,26 @@
       }
     }
   }
+
+  // Error state styling
+  &.formFieldWrapperError {
+    input,
+    textarea {
+      border-color: #dc2626 !important; // red-600
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
+
+    // Target custom dropdown trigger
+    :global(.customDropdown) .dropdownTrigger {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
+
+    // Target custom calendar input
+    :global(.customCalendarWrapper) .customCalendarInput {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
+  }
 }
 

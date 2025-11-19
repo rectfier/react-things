@@ -39,6 +39,11 @@
     border-top: 3px solid $primary;
   }
 
+  &.completed {
+    background-color: $white;
+    border-top: 3px solid #10b981; // green-500
+  }
+
   .tabContent {
     display: flex;
     align-items: flex-start;
@@ -86,6 +91,10 @@
 
     i.pi-circle-fill {
       color: $primary;
+    }
+
+    &.completed i.pi-circle-fill {
+      color: #10b981; // green-500
     }
   }
 }

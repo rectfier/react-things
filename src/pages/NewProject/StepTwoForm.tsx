@@ -1,65 +1,49 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
+import { useFormContext, Controller } from 'react-hook-form';
 import { Button } from 'primereact/button';
 import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
+import { ProjectFormData } from './NewProject';
 
-interface StepTwoFormData {
-  estimatedSpendUSD: string;
-  estimatedSpendLocal: string;
-  associatedPO: string;
-  businessQuestion: string;
-  valueToClient: string;
-  procurementNotification: boolean;
-  selectedVendor: string | null;
-  searchQuery: string;
+interface StepTwoFormProps {
+  onSubmit: () => void;
 }
 
-const mockVendors = [
+const mockVendors: string[] = [
   'Vendor A', 'Vendor B', 'Vendor C', 'Vendor D', 'Vendor E',
   'Vendor F', 'Vendor G', 'Vendor H', 'Vendor I', 'Vendor J',
   'Vendor K', 'Vendor L', 'Vendor M', 'Vendor N', 'Vendor O',
   'Vendor P', 'Vendor Q', 'Vendor R'
 ];
 
-const StepTwoForm: React.FC = () => {
-  const [formData, setFormData] = useState<StepTwoFormData>({
-    estimatedSpendUSD: '$125,000.00',
-    estimatedSpendLocal: '€118,500.00',
-    associatedPO: 'PO-457392-VERT',
-    businessQuestion: 'Germany',
-    valueToClient: 'France, Spain, Italy, United Kingdom',
-    procurementNotification: true,
-    selectedVendor: 'Vendor A',
-    searchQuery: ''
-  });
+const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
+  const { register, control, watch, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
+  const selectedVendor = watch('selectedVendor');
+  const searchQuery = watch('searchQuery') || '';
 
-  const [filteredVendors, setFilteredVendors] = useState<string[]>(mockVendors);
+  const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
+  const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
 
-  const handleInputChange = (field: keyof StepTwoFormData, value: string | boolean): void => {
-    setFormData((prev: StepTwoFormData) => ({ ...prev, [field]: value }));
-  };
-
-  const handleTextChange = (field: keyof StepTwoFormData) => (e: ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(field, e.target.value);
-    
-    if (field === 'searchQuery') {
-      const query = e.target.value.toLowerCase();
-      const filtered = mockVendors.filter(vendor => 
-        vendor.toLowerCase().includes(query)
-      );
+  React.useEffect(() => {
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      const filtered = mockVendors.filter((vendor: string) => {
+        const vendorLower = String(vendor).toLowerCase();
+        return vendorLower.indexOf(query) !== -1;
+      });
       setFilteredVendors(filtered);
+    } else {
+      setFilteredVendors([]);
     }
-  };
-
-  const handleCheckboxChange = (field: keyof StepTwoFormData) => (e: ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(field, e.target.checked);
-  };
+  }, [searchQuery]);
 
   const handleVendorSelect = (vendor: string) => {
-    setFormData((prev: StepTwoFormData) => ({ ...prev, selectedVendor: vendor }));
+    setValue('selectedVendor', vendor);
+    setValue('searchQuery', '');
+    setFilteredVendors([]);
   };
 
   const handleBack = (): void => {
@@ -69,16 +53,13 @@ const StepTwoForm: React.FC = () => {
 
   const handleSaveDraft = (): void => {
     // TODO: Implement save draft functionality
-    console.log('Saving draft...', formData);
+    console.log('Saving draft...');
   };
 
-  const handleSubmit = (): void => {
-    // TODO: Implement submit functionality
-    console.log('Submitting...', formData);
-  };
-
-  const selectedVendorData = formData.selectedVendor ? {
-    name: formData.selectedVendor,
+  // Show vendor profile for hovered vendor, or selected vendor if no hover
+  const displayVendorData = hoveredVendor || selectedVendor;
+  const vendorProfileData = displayVendorData ? {
+    name: displayVendorData,
     globalScore: 8.1,
     summary: 'Specializes in multi-market quantitative oncology research, with deep expertise in the EU5 region. Certified for high-volume data collection.'
   } : null;
@@ -92,60 +73,70 @@ const StepTwoForm: React.FC = () => {
             <FormField 
               label="Estimated Spend in USD"
               tooltip="Enter the estimated spend in USD"
+              error={errors.estimatedSpendUSD?.message}
             >
               <InputField
-                value={formData.estimatedSpendUSD}
-                onChange={handleTextChange('estimatedSpendUSD')}
+                {...register('estimatedSpendUSD')}
                 className={formStyles.fullWidth}
               />
             </FormField>
             <FormField 
               label="Estimated Spend in Local Currency"
               tooltip="Enter the estimated spend in local currency"
+              error={errors.estimatedSpendLocal?.message}
             >
               <InputField
-                value={formData.estimatedSpendLocal}
-                onChange={handleTextChange('estimatedSpendLocal')}
+                {...register('estimatedSpendLocal')}
                 className={formStyles.fullWidth}
               />
             </FormField>
             <FormField 
               label="Associated PO #"
               tooltip="Enter the associated purchase order number"
+              error={errors.associatedPO?.message}
             >
               <InputField
-                value={formData.associatedPO}
-                onChange={handleTextChange('associatedPO')}
+                {...register('associatedPO')}
                 className={formStyles.fullWidth}
               />
             </FormField>
             <FormField 
               label="Business Question"
               tooltip="Enter the business question"
+              error={errors.businessQuestion?.message}
             >
               <InputField
-                value={formData.businessQuestion}
-                onChange={handleTextChange('businessQuestion')}
+                {...register('businessQuestion')}
                 className={formStyles.fullWidth}
               />
             </FormField>
             <FormField 
               label="Value to Client"
               tooltip="Enter the value to client"
+              error={errors.valueToClient?.message}
             >
               <InputField
-                value={formData.valueToClient}
-                onChange={handleTextChange('valueToClient')}
+                {...register('valueToClient')}
                 className={formStyles.fullWidth}
               />
             </FormField>
             <div className={formStyles.formField}>
-              <div className={formStyles.checkboxFieldRow}>
+              <div 
+                className={formStyles.checkboxFieldRow}
+                aria-invalid={!!errors.procurementNotification}
+                aria-label={errors.procurementNotification?.message}
+              >
                 <label htmlFor="procurement-notification" className={formStyles.checkboxFieldLabel}>Procurement Notification</label>
-                <CheckboxField
-                  id="procurement-notification"
-                  checked={formData.procurementNotification}
-                  onChange={handleCheckboxChange('procurementNotification')}
+                <Controller
+                  name="procurementNotification"
+                  control={control}
+                  render={({ field }) => (
+                    <CheckboxField
+                      id="procurement-notification"
+                      checked={field.value || false}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -155,7 +146,11 @@ const StepTwoForm: React.FC = () => {
         {/* Vendor Selection Section */}
         <div className={formStyles.formSection}>
           <h2>Vendor Selection</h2>
-          <div className={formStyles.vendorSelectionLayout}>
+          <div 
+            className={formStyles.vendorSelectionLayout}
+            aria-invalid={!!errors.selectedVendor}
+            aria-label={errors.selectedVendor?.message}
+          >
             <div className={formStyles.vendorSearchSection}>
               <div className={formStyles.searchControls}>
                 <span className={formStyles.vendorSelectionTitle}>Search Vendor</span>
@@ -184,12 +179,17 @@ const StepTwoForm: React.FC = () => {
                       />
                     </svg>
                   </span>
-                  <input
-                    type="text"
-                    value={formData.searchQuery}
-                    onChange={handleTextChange('searchQuery')}
-                    placeholder={`${filteredVendors.length} Approved Vendors`}
-                    className={formStyles.searchInput}
+                  <Controller
+                    name="searchQuery"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="text"
+                        {...field}
+                        placeholder={`${mockVendors.length} Approved Vendors`}
+                        className={formStyles.searchInput}
+                      />
+                    )}
                   />
                 </div>
                 <Button
@@ -208,45 +208,49 @@ const StepTwoForm: React.FC = () => {
                 />
               </div>
               
-              <div className={formStyles.vendorList}>
-                {filteredVendors.map((vendor) => (
-                  <div
-                    key={vendor}
-                    className={`${formStyles.vendorItem} ${formData.selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
-                    onClick={() => handleVendorSelect(vendor)}
-                  >
-                    <span className={formStyles.vendorName}>{vendor}</span>
-                    {formData.selectedVendor === vendor && (
-                      <span className={formStyles.checkIcon}>
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M13.3333 4L6 11.3333L2.66667 8"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {filteredVendors.length > 0 && (
+                <div className={formStyles.vendorList}>
+                  {filteredVendors.map((vendor) => (
+                    <div
+                      key={vendor}
+                      className={`${formStyles.vendorItem} ${selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
+                      onClick={() => handleVendorSelect(vendor)}
+                      onMouseEnter={() => setHoveredVendor(vendor)}
+                      onMouseLeave={() => setHoveredVendor(null)}
+                    >
+                      <span className={formStyles.vendorName}>{vendor}</span>
+                      {selectedVendor === vendor && (
+                        <span className={formStyles.checkIcon}>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13.3333 4L6 11.3333L2.66667 8"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Vendor Overview Card */}
-            {selectedVendorData && (
+            {vendorProfileData && (
               <div className={formStyles.vendorCardWrapper}>
                 <VendorOverviewCard
-                  vendorName={selectedVendorData.name}
-                  globalScore={selectedVendorData.globalScore}
-                  summary={selectedVendorData.summary}
+                  vendorName={vendorProfileData.name}
+                  globalScore={vendorProfileData.globalScore}
+                  summary={vendorProfileData.summary}
                   onViewProfile={() => console.log('View profile')}
                 />
               </div>
@@ -283,7 +287,7 @@ const StepTwoForm: React.FC = () => {
               icon="pi pi-check"
               iconPos="right"
               className="p-button-primary"
-              onClick={handleSubmit}
+              onClick={onSubmit}
             />
           </div>
         </div>

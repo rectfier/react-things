@@ -1,54 +1,19 @@
-import React, { useState, ChangeEvent } from 'react';
+import React from 'react';
+import { useFormContext, Controller } from 'react-hook-form';
 import { Button } from 'primereact/button';
-import CalendarField, { CalendarFieldChangeEvent } from '../../ui/CalendarField';
-import DropdownField, { DropdownFieldChangeEvent, DropdownFieldOption } from '../../ui/DropdownField';
+import CalendarField from '../../ui/CalendarField';
+import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import InputField from '../../ui/InputField';
 import TextareaField from '../../ui/TextareaField';
 
 import FormField from '../../ui/FormField/FormField';
 
 import styles from '../../styles/Form.module.scss';
+import { ProjectFormData } from './NewProject';
 
-interface StepOneFormData {
-  name: string;
-  owner: string;
-  buStakeholder: string;
-  team: string;
-  delegates: string;
-  category: string;
-  notifications: string;
-  description: string;
-  plannedExecutionYear: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  product: string;
-  clientRequestor: string;
-  otherClientParticipant: string;
-  buStakeholderAttr: string;
-  therapeuticArea: string;
-  researchType: string;
-  methodology: string;
-  markets: string;
-  regions: string;
-  respondentType: string;
-  notes: string;
+interface StepOneFormProps {
+  onNext: () => void;
 }
-
-type TextChangeHandler = (
-  field: keyof StepOneFormData
-) => (e: ChangeEvent<HTMLInputElement>) => void;
-
-type TextareaChangeHandler = (
-  field: keyof StepOneFormData
-) => (e: ChangeEvent<HTMLTextAreaElement>) => void;
-
-type DateChangeHandler = (
-  field: 'startDate' | 'endDate'
-) => (e: CalendarFieldChangeEvent) => void;
-
-type DropdownChangeHandler = (
-  field: keyof StepOneFormData
-) => (e: DropdownFieldChangeEvent) => void;
 
 // Sample mock data for dropdowns
 const ownerOptions: DropdownFieldOption[] = [
@@ -110,62 +75,45 @@ const respondentTypeOptions: DropdownFieldOption[] = [
   { label: 'Key Opinion Leaders', value: 'kol' }
 ];
 
-const StepOneForm: React.FC = () => {
-  const [formData, setFormData] = useState<StepOneFormData>({
-    name: '',
-    owner: '',
-    buStakeholder: '',
-    team: '',
-    delegates: '',
-    category: '',
-    notifications: '',
-    description: '',
-    plannedExecutionYear: '',
-    startDate: null,
-    endDate: null,
-    product: '',
-    clientRequestor: '',
-    otherClientParticipant: '',
-    buStakeholderAttr: '',
-    therapeuticArea: '',
-    researchType: '',
-    methodology: '',
-    markets: '',
-    regions: '',
-    respondentType: '',
-    notes: ''
-  });
-
-  const handleInputChange = (field: keyof StepOneFormData, value: string | Date | null): void => {
-    setFormData((prev: StepOneFormData) => ({ ...prev, [field]: value }));
-  };
-
-  const handleTextChange: TextChangeHandler = (field) => (e) => {
-    handleInputChange(field, e.target.value);
-  };
-
-  const handleTextareaChange: TextareaChangeHandler = (field) => (e) => {
-    handleInputChange(field, e.target.value);
-  };
-
-  const handleDateChange: DateChangeHandler = (field) => (e) => {
-    handleInputChange(field, e.value as Date | null);
-  };
-
-  const handleDropdownChange: DropdownChangeHandler = (field) => (e) => {
-    handleInputChange(field, e.value as string);
-  };
+const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
+  const { register, control, trigger, formState: { errors } } = useFormContext<ProjectFormData>();
 
   const handleSaveDraft = (): void => {
     // TODO: Implement save draft functionality
     // eslint-disable-next-line no-console
-    console.log('Saving draft...', formData);
+    console.log('Saving draft...');
   };
 
-  const handleNextStep = (): void => {
-    // TODO: Implement next step functionality
-    // eslint-disable-next-line no-console
-    console.log('Moving to next step...', formData);
+  const handleNextStep = async (): Promise<void> => {
+    const step1Fields: (keyof ProjectFormData)[] = [
+      'name',
+      'owner',
+      'buStakeholder',
+      'team',
+      'delegates',
+      'category',
+      'notifications',
+      'description',
+      'plannedExecutionYear',
+      'startDate',
+      'endDate',
+      'product',
+      'clientRequestor',
+      'otherClientParticipant',
+      'buStakeholderAttr',
+      'therapeuticArea',
+      'researchType',
+      'methodology',
+      'markets',
+      'regions',
+      'respondentType',
+      'notes',
+    ];
+    
+    const isValid = await trigger(step1Fields as any);
+    if (isValid) {
+      onNext();
+    }
   };
 
   return (
@@ -177,81 +125,116 @@ const StepOneForm: React.FC = () => {
           <FormField 
             label="Name"
             tooltip="Enter the project name"
+            error={errors.name?.message}
           >
             <InputField
-              value={formData.name}
-              onChange={handleTextChange('name')}
+              {...register('name')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Owner" 
             tooltip="Select the project owner"
+            error={errors.owner?.message}
           >
-            <DropdownField
-              value={formData.owner}
-              onChange={handleDropdownChange('owner')}
-              options={ownerOptions}
-              placeholder="Select owner"
-              className={styles.fullWidth}
+            <Controller
+              name="owner"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={ownerOptions}
+                  placeholder="Select owner"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="BU/Stakeholder" 
             tooltip="Business unit or stakeholder"
+            error={errors.buStakeholder?.message}
           >
-            <DropdownField
-              value={formData.buStakeholder}
-              onChange={handleDropdownChange('buStakeholder')}
-              options={buStakeholderOptions}
-              placeholder="Select BU/Stakeholder"
-              className={styles.fullWidth}
+            <Controller
+              name="buStakeholder"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={buStakeholderOptions}
+                  placeholder="Select BU/Stakeholder"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="Team" 
             tooltip="Select the team"
+            error={errors.team?.message}
           >
-            <DropdownField
-              value={formData.team}
-              onChange={handleDropdownChange('team')}
-              options={teamOptions}
-              placeholder="Select team"
-              className={styles.fullWidth}
+            <Controller
+              name="team"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={teamOptions}
+                  placeholder="Select team"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="Delegates" 
             tooltip="Select delegates"
+            error={errors.delegates?.message}
           >
-            <DropdownField
-              value={formData.delegates}
-              onChange={handleDropdownChange('delegates')}
-              options={delegatesOptions}
-              placeholder="Select delegates"
-              className={styles.fullWidth}
+            <Controller
+              name="delegates"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={delegatesOptions}
+                  placeholder="Select delegates"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="Category" 
             tooltip="Select category"
+            error={errors.category?.message}
           >
-            <DropdownField
-              value={formData.category}
-              onChange={handleDropdownChange('category')}
-              options={categoryOptions}
-              placeholder="Select category"
-              className={styles.fullWidth}
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={categoryOptions}
+                  placeholder="Select category"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="Notifications" 
             tooltip="Enter notification preferences"
             className={styles.colSpanFull}
+            error={errors.notifications?.message}
           >
             <InputField
-              value={formData.notifications}
-              onChange={handleTextChange('notifications')}
+              {...register('notifications')}
               className={styles.fullWidth}
             />
           </FormField>
@@ -259,10 +242,10 @@ const StepOneForm: React.FC = () => {
             label="Description" 
             tooltip="Enter project description"
             className={styles.colSpanFull}
+            error={errors.description?.message}
           >
             <TextareaField
-              value={formData.description}
-              onChange={handleTextareaChange('description')}
+              {...register('description')}
               rows={4}
               className={styles.fullWidth}
             />
@@ -277,33 +260,47 @@ const StepOneForm: React.FC = () => {
           <FormField 
             label="Planned Execution Year" 
             tooltip="Enter the planned execution year"
+            error={errors.plannedExecutionYear?.message}
           >
             <InputField
-              value={formData.plannedExecutionYear}
-              onChange={handleTextChange('plannedExecutionYear')}
+              {...register('plannedExecutionYear')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Start Date"
             tooltip="Select the project start date"
+            error={errors.startDate?.message}
           >
-            <CalendarField
-              value={formData.startDate}
-              onChange={handleDateChange('startDate')}
-              dateFormat="mm/dd/yyyy"
-              className={styles.fullWidth}
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <CalendarField
+                  value={field.value || undefined}
+                  onChange={(e) => field.onChange(e.value || undefined)}
+                  dateFormat="mm/dd/yyyy"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="End Date"
             tooltip="Select the project end date"
+            error={errors.endDate?.message}
           >
-            <CalendarField
-              value={formData.endDate}
-              onChange={handleDateChange('endDate')}
-              dateFormat="mm/dd/yyyy"
-              className={styles.fullWidth}
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <CalendarField
+                  value={field.value || undefined}
+                  onChange={(e) => field.onChange(e.value || undefined)}
+                  dateFormat="mm/dd/yyyy"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
         </div>
@@ -316,105 +313,119 @@ const StepOneForm: React.FC = () => {
           <FormField 
             label="Product"
             tooltip="Enter the product name"
+            error={errors.product?.message}
           >
             <InputField
-              value={formData.product}
-              onChange={handleTextChange('product')}
+              {...register('product')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Client Requestor"
             tooltip="Enter the client requestor"
+            error={errors.clientRequestor?.message}
           >
             <InputField
-              value={formData.clientRequestor}
-              onChange={handleTextChange('clientRequestor')}
+              {...register('clientRequestor')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Other Client participant"
             tooltip="Enter other client participants"
+            error={errors.otherClientParticipant?.message}
           >
             <InputField
-              value={formData.otherClientParticipant}
-              onChange={handleTextChange('otherClientParticipant')}
+              {...register('otherClientParticipant')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="B/U Stakeholder" 
             tooltip="Business unit stakeholder"
+            error={errors.buStakeholderAttr?.message}
           >
             <InputField
-              value={formData.buStakeholderAttr}
-              onChange={handleTextChange('buStakeholderAttr')}
+              {...register('buStakeholderAttr')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Therapeutic Area"
             tooltip="Enter the therapeutic area"
+            error={errors.therapeuticArea?.message}
           >
             <InputField
-              value={formData.therapeuticArea}
-              onChange={handleTextChange('therapeuticArea')}
+              {...register('therapeuticArea')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Research Type"
             tooltip="Enter the research type"
+            error={errors.researchType?.message}
           >
             <InputField
-              value={formData.researchType}
-              onChange={handleTextChange('researchType')}
+              {...register('researchType')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Methodology"
             tooltip="Enter the methodology"
+            error={errors.methodology?.message}
           >
             <InputField
-              value={formData.methodology}
-              onChange={handleTextChange('methodology')}
+              {...register('methodology')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Markets where study is being fielded"
             tooltip="Select markets where study is being fielded"
+            error={errors.markets?.message}
           >
-            <DropdownField
-              value={formData.markets}
-              onChange={handleDropdownChange('markets')}
-              options={marketsOptions}
-              placeholder="Select markets"
-              className={styles.fullWidth}
+            <Controller
+              name="markets"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={marketsOptions}
+                  placeholder="Select markets"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
           <FormField 
             label="Regions (If Applicable)"
             tooltip="Enter applicable regions"
+            error={errors.regions?.message}
           >
             <InputField
-              value={formData.regions}
-              onChange={handleTextChange('regions')}
+              {...register('regions')}
               className={styles.fullWidth}
             />
           </FormField>
           <FormField 
             label="Respondent Type" 
             tooltip="Select respondent type"
+            error={errors.respondentType?.message}
           >
-            <DropdownField
-              value={formData.respondentType}
-              onChange={handleDropdownChange('respondentType')}
-              options={respondentTypeOptions}
-              placeholder="Select respondent type"
-              className={styles.fullWidth}
+            <Controller
+              name="respondentType"
+              control={control}
+              render={({ field }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={respondentTypeOptions}
+                  placeholder="Select respondent type"
+                  className={styles.fullWidth}
+                />
+              )}
             />
           </FormField>
         </div>
@@ -426,10 +437,10 @@ const StepOneForm: React.FC = () => {
         <FormField 
           label="Notes"
           tooltip="Enter additional notes"
+          error={errors.notes?.message}
         >
           <TextareaField
-            value={formData.notes}
-            onChange={handleTextareaChange('notes')}
+            {...register('notes')}
             rows={4}
             className={styles.fullWidth}
           />

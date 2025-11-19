@@ -58,9 +58,9 @@ const TabView: React.FC<TabViewProps> = ({
               aria-controls={panelId}
               aria-disabled={isDisabled}
               tabIndex={isActive ? 0 : -1}
-              className={`${styles.tabButton} ${isActive ? styles.active : ''}`}
+              className={`${styles.tabButton} ${isActive ? styles.active : ''} ${child.props.isValidated ? styles.completed : ''}`}
             >
-              <div className={`${styles.tabContent} ${isActive ? styles.active : ''}`}>
+              <div className={`${styles.tabContent} ${isActive ? styles.active : ''} ${child.props.isValidated ? styles.completed : ''}`}>
                 <i className={`pi ${child.props.isValidated ? 'pi-circle-fill' : 'pi-circle'}`}></i>
                 <div className={styles.tabHeaderText}>
                   <span className={styles.tabTitle}>{child.props.header}</span>

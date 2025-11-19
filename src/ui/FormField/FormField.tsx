@@ -9,6 +9,7 @@ export interface FormFieldProps {
   required?: boolean;
   children: ReactNode;
   className?: string;
+  error?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ 
@@ -16,7 +17,8 @@ const FormField: React.FC<FormFieldProps> = ({
   tooltip,
   required,
   children,
-  className = ''
+  className = '',
+  error
 }) => {
   const content = tooltip ? (
     <div className={wrapperStyles.inputWithTooltip}>
@@ -35,7 +37,11 @@ const FormField: React.FC<FormFieldProps> = ({
         label={label} 
         required={required}
       />
-      <div className={wrapperStyles.formFieldWrapper}>
+      <div 
+        className={`${wrapperStyles.formFieldWrapper} ${error ? wrapperStyles.formFieldWrapperError : ''}`}
+        aria-invalid={!!error}
+        aria-label={error || undefined}
+      >
         {content}
       </div>
     </div>
