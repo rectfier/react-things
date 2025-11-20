@@ -72,6 +72,12 @@
   @include flex-between;
   padding-top: $spacing-4;
 
+  .leftActions {
+    display: flex;
+    gap: $spacing-3;
+    align-items: center;
+  }
+
   .actionGroup {
     display: flex;
     gap: $spacing-3;
@@ -162,6 +168,34 @@
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+  }
+
+  .cancelButton,
+  .backButton {
+    background-color: $gray-100;
+    border-color: $gray-300;
+    color: $gray-700;
+
+    &:hover {
+      background-color: $gray-200;
+      border-color: $gray-400;
+      color: $gray-900;
+    }
+  }
+
+  .submitButton {
+    background-color: $blue-600;
+    border-color: $blue-600;
+    color: $white;
+
+    &:hover {
+      background-color: $blue-800;
+      border-color: $blue-800;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($blue-600, 0.2);
     }
   }
 }

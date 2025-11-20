@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Button } from 'primereact/button';
 import CalendarField from '../../ui/CalendarField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import InputField from '../../ui/InputField';
@@ -11,9 +10,7 @@ import FormField from '../../ui/FormField/FormField';
 import styles from '../../styles/Form.module.scss';
 import { ProjectFormData } from './NewProject';
 
-interface StepOneFormProps {
-  onNext: () => void;
-}
+interface StepOneFormProps {}
 
 // Sample mock data for dropdowns
 const ownerOptions: DropdownFieldOption[] = [
@@ -75,46 +72,8 @@ const respondentTypeOptions: DropdownFieldOption[] = [
   { label: 'Key Opinion Leaders', value: 'kol' }
 ];
 
-const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
-  const { register, control, trigger, formState: { errors } } = useFormContext<ProjectFormData>();
-
-  const handleSaveDraft = (): void => {
-    // TODO: Implement save draft functionality
-    // eslint-disable-next-line no-console
-    console.log('Saving draft...');
-  };
-
-  const handleNextStep = async (): Promise<void> => {
-    const step1Fields: (keyof ProjectFormData)[] = [
-      'name',
-      'owner',
-      'buStakeholder',
-      'team',
-      'delegates',
-      'category',
-      'notifications',
-      'description',
-      'plannedExecutionYear',
-      'startDate',
-      'endDate',
-      'product',
-      'clientRequestor',
-      'otherClientParticipant',
-      'buStakeholderAttr',
-      'therapeuticArea',
-      'researchType',
-      'methodology',
-      'markets',
-      'regions',
-      'respondentType',
-      'notes',
-    ];
-    
-    const isValid = await trigger(step1Fields as any);
-    if (isValid) {
-      onNext();
-    }
-  };
+const StepOneForm: React.FC<StepOneFormProps> = () => {
+  const { register, control, formState: { errors } } = useFormContext<ProjectFormData>();
 
   return (
     <div className={styles.form}>
@@ -454,33 +413,6 @@ const StepOneForm: React.FC<StepOneFormProps> = ({ onNext }) => {
         </FormField>
       </div>
 
-      {/* Action Buttons */}
-      <div className={styles.formActions}>
-        <Button
-          label="Cancel"
-          icon="pi pi-times"
-          className="p-button-text"
-        />
-        <div className={styles.actionGroup}>
-          <button type="button" className={styles.attachFileLink}>
-            <i className="pi pi-paperclip"></i>
-            <span>Attach file</span>
-          </button>
-          <Button
-            label="Save Draft"
-            icon="pi pi-save"
-            className="p-button-primary"
-            onClick={handleSaveDraft}
-          />
-          <Button
-            label="Next Step"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            className="p-button-primary"
-            onClick={handleNextStep}
-          />
-        </div>
-      </div>
     </div>
   );
 };

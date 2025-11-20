@@ -8,9 +8,7 @@ import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
 import { ProjectFormData } from './NewProject';
 
-interface StepTwoFormProps {
-  onSubmit: () => void;
-}
+interface StepTwoFormProps {}
 
 const mockVendors: string[] = [
   'Vendor A', 'Vendor B', 'Vendor C', 'Vendor D', 'Vendor E',
@@ -19,12 +17,12 @@ const mockVendors: string[] = [
   'Vendor P', 'Vendor Q', 'Vendor R'
 ];
 
-const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
+const StepTwoForm: React.FC<StepTwoFormProps> = () => {
   const { register, control, watch, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
   const selectedVendor = watch('selectedVendor');
-  const searchQuery = watch('searchQuery') || '';
 
-  const [filteredVendors, setFilteredVendors] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [filteredVendors, setFilteredVendors] = useState<string[]>(mockVendors);
   const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
 
   React.useEffect(() => {
@@ -36,24 +34,14 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
       });
       setFilteredVendors(filtered);
     } else {
-      setFilteredVendors([]);
+      setFilteredVendors(mockVendors);
     }
   }, [searchQuery]);
 
   const handleVendorSelect = (vendor: string) => {
     setValue('selectedVendor', vendor);
-    setValue('searchQuery', '');
-    setFilteredVendors([]);
-  };
-
-  const handleBack = (): void => {
-    // TODO: Implement back functionality
-    console.log('Going back to step 1...');
-  };
-
-  const handleSaveDraft = (): void => {
-    // TODO: Implement save draft functionality
-    console.log('Saving draft...');
+    setSearchQuery('');
+    setFilteredVendors(mockVendors);
   };
 
   // Show vendor profile for hovered vendor, or selected vendor if no hover
@@ -179,17 +167,12 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
                       />
                     </svg>
                   </span>
-                  <Controller
-                    name="searchQuery"
-                    control={control}
-                    render={({ field }) => (
                   <input
                     type="text"
-                        {...field}
-                        placeholder={`${mockVendors.length} Approved Vendors`}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={`${mockVendors.length} Approved Vendors`}
                     className={formStyles.searchInput}
-                      />
-                    )}
                   />
                 </div>
                 <Button
@@ -258,39 +241,6 @@ const StepTwoForm: React.FC<StepTwoFormProps> = ({ onSubmit }) => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className={formStyles.formActions}>
-          <Button
-            label="Cancel"
-            icon="pi pi-times"
-            className="p-button-text"
-          />
-          <div className={formStyles.actionGroup}>
-            <Button
-              label="Back"
-              icon="pi pi-arrow-left"
-              className="p-button-secondary"
-              onClick={handleBack}
-            />
-            <button type="button" className={formStyles.attachFileLink}>
-              <i className="pi pi-paperclip"></i>
-              <span>Attach file</span>
-            </button>
-            <Button
-              label="Save Draft"
-              icon="pi pi-save"
-              className="p-button-primary"
-              onClick={handleSaveDraft}
-            />
-            <Button
-              label="Submit"
-              icon="pi pi-check"
-              iconPos="right"
-              className="p-button-primary"
-              onClick={onSubmit}
-            />
-          </div>
-        </div>
       </div>
   );
 };

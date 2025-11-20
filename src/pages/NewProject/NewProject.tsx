@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Button } from 'primereact/button';
 import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import styles from '../../styles/NewProject.module.scss';
+import formStyles from '../../styles/Form.module.scss';
 
 // Define Zod schema combining Step 1 and Step 2 fields - all fields are required
 const projectSchema = z.object({
@@ -42,10 +44,72 @@ const projectSchema = z.object({
   valueToClient: z.string().min(1, 'Value to Client is required'),
   procurementNotification: z.boolean().refine((val) => val !== undefined, { message: 'Procurement Notification is required' }),
   selectedVendor: z.string().min(1, 'Selected Vendor is required'),
-  searchQuery: z.string().optional(), // This is just for UI filtering, not a form field
 });
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
+
+interface FormActionsProps {
+  activeStep: number;
+  onCancel: () => void;
+  onBack: () => void;
+  onAttachFile: () => void;
+  onSaveDraft: () => void;
+  onNextStep: () => void;
+  onSubmit: () => void;
+}
+
+const FormActions: React.FC<FormActionsProps> = ({
+  activeStep,
+  onCancel,
+  onBack,
+  onAttachFile,
+  onSaveDraft,
+  onNextStep,
+  onSubmit,
+}) => {
+  return (
+    <div className={formStyles.formActions}>
+      <div className={formStyles.leftActions}>
+        <Button
+          label="Cancel"
+          className={`p-button-secondary ${formStyles.cancelButton}`}
+          onClick={onCancel}
+        />
+        {activeStep === 1 && (
+          <Button
+            label="Back"
+            className={`p-button-secondary ${formStyles.backButton}`}
+            onClick={onBack}
+          />
+        )}
+      </div>
+      <div className={formStyles.actionGroup}>
+        <button type="button" className={formStyles.attachFileLink} onClick={onAttachFile}>
+          <i className="pi pi-paperclip"></i>
+          <span>Attach file</span>
+        </button>
+        <Button
+          label="Save Draft"
+          className="p-button-primary"
+          onClick={onSaveDraft}
+        />
+        {activeStep === 0 ? (
+          <Button
+            label="Next Step"
+            className="p-button-primary"
+            onClick={onNextStep}
+          />
+        ) : (
+          <Button
+            label="Submit"
+            className={`${formStyles.submitButton}`}
+            onClick={onSubmit}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
 const NewProject: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -82,39 +146,38 @@ const NewProject: React.FC = () => {
       valueToClient: '',
       procurementNotification: false,
       selectedVendor: '',
-      searchQuery: '',
     },
     mode: 'onChange',
   });
 
+  const step1Fields: (keyof ProjectFormData)[] = [
+    'name',
+    'owner',
+    'buStakeholder',
+    'team',
+    'delegates',
+    'category',
+    'notifications',
+    'description',
+    'plannedExecutionYear',
+    'startDate',
+    'endDate',
+    'product',
+    'clientRequestor',
+    'otherClientParticipant',
+    'buStakeholderAttr',
+    'therapeuticArea',
+    'researchType',
+    'methodology',
+    'markets',
+    'regions',
+    'respondentType',
+    'notes',
+  ];
+
   const handleTabChange = async (e: { index: number }) => {
     // If switching to Step 2, validate all Step 1 fields first
     if (e.index === 1) {
-      const step1Fields: (keyof ProjectFormData)[] = [
-        'name',
-        'owner',
-        'buStakeholder',
-        'team',
-        'delegates',
-        'category',
-        'notifications',
-        'description',
-        'plannedExecutionYear',
-        'startDate',
-        'endDate',
-        'product',
-        'clientRequestor',
-        'otherClientParticipant',
-        'buStakeholderAttr',
-        'therapeuticArea',
-        'researchType',
-        'methodology',
-        'markets',
-        'regions',
-        'respondentType',
-        'notes',
-      ];
-      
       const isValid = await methods.trigger(step1Fields as any);
       if (!isValid) {
         return; // Don't switch tabs if validation fails
@@ -124,35 +187,74 @@ const NewProject: React.FC = () => {
     setActiveIndex(e.index);
   };
 
-  const onSubmit = (data: ProjectFormData): void => {
-    console.log('Form submitted:', data);
+  const handleCancel = (): void => {
+    console.log('Cancel clicked');
+    // TODO: Implement cancel functionality
+  };
+
+  const handleBack = (): void => {
+    setActiveIndex(0);
+  };
+
+  const handleAttachFile = (): void => {
+    console.log('Attach file clicked');
+    // TODO: Implement attach file functionality
+  };
+
+  const handleSaveDraft = (): void => {
+    console.log('Saving draft...');
+    // TODO: Implement save draft functionality
+  };
+
+  const handleNextStep = async (): Promise<void> => {
+    const isValid = await methods.trigger(step1Fields as any);
+    if (isValid) {
+      setActiveIndex(1);
+    }
+  };
+
+  const handleSubmit = (): void => {
+    methods.handleSubmit((data: ProjectFormData) => {
+      console.log('Form submitted:', data);
+      // TODO: Implement form submission
+    })();
   };
 
   return (
     <FormProvider {...methods}>
-    <div className={styles.newProjectContainer}>
-      <div className={styles.newProjectCard}>
-        <h1>New Project</h1>
-        <TabView 
-          activeIndex={activeIndex} 
+      <div className={styles.newProjectContainer}>
+        <div className={styles.newProjectCard}>
+          <h1>New Project</h1>
+          <TabView 
+            activeIndex={activeIndex} 
             onTabChange={handleTabChange}
-        >
-          <TabPanel 
-            header="Step 1" 
-            subheader="Fill in Project Specifications"
+          >
+            <TabPanel 
+              header="Step 1" 
+              subheader="Fill in Project Specifications"
               isValidated={activeIndex > 0}
-          >
-              <StepOneForm onNext={() => setActiveIndex(1)} />
-          </TabPanel>
-          <TabPanel 
-            header="Step 2" 
-            subheader="Fill in Financial Details and Select Vendor"
-          >
-              <StepTwoForm onSubmit={methods.handleSubmit(onSubmit)} />
-          </TabPanel>
-        </TabView>
+            >
+              <StepOneForm />
+            </TabPanel>
+            <TabPanel 
+              header="Step 2" 
+              subheader="Fill in Financial Details and Select Vendor"
+            >
+              <StepTwoForm />
+            </TabPanel>
+          </TabView>
+          
+          <FormActions
+            activeStep={activeIndex}
+            onCancel={handleCancel}
+            onBack={handleBack}
+            onAttachFile={handleAttachFile}
+            onSaveDraft={handleSaveDraft}
+            onNextStep={handleNextStep}
+            onSubmit={handleSubmit}
+          />
+        </div>
       </div>
-    </div>
     </FormProvider>
   );
 };
