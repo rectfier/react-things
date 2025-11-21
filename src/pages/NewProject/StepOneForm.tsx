@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import CalendarField from '../../ui/CalendarField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
+import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import InputField from '../../ui/InputField';
 import TextareaField from '../../ui/TextareaField';
 
@@ -70,6 +71,14 @@ const respondentTypeOptions: DropdownFieldOption[] = [
   { label: 'Caregivers', value: 'caregivers' },
   { label: 'Payers', value: 'payers' },
   { label: 'Key Opinion Leaders', value: 'kol' }
+];
+
+const regionOptions: MultiSelectOption[] = [
+  { label: 'North America', value: 'na' },
+  { label: 'Europe', value: 'eu' },
+  { label: 'Asia Pacific', value: 'apac' },
+  { label: 'Latin America', value: 'latam' },
+  { label: 'Middle East & Africa', value: 'mea' }
 ];
 
 const StepOneForm: React.FC<StepOneFormProps> = () => {
@@ -369,9 +378,19 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             tooltip="Enter applicable regions"
             error={errors.regions?.message}
           >
-            <InputField
-              {...register('regions')}
-              className={styles.fullWidth}
+            <Controller
+              name="regions"
+              control={control}
+              render={({ field, fieldState }) => (
+                <MultiSelectField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={regionOptions}
+                  placeholder="Select regions"
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                />
+              )}
             />
           </FormField>
           <FormField 

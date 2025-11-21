@@ -3,6 +3,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 import { Button } from 'primereact/button';
 import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
+import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
@@ -15,6 +16,14 @@ const mockVendors: string[] = [
   'Vendor F', 'Vendor G', 'Vendor H', 'Vendor I', 'Vendor J',
   'Vendor K', 'Vendor L', 'Vendor M', 'Vendor N', 'Vendor O',
   'Vendor P', 'Vendor Q', 'Vendor R'
+];
+
+const valueToClientOptions: MultiSelectOption[] = [
+  { label: 'Cost Savings', value: 'cost-savings' },
+  { label: 'Process Efficiency', value: 'process-efficiency' },
+  { label: 'Risk Mitigation', value: 'risk-mitigation' },
+  { label: 'Innovation', value: 'innovation' },
+  { label: 'Strategic Alignment', value: 'strategic-alignment' }
 ];
 
 const StepTwoForm: React.FC<StepTwoFormProps> = () => {
@@ -71,12 +80,25 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             <FormField 
               label="Estimated Spend in Local Currency"
               tooltip="Enter the estimated spend in local currency"
-              error={errors.estimatedSpendLocal?.message}
+              error={errors.estimatedSpendLocal?.amount?.message || errors.estimatedSpendLocal?.message}
             >
-              <InputField
-                {...register('estimatedSpendLocal')}
-                className={formStyles.fullWidth}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ 
+                  padding: '0.375rem 0.75rem', 
+                  backgroundColor: '#f3f4f6', 
+                  border: '1px solid #e5e7eb', 
+                  borderRadius: '0.375rem',
+                  color: '#374151',
+                  fontSize: '0.875rem'
+                }}>
+                  {watch('estimatedSpendLocal.currency')}
+                </span>
+                <InputField
+                  type="number"
+                  {...register('estimatedSpendLocal.amount', { valueAsNumber: true })}
+                  className={formStyles.fullWidth}
+                />
+              </div>
             </FormField>
             <FormField 
               label="Associated PO #"
@@ -103,9 +125,19 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               tooltip="Enter the value to client"
               error={errors.valueToClient?.message}
             >
-              <InputField
-                {...register('valueToClient')}
-                className={formStyles.fullWidth}
+              <Controller
+                name="valueToClient"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <MultiSelectField
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.value)}
+                    options={valueToClientOptions}
+                    placeholder="Select value to client"
+                    className={formStyles.fullWidth}
+                    invalid={fieldState.invalid}
+                  />
+                )}
               />
             </FormField>
             <div className={formStyles.formField}>

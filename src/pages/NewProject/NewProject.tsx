@@ -144,7 +144,7 @@ const NewProject: React.FC = () => {
       notes: '',
       estimatedSpendUSD: 0,
       estimatedSpendLocal: {
-        currency: '',
+        currency: 'EUR',
         amount: 0,
       },
       associatedPO: '',
@@ -266,38 +266,3 @@ const NewProject: React.FC = () => {
 };
 
 export default NewProject;
-
-// type ProjectFormData = {
-//   name: string;
-//   owner: string;
-//   buStakeholder: string;
-//   team: string;
-//   delegates: string;
-//   category: string;
-//   notifications: string;
-//   description: string;
-//   plannedExecutionYear: string;
-//   startDate: Date;
-//   endDate: Date;
-//   product: string;
-//   clientRequestor: string;
-//   otherClientParticipant: string;
-//   buStakeholderAttr: string;
-//   therapeuticArea: string;
-//   researchType: string;
-//   methodology: string;
-//   markets: string;
-//   regions: string[];
-//   respondentType: string;
-//   notes: string;
-//   estimatedSpendUSD: number;
-//   estimatedSpendLocal: {
-//     currency: string;
-//     amount: number;
-//   };
-//   associatedPO: string;
-//   businessQuestion: string;
-//   valueToClient: string[];
-//   procurementNotification: boolean;
-//   selectedVendor: string;
-// }
