@@ -7,12 +7,12 @@ export interface MultiSelectOption {
 }
 
 export interface MultiSelectChangeEvent {
-  value: (string | number)[];
+  value: string;
   originalEvent: React.MouseEvent | React.KeyboardEvent;
 }
 
 export interface MultiSelectFieldProps {
-  value?: (string | number)[];
+  value?: string;
   options?: MultiSelectOption[];
   onChange?: (e: MultiSelectChangeEvent) => void;
   placeholder?: string;
@@ -22,9 +22,12 @@ export interface MultiSelectFieldProps {
 }
 
 const MultiSelectField = forwardRef<HTMLDivElement, MultiSelectFieldProps>(
-  ({ value = [], options = [], onChange, placeholder = 'Select...', className = '', disabled = false, invalid = false }, _ref) => {
+  ({ value = '', options = [], onChange, placeholder = 'Select...', className = '', disabled = false, invalid = false }, _ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Convert comma-separated string to array
+    const valueArray = value ? value.split(',').map(v => v.trim()).filter(Boolean) : [];
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -51,14 +54,18 @@ const MultiSelectField = forwardRef<HTMLDivElement, MultiSelectFieldProps>(
     const handleSelect = (option: MultiSelectOption, event: React.MouseEvent) => {
       if (disabled) return;
 
-      const newValue = [...(value || [])];
-      const index = newValue.indexOf(option.value);
+      const currentValues = [...valueArray];
+      const optionValueStr = String(option.value);
+      const index = currentValues.indexOf(optionValueStr);
 
       if (index === -1) {
-        newValue.push(option.value);
+        currentValues.push(optionValueStr);
       } else {
-        newValue.splice(index, 1);
+        currentValues.splice(index, 1);
       }
+
+      // Convert array back to comma-separated string
+      const newValue = currentValues.join(', ');
 
       if (onChange) {
         onChange({
@@ -70,7 +77,7 @@ const MultiSelectField = forwardRef<HTMLDivElement, MultiSelectFieldProps>(
     };
 
     const selectedLabels = options
-      .filter(opt => (value || []).includes(opt.value))
+      .filter(opt => valueArray.includes(String(opt.value)))
       .map(opt => opt.label)
       .join(', ');
 
@@ -116,7 +123,7 @@ const MultiSelectField = forwardRef<HTMLDivElement, MultiSelectFieldProps>(
             aria-multiselectable="true"
           >
             {options.map((option) => {
-              const isSelected = (value || []).includes(option.value);
+              const isSelected = valueArray.includes(String(option.value));
               return (
                 <li
                   key={option.value}
