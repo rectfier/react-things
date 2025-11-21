@@ -32,16 +32,19 @@ const projectSchema = z.object({
   researchType: z.string().min(1, 'Research Type is required'),
   methodology: z.string().min(1, 'Methodology is required'),
   markets: z.string().min(1, 'Markets is required'),
-  regions: z.string().min(1, 'Regions is required'),
+  regions: z.array(z.string().min(1)).min(1, 'Regions is required'),
   respondentType: z.string().min(1, 'Respondent Type is required'),
   notes: z.string().min(1, 'Notes is required'),
   
   // Step 2 - All required fields
-  estimatedSpendUSD: z.string().min(1, 'Estimated Spend in USD is required'),
-  estimatedSpendLocal: z.string().min(1, 'Estimated Spend in Local Currency is required'),
+  estimatedSpendUSD: z.number().min(0, 'Estimated Spend in USD is required'),
+  estimatedSpendLocal: z.object({
+    currency: z.string().min(1, 'Currency is required'),
+    amount: z.number().min(0, 'Amount is required'),
+  }).refine((val) => val.currency && val.amount !== undefined, { message: 'Estimated Spend in Local Currency is required' }),
   associatedPO: z.string().min(1, 'Associated PO is required'),
   businessQuestion: z.string().min(1, 'Business Question is required'),
-  valueToClient: z.string().min(1, 'Value to Client is required'),
+  valueToClient: z.array(z.string().min(1)).min(1, 'Value to Client is required'),
   procurementNotification: z.boolean().refine((val) => val !== undefined, { message: 'Procurement Notification is required' }),
   selectedVendor: z.string().min(1, 'Selected Vendor is required'),
 });
@@ -136,14 +139,17 @@ const NewProject: React.FC = () => {
       researchType: '',
       methodology: '',
       markets: '',
-      regions: '',
+      regions: [],
       respondentType: '',
       notes: '',
-      estimatedSpendUSD: '',
-      estimatedSpendLocal: '',
+      estimatedSpendUSD: 0,
+      estimatedSpendLocal: {
+        currency: '',
+        amount: 0,
+      },
       associatedPO: '',
       businessQuestion: '',
-      valueToClient: '',
+      valueToClient: [],
       procurementNotification: false,
       selectedVendor: '',
     },
@@ -261,3 +267,37 @@ const NewProject: React.FC = () => {
 
 export default NewProject;
 
+// type ProjectFormData = {
+//   name: string;
+//   owner: string;
+//   buStakeholder: string;
+//   team: string;
+//   delegates: string;
+//   category: string;
+//   notifications: string;
+//   description: string;
+//   plannedExecutionYear: string;
+//   startDate: Date;
+//   endDate: Date;
+//   product: string;
+//   clientRequestor: string;
+//   otherClientParticipant: string;
+//   buStakeholderAttr: string;
+//   therapeuticArea: string;
+//   researchType: string;
+//   methodology: string;
+//   markets: string;
+//   regions: string[];
+//   respondentType: string;
+//   notes: string;
+//   estimatedSpendUSD: number;
+//   estimatedSpendLocal: {
+//     currency: string;
+//     amount: number;
+//   };
+//   associatedPO: string;
+//   businessQuestion: string;
+//   valueToClient: string[];
+//   procurementNotification: boolean;
+//   selectedVendor: string;
+// }
