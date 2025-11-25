@@ -13,7 +13,7 @@ import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
 
 // Define Zod schema combining Step 1 and Step 2 fields - all fields are required
-const projectSchema = z.object({
+export const projectSchema = z.object({
   // Step 1 - All required fields
   name: z.string().min(1, 'Name is required'),
   owner: z.string().min(1, 'Owner is required'),

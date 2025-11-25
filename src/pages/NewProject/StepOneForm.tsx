@@ -9,7 +9,7 @@ import TextareaField from '../../ui/TextareaField';
 import FormField from '../../ui/FormField/FormField';
 
 import styles from '../../styles/Form.module.scss';
-import { ProjectFormData } from './NewProject';
+import { ProjectFormData, projectSchema } from './NewProject';
 
 interface StepOneFormProps {}
 
@@ -94,7 +94,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Name"
             tooltip="Enter the project name"
             error={errors.name?.message}
-            required
+            required={!projectSchema.shape.name.isOptional()}
           >
             <InputField
               {...register('name')}
@@ -105,7 +105,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Owner" 
             tooltip="Select the project owner"
             error={errors.owner?.message}
-            required
+            required={!projectSchema.shape.owner.isOptional()}
           >
             <Controller
               name="owner"
@@ -126,7 +126,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="BU/Stakeholder" 
             tooltip="Business unit or stakeholder"
             error={errors.buStakeholder?.message}
-            required
+            required={!projectSchema.shape.buStakeholder.isOptional()}
           >
             <Controller
               name="buStakeholder"
@@ -147,7 +147,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Team" 
             tooltip="Select the team"
             error={errors.team?.message}
-            required
+            required={!projectSchema.shape.team.isOptional()}
           >
             <Controller
               name="team"
@@ -168,7 +168,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Delegates" 
             tooltip="Select delegates"
             error={errors.delegates?.message}
-            required
+            required={!projectSchema.shape.delegates.isOptional()}
           >
             <Controller
               name="delegates"
@@ -189,7 +189,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Category" 
             tooltip="Select category"
             error={errors.category?.message}
-            required
+            required={!projectSchema.shape.category.isOptional()}
           >
             <Controller
               name="category"
@@ -211,7 +211,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             tooltip="Enter notification preferences"
             className={styles.colSpanFull}
             error={errors.notifications?.message}
-            required
+            required={!projectSchema.shape.notifications.isOptional()}
           >
             <InputField
               {...register('notifications')}
@@ -223,7 +223,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             tooltip="Enter project description"
             className={styles.colSpanFull}
             error={errors.description?.message}
-            required
+            required={!projectSchema.shape.description.isOptional()}
           >
             <TextareaField
               {...register('description')}
@@ -242,7 +242,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Planned Execution Year" 
             tooltip="Enter the planned execution year"
             error={errors.plannedExecutionYear?.message}
-            required
+            required={!projectSchema.shape.plannedExecutionYear.isOptional()}
           >
             <InputField
               {...register('plannedExecutionYear')}
@@ -253,7 +253,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Start Date"
             tooltip="Select the project start date"
             error={errors.startDate?.message}
-            required
+            required={!projectSchema.shape.startDate.isOptional()}
           >
             <Controller
               name="startDate"
@@ -272,7 +272,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="End Date"
             tooltip="Select the project end date"
             error={errors.endDate?.message}
-            required
+            required={!projectSchema.shape.endDate.isOptional()}
           >
             <Controller
               name="endDate"
@@ -298,7 +298,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Product"
             tooltip="Enter the product name"
             error={errors.product?.message}
-            required
+            required={!projectSchema.shape.product.isOptional()}
           >
             <InputField
               {...register('product')}
@@ -309,7 +309,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Client Requestor"
             tooltip="Enter the client requestor"
             error={errors.clientRequestor?.message}
-            required
+            required={!projectSchema.shape.clientRequestor.isOptional()}
           >
             <InputField
               {...register('clientRequestor')}
@@ -320,7 +320,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Other Client participant"
             tooltip="Enter other client participants"
             error={errors.otherClientParticipant?.message}
-            required
+            required={!projectSchema.shape.otherClientParticipant.isOptional()}
           >
             <InputField
               {...register('otherClientParticipant')}
@@ -331,7 +331,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="B/U Stakeholder" 
             tooltip="Business unit stakeholder"
             error={errors.buStakeholderAttr?.message}
-            required
+            required={!projectSchema.shape.buStakeholderAttr.isOptional()}
           >
             <InputField
               {...register('buStakeholderAttr')}
@@ -342,7 +342,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Therapeutic Area"
             tooltip="Enter the therapeutic area"
             error={errors.therapeuticArea?.message}
-            required
+            required={!projectSchema.shape.therapeuticArea.isOptional()}
           >
             <InputField
               {...register('therapeuticArea')}
@@ -353,7 +353,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Research Type"
             tooltip="Enter the research type"
             error={errors.researchType?.message}
-            required
+            required={!projectSchema.shape.researchType.isOptional()}
           >
             <InputField
               {...register('researchType')}
@@ -364,7 +364,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Methodology"
             tooltip="Enter the methodology"
             error={errors.methodology?.message}
-            required
+            required={!projectSchema.shape.methodology.isOptional()}
           >
             <InputField
               {...register('methodology')}
@@ -375,7 +375,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Markets where study is being fielded"
             tooltip="Select markets where study is being fielded"
             error={errors.markets?.message}
-            required
+            required={!projectSchema.shape.markets.isOptional()}
           >
             <Controller
               name="markets"
@@ -396,7 +396,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Regions (If Applicable)"
             tooltip="Enter applicable regions"
             error={errors.regions?.message}
-            required
+            required={!projectSchema.shape.regions.isOptional()}
           >
             <Controller
               name="regions"
@@ -417,7 +417,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Respondent Type" 
             tooltip="Select respondent type"
             error={errors.respondentType?.message}
-            required
+            required={!projectSchema.shape.respondentType.isOptional()}
           >
             <Controller
               name="respondentType"
@@ -444,7 +444,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           label="Notes"
           tooltip="Enter additional notes"
           error={errors.notes?.message}
-          required
+          required={!projectSchema.shape.notes.isOptional()}
         >
           <TextareaField
             {...register('notes')}

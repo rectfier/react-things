@@ -8,7 +8,7 @@ import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
-import { ProjectFormData } from './NewProject';
+import { ProjectFormData, projectSchema } from './NewProject';
 
 interface StepTwoFormProps {}
 
@@ -72,7 +72,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Estimated Spend in USD"
               tooltip="Enter the estimated spend in USD"
               error={errors.estimatedSpendUSD?.message}
-              required
+              required={!projectSchema.shape.estimatedSpendUSD.isOptional()}
             >
               <InputField
                 {...register('estimatedSpendUSD')}
@@ -83,7 +83,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Estimated Spend in Local Currency"
               tooltip="Enter the estimated spend in local currency"
               error={errors.estimatedSpendLocal?.amount?.message || errors.estimatedSpendLocal?.message}
-              required
+              required={true}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ 
@@ -107,7 +107,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Associated PO #"
               tooltip="Enter the associated purchase order number"
               error={errors.associatedPO?.message}
-              required
+              required={!projectSchema.shape.associatedPO.isOptional()}
             >
               <InputField
                 {...register('associatedPO')}
@@ -118,7 +118,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Business Question"
               tooltip="Enter the business question"
               error={errors.businessQuestion?.message}
-              required
+              required={!projectSchema.shape.businessQuestion.isOptional()}
             >
               <InputField
                 {...register('businessQuestion')}
@@ -129,7 +129,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Value to Client"
               tooltip="Enter the value to client"
               error={errors.valueToClient?.message}
-              required
+              required={!projectSchema.shape.valueToClient.isOptional()}
             >
               <Controller
                 name="valueToClient"
@@ -176,7 +176,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             label="Vendor Selection"
             tooltip="Select a vendor from the list"
             error={errors.selectedVendor?.message}
-            required
+            required={!projectSchema.shape.selectedVendor.isOptional()}
           >
             <div 
               className={formStyles.vendorSelectionLayout}
