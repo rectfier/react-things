@@ -9,7 +9,7 @@ import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import FormTypeSelection from './FormTypeSelection'; // Import the new component
-import Popups from './Popups';
+import { usePopups } from './Popups';
 import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
 
@@ -120,8 +120,7 @@ const FormActions: React.FC<FormActionsProps> = ({
 
 const ProjectForm: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [dialogType, setDialogType] = useState<'submit' | 'saveDraft' | null>(null);
+  const { openSubmitDialog, openDraftDialog } = usePopups();
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -215,8 +214,17 @@ const ProjectForm: React.FC = () => {
 
   const handleSaveDraft = (): void => {
     console.log('Saving draft...');
-    setDialogType('saveDraft');
-    setIsDialogOpen(true);
+    const projectName = methods.getValues().name || 'Untitled Project';
+    openDraftDialog({
+      dialogType: 'saveDraft',
+      projectName,
+      onInitiateNewProject: () => {
+        // TODO: Navigate to new project or reset form
+      },
+      onGoToProjectBoard: () => {
+        // TODO: Navigate to project board
+      },
+    });
     // TODO: Implement save draft functionality
   };
 
@@ -230,32 +238,19 @@ const ProjectForm: React.FC = () => {
   const handleSubmit = (): void => {
     methods.handleSubmit((data: ProjectFormData) => {
       console.log('Form submitted:', data);
-      setDialogType('submit');
-      setIsDialogOpen(true);
+      const projectName = data.name || 'Untitled Project';
+      openSubmitDialog({
+        dialogType: 'submit',
+        projectName,
+        onInitiateNewProject: () => {
+          // TODO: Navigate to new project or reset form
+        },
+        onGoToProjectBoard: () => {
+          // TODO: Navigate to project board
+        },
+      });
       // TODO: Implement form submission
     })();
-  };
-
-  const handleDialogClose = (): void => {
-    setIsDialogOpen(false);
-    setDialogType(null);
-  };
-
-  const handleInitiateNewProject = (): void => {
-    setIsDialogOpen(false);
-    setDialogType(null);
-    // TODO: Navigate to new project or reset form
-  };
-
-  const handleGoToProjectBoard = (): void => {
-    setIsDialogOpen(false);
-    setDialogType(null);
-    // TODO: Navigate to project board
-  };
-
-  const getProjectName = (): string => {
-    const formData = methods.getValues();
-    return formData.name || 'Untitled Project';
   };
 
   return (
@@ -290,15 +285,6 @@ const ProjectForm: React.FC = () => {
             onSaveDraft={handleSaveDraft}
             onNextStep={handleNextStep}
             onSubmit={handleSubmit}
-          />
-
-          <Popups
-            isOpen={isDialogOpen}
-            dialogType={dialogType}
-            projectName={getProjectName()}
-            onClose={handleDialogClose}
-            onInitiateNewProject={handleInitiateNewProject}
-            onGoToProjectBoard={handleGoToProjectBoard}
           />
         </div>
       </div>

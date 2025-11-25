@@ -1,5 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { DialogProvider } from './contexts/DialogContext';
 import NewProject from './pages/NewProject/NewProject';
 import DialogPage from './pages/Dialog/Dialog';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -9,15 +10,17 @@ import styles from './styles/App.module.scss';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className={styles.appContainer}>
-        <Routes>
-          <Route path="/" element={<div className={styles.homePage}><h1>Home</h1></div>} />
-          <Route path="/new-project" element={<NewProject />} />
-          <Route path="/dialog" element={<DialogPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <DialogProvider>
+      <Router>
+        <div className={styles.appContainer}>
+          <Routes>
+            <Route path="/" element={<div className={styles.homePage}><h1>Home</h1></div>} />
+            <Route path="/new-project" element={<NewProject />} />
+            <Route path="/dialog" element={<DialogPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </DialogProvider>
   );
 };
 
