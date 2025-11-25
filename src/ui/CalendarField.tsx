@@ -1,5 +1,5 @@
 import React, { useRef, forwardRef } from 'react';
-import styles from '../styles/CalendarField.module.scss';
+import styles from './CalendarField.module.scss';
 
 export interface CalendarFieldChangeEvent {
   value: Date | null;

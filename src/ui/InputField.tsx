@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react';
-import styles from '../styles/InputField.module.scss';
+import styles from './InputField.module.scss';
 
 export interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value?: string;

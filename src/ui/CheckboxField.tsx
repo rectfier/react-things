@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react';
-import styles from '../styles/CheckboxField.module.scss';
+import styles from './CheckboxField.module.scss';
 
 export interface CheckboxFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
   checked?: boolean;

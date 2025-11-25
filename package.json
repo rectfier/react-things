@@ -9,6 +9,7 @@
     "primeicons": "^6.0.1",
     "primereact": "^9.6.0",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.66.1",
     "react-router-dom": "^6.8.1",

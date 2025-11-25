@@ -1,5 +1,5 @@
 import React, { ReactElement, Children, useRef } from 'react';
-import styles from '../../styles/TabView.module.scss';
+import styles from './TabView.module.scss';
 import type { TabPanelProps } from './TabPanel';
 
 export interface TabViewProps {

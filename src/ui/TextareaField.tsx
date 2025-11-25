@@ -1,5 +1,5 @@
 import React, { TextareaHTMLAttributes, forwardRef } from 'react';
-import styles from '../styles/TextareaField.module.scss';
+import styles from './TextareaField.module.scss';
 
 export interface TextareaFieldProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
   value?: string;

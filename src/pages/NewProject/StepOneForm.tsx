@@ -94,6 +94,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Name"
             tooltip="Enter the project name"
             error={errors.name?.message}
+            required
           >
             <InputField
               {...register('name')}
@@ -104,6 +105,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Owner" 
             tooltip="Select the project owner"
             error={errors.owner?.message}
+            required
           >
             <Controller
               name="owner"
@@ -124,6 +126,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="BU/Stakeholder" 
             tooltip="Business unit or stakeholder"
             error={errors.buStakeholder?.message}
+            required
           >
             <Controller
               name="buStakeholder"
@@ -144,6 +147,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Team" 
             tooltip="Select the team"
             error={errors.team?.message}
+            required
           >
             <Controller
               name="team"
@@ -164,6 +168,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Delegates" 
             tooltip="Select delegates"
             error={errors.delegates?.message}
+            required
           >
             <Controller
               name="delegates"
@@ -184,6 +189,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Category" 
             tooltip="Select category"
             error={errors.category?.message}
+            required
           >
             <Controller
               name="category"
@@ -205,6 +211,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             tooltip="Enter notification preferences"
             className={styles.colSpanFull}
             error={errors.notifications?.message}
+            required
           >
             <InputField
               {...register('notifications')}
@@ -216,6 +223,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             tooltip="Enter project description"
             className={styles.colSpanFull}
             error={errors.description?.message}
+            required
           >
             <TextareaField
               {...register('description')}
@@ -234,6 +242,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Planned Execution Year" 
             tooltip="Enter the planned execution year"
             error={errors.plannedExecutionYear?.message}
+            required
           >
             <InputField
               {...register('plannedExecutionYear')}
@@ -244,6 +253,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Start Date"
             tooltip="Select the project start date"
             error={errors.startDate?.message}
+            required
           >
             <Controller
               name="startDate"
@@ -262,6 +272,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="End Date"
             tooltip="Select the project end date"
             error={errors.endDate?.message}
+            required
           >
             <Controller
               name="endDate"
@@ -287,6 +298,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Product"
             tooltip="Enter the product name"
             error={errors.product?.message}
+            required
           >
             <InputField
               {...register('product')}
@@ -297,6 +309,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Client Requestor"
             tooltip="Enter the client requestor"
             error={errors.clientRequestor?.message}
+            required
           >
             <InputField
               {...register('clientRequestor')}
@@ -307,6 +320,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Other Client participant"
             tooltip="Enter other client participants"
             error={errors.otherClientParticipant?.message}
+            required
           >
             <InputField
               {...register('otherClientParticipant')}
@@ -317,6 +331,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="B/U Stakeholder" 
             tooltip="Business unit stakeholder"
             error={errors.buStakeholderAttr?.message}
+            required
           >
             <InputField
               {...register('buStakeholderAttr')}
@@ -327,6 +342,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Therapeutic Area"
             tooltip="Enter the therapeutic area"
             error={errors.therapeuticArea?.message}
+            required
           >
             <InputField
               {...register('therapeuticArea')}
@@ -337,6 +353,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Research Type"
             tooltip="Enter the research type"
             error={errors.researchType?.message}
+            required
           >
             <InputField
               {...register('researchType')}
@@ -347,6 +364,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Methodology"
             tooltip="Enter the methodology"
             error={errors.methodology?.message}
+            required
           >
             <InputField
               {...register('methodology')}
@@ -357,6 +375,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Markets where study is being fielded"
             tooltip="Select markets where study is being fielded"
             error={errors.markets?.message}
+            required
           >
             <Controller
               name="markets"
@@ -377,6 +396,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Regions (If Applicable)"
             tooltip="Enter applicable regions"
             error={errors.regions?.message}
+            required
           >
             <Controller
               name="regions"
@@ -397,6 +417,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             label="Respondent Type" 
             tooltip="Select respondent type"
             error={errors.respondentType?.message}
+            required
           >
             <Controller
               name="respondentType"
@@ -423,6 +444,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           label="Notes"
           tooltip="Enter additional notes"
           error={errors.notes?.message}
+          required
         >
           <TextareaField
             {...register('notes')}

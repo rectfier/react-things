@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+
+# Project rules
+
+- All this code will go in a Sharepoint application later, some part of it least, so assume that
+- Do not put classes name literally, import them as styles and then use, just like how sharepoint expect
+- Import * as React from 'react', this is what you will do as sharepoint expect this
+- Shareopint use rushstack lint, although that's no here in project, just try to make sure code is according to that.
+- Always take a look at _variables.scss file, it have the deafult vars we use in scss, use them.
+  
+## Component Rules
+
+- Create all reusable components in src/components/ui/. Only move to domain folders if truly specific.
+- Forward refs on all common components: React.forwardRef<HTMLButtonElement, ButtonProps>
+- NEVER nest component styles inside parent selectors. This breaks reusability.
+- Use compound components: <Card>, <Card.Header>, <Card.Body>
+- NO inline styles. Use SCSS classes only. Use .module.scss, and always import them
+- import styles from "../../styles/Component.module.scss": This is how you will use scss, that's the only way this project need it.

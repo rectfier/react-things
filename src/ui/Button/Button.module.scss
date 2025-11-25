@@ -1,0 +1,147 @@
+@import '../../styles/variables';
+
+// Base button styles - target Bootstrap's btn class
+:global(.btn).button {
+  font-size: $font-size-input;
+  font-weight: 400; // Light weight to match form elements, no bold
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-1;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+  line-height: 1.5;
+  height: 2rem;
+  padding: 0.375rem $spacing-4;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Icon styling
+  i {
+    font-size: $font-size-input;
+  }
+}
+
+// Primary variant - deep twilight blue with white font
+:global(.btn).button.primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    background-color: $primary-hover;
+    border-color: $primary-hover;
+    color: $white;
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    background-color: $primary-hover;
+    border-color: $primary-hover;
+    color: $white;
+    box-shadow: 0 0 0 3px rgba($primary, 0.15);
+  }
+}
+
+// Secondary variant - bright teal blue with white font
+:global(.btn).button.secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    background-color: $secondary-hover;
+    border-color: $secondary-hover;
+    color: $white;
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    background-color: $secondary-hover;
+    border-color: $secondary-hover;
+    color: $white;
+    box-shadow: 0 0 0 3px rgba($secondary, 0.15);
+  }
+}
+
+// Light variant - frosted blue background with deep twilight text
+:global(.btn).button.light {
+  background-color: $blue-light;
+  border-color: $blue-light;
+  color: $primary;
+
+  &:hover:not(:disabled) {
+    background-color: $blue-accent;
+    border-color: $blue-accent;
+    color: $primary;
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    background-color: $blue-accent;
+    border-color: $blue-accent;
+    color: $primary;
+    box-shadow: 0 0 0 3px rgba($blue-light, 0.3);
+  }
+}
+
+// Outline variant - for cancel, back, filter buttons (black/dark gray)
+:global(.btn).button.outline {
+  background-color: $gray-900;
+  border-color: $gray-900;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    background-color: #0a0a0a; // Slightly darker than $gray-900
+    border-color: #0a0a0a;
+    color: $white;
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    background-color: #0a0a0a;
+    border-color: #0a0a0a;
+    color: $white;
+    box-shadow: 0 0 0 3px rgba($gray-900, 0.2);
+  }
+}
+
+// Link variant - looks like a blue link (text only, no button styling)
+:global(.btn).button.link {
+  background: none;
+  border: none;
+  color: $blue-600;
+  padding: 0;
+  height: auto;
+  text-decoration: none;
+  font-weight: $font-weight-normal;
+  box-shadow: none;
+
+  i {
+    margin-right: $spacing-1;
+  }
+
+  &:hover:not(:disabled) {
+    color: $blue-800;
+    text-decoration: underline;
+    background: transparent;
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    color: $blue-800;
+    box-shadow: none;
+    text-decoration: underline;
+    background: transparent;
+  }
+}

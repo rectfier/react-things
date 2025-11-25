@@ -14,10 +14,15 @@ $white: #ffffff;
 $off-white: #f5f5f5;
 
 // Primary and Secondary Colors
-$primary: #1e293b; // Dark navy blue for buttons and step headings
-$primary-hover: #334155;
-$secondary: #64748b; // Secondary color
-$secondary-hover: #475569;
+$primary: #03045e; // Deep twilight blue
+$primary-hover: #023e8a; // Darker shade for hover
+$secondary: #0077b6; // Bright teal blue
+$secondary-hover: #005f8a; // Darker shade for hover
+
+// Additional Blue Palette
+$blue-accent: #00b4d8; // Turquoise surf
+$blue-light: #90e0ef; // Frosted blue
+$blue-very-light: #caf0f8; // Light cyan
 
 // Spacing
 $spacing-1: 0.2rem;

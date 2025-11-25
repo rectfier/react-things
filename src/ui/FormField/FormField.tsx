@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import FormFieldLabel from '../FormFieldLabel/FormFieldLabel';
-import wrapperStyles from '../../styles/FormFieldWrapper.module.scss';
+import wrapperStyles from './FormFieldWrapper.module.scss';
 import formStyles from '../../styles/Form.module.scss';
 
 export interface FormFieldProps {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
-import styles from '../styles/DropdownField.module.scss';
+import styles from './DropdownField.module.scss';
 
 export interface MultiSelectOption {
   label: string;

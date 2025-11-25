@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Button } from 'primereact/button';
+import Button from '../../ui/Button/Button';
 import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
@@ -71,6 +72,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Estimated Spend in USD"
               tooltip="Enter the estimated spend in USD"
               error={errors.estimatedSpendUSD?.message}
+              required
             >
               <InputField
                 {...register('estimatedSpendUSD')}
@@ -81,6 +83,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Estimated Spend in Local Currency"
               tooltip="Enter the estimated spend in local currency"
               error={errors.estimatedSpendLocal?.amount?.message || errors.estimatedSpendLocal?.message}
+              required
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ 
@@ -104,6 +107,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Associated PO #"
               tooltip="Enter the associated purchase order number"
               error={errors.associatedPO?.message}
+              required
             >
               <InputField
                 {...register('associatedPO')}
@@ -114,6 +118,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Business Question"
               tooltip="Enter the business question"
               error={errors.businessQuestion?.message}
+              required
             >
               <InputField
                 {...register('businessQuestion')}
@@ -124,6 +129,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               label="Value to Client"
               tooltip="Enter the value to client"
               error={errors.valueToClient?.message}
+              required
             >
               <Controller
                 name="valueToClient"
@@ -166,111 +172,118 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
         {/* Vendor Selection Section */}
         <div className={formStyles.formSection}>
           <h2>Vendor Selection</h2>
-          <div 
-            className={formStyles.vendorSelectionLayout}
-            aria-invalid={!!errors.selectedVendor}
-            aria-label={errors.selectedVendor?.message}
+          <FormField
+            label="Vendor Selection"
+            tooltip="Select a vendor from the list"
+            error={errors.selectedVendor?.message}
+            required
           >
-            <div className={formStyles.vendorSearchSection}>
-              <div className={formStyles.searchControls}>
-                <span className={formStyles.vendorSelectionTitle}>Search Vendor</span>
-                <div className={formStyles.searchInputContainer}>
-                  <span className={formStyles.searchIcon}>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z"
-                        stroke="currentColor"
-                        strokeWidth="1.33333"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M14 14L11.1 11.1"
-                        stroke="currentColor"
-                        strokeWidth="1.33333"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={`${mockVendors.length} Approved Vendors`}
-                    className={formStyles.searchInput}
+            <div 
+              className={formStyles.vendorSelectionLayout}
+              aria-invalid={!!errors.selectedVendor}
+              aria-label={errors.selectedVendor?.message}
+            >
+              <div className={formStyles.vendorSearchSection}>
+                <div className={formStyles.searchControls}>
+                  <span className={formStyles.vendorSelectionTitle}>Search Vendor</span>
+                  <div className={formStyles.searchInputContainer}>
+                    <span className={formStyles.searchIcon}>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z"
+                          stroke="currentColor"
+                          strokeWidth="1.33333"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M14 14L11.1 11.1"
+                          stroke="currentColor"
+                          strokeWidth="1.33333"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={`${mockVendors.length} Approved Vendors`}
+                      className={formStyles.searchInput}
+                    />
+                  </div>
+                  <Button
+                    label="Search"
+                    variant="primary"
+                    onClick={() => console.log('Search')}
+                  />
+                  <Button
+                    label="Apply Filter"
+                    icon="pi pi-chevron-down"
+                    iconPos="right"
+                    variant="outline"
+                    onClick={() => {
+                      console.log('Apply Filter clicked');
+                    }}
                   />
                 </div>
-                <Button
-                  label="Search"
-                  className={`${formStyles.searchButton} p-button-primary`}
-                  onClick={() => console.log('Search')}
-                />
-                <Button
-                  label="Apply Filter"
-                  icon="pi pi-chevron-down"
-                  iconPos="right"
-                  className={`${formStyles.searchButton} ${formStyles.filterButton}`}
-                  onClick={() => {
-                    console.log('Apply Filter clicked');
-                  }}
-                />
+                
+                {filteredVendors.length > 0 && (
+                <div className={formStyles.vendorList}>
+                  {filteredVendors.map((vendor) => (
+                    <div
+                      key={vendor}
+                        className={`${formStyles.vendorItem} ${selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
+                      onClick={() => handleVendorSelect(vendor)}
+                        onMouseEnter={() => setHoveredVendor(vendor)}
+                        onMouseLeave={() => setHoveredVendor(null)}
+                    >
+                      <span className={formStyles.vendorName}>{vendor}</span>
+                        {selectedVendor === vendor && (
+                        <span className={formStyles.checkIcon}>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13.3333 4L6 11.3333L2.66667 8"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                )}
               </div>
-              
-              {filteredVendors.length > 0 && (
-              <div className={formStyles.vendorList}>
-                {filteredVendors.map((vendor) => (
-                  <div
-                    key={vendor}
-                      className={`${formStyles.vendorItem} ${selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
-                    onClick={() => handleVendorSelect(vendor)}
-                      onMouseEnter={() => setHoveredVendor(vendor)}
-                      onMouseLeave={() => setHoveredVendor(null)}
-                  >
-                    <span className={formStyles.vendorName}>{vendor}</span>
-                      {selectedVendor === vendor && (
-                      <span className={formStyles.checkIcon}>
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M13.3333 4L6 11.3333L2.66667 8"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
+
+              {/* Vendor Overview Card */}
+              {vendorProfileData && (
+                <div className={formStyles.vendorCardWrapper}>
+                  <VendorOverviewCard
+                    vendorName={vendorProfileData.name}
+                    globalScore={vendorProfileData.globalScore}
+                    summary={vendorProfileData.summary}
+                    onViewProfile={() => console.log('View profile')}
+                  />
+                </div>
               )}
             </div>
-
-            {/* Vendor Overview Card */}
-            {vendorProfileData && (
-              <div className={formStyles.vendorCardWrapper}>
-                <VendorOverviewCard
-                  vendorName={vendorProfileData.name}
-                  globalScore={vendorProfileData.globalScore}
-                  summary={vendorProfileData.summary}
-                  onViewProfile={() => console.log('View profile')}
-                />
-              </div>
-            )}
-          </div>
+          </FormField>
         </div>
 
       </div>

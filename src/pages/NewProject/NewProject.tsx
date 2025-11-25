@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button } from 'primereact/button';
+import Button from '../../ui/Button/Button';
 import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
+import FormTypeSelection from './FormTypeSelection'; // Import the new component
 import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
 
@@ -35,7 +37,7 @@ const projectSchema = z.object({
   regions: z.string().min(1, 'Regions is required'),
   respondentType: z.string().min(1, 'Respondent Type is required'),
   notes: z.string().min(1, 'Notes is required'),
-  
+
   // Step 2 - All required fields
   estimatedSpendUSD: z.number().min(0, 'Estimated Spend in USD is required'),
   estimatedSpendLocal: z.object({
@@ -75,37 +77,38 @@ const FormActions: React.FC<FormActionsProps> = ({
       <div className={formStyles.leftActions}>
         <Button
           label="Cancel"
-          className={`p-button-secondary ${formStyles.cancelButton}`}
+          variant="outline"
           onClick={onCancel}
         />
         {activeStep === 1 && (
           <Button
             label="Back"
-            className={`p-button-secondary ${formStyles.backButton}`}
+            variant="outline"
             onClick={onBack}
           />
         )}
       </div>
       <div className={formStyles.actionGroup}>
-        <button type="button" className={formStyles.attachFileLink} onClick={onAttachFile}>
-          <i className="pi pi-paperclip"></i>
-          <span>Attach file</span>
-        </button>
+        <Button
+          variant="link"
+          label="Attach file"
+          onClick={onAttachFile}
+        />
         <Button
           label="Save Draft"
-          className="p-button-primary"
+          variant="secondary"
           onClick={onSaveDraft}
         />
         {activeStep === 0 ? (
           <Button
             label="Next Step"
-            className="p-button-primary"
+            variant="primary"
             onClick={onNextStep}
           />
         ) : (
           <Button
             label="Submit"
-            className={`${formStyles.submitButton}`}
+            variant="secondary"
             onClick={onSubmit}
           />
         )}
@@ -114,7 +117,7 @@ const FormActions: React.FC<FormActionsProps> = ({
   );
 };
 
-const NewProject: React.FC = () => {
+const ProjectForm: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const methods = useForm<ProjectFormData>({
@@ -263,6 +266,25 @@ const NewProject: React.FC = () => {
       </div>
     </FormProvider>
   );
+};
+
+
+const NewProject: React.FC = () => {
+    const [formType, setFormType] = useState<string | null>(null);
+
+    const handleFormTypeSelect = (type: string) => {
+        setFormType(type);
+    };
+
+    return (
+        <>
+            {formType ? (
+                <ProjectForm />
+            ) : (
+                <FormTypeSelection onFormTypeSelect={handleFormTypeSelect} />
+            )}
+        </>
+    );
 };
 
 export default NewProject;
