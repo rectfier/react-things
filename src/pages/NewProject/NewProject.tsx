@@ -9,8 +9,10 @@ import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import FormTypeSelection from './FormTypeSelection'; // Import the new component
+import Dialog from '../../ui/Dialog/Dialog';
 import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
+import dialogStyles from '../../ui/Dialog/Dialog.module.scss';
 
 // Define Zod schema combining Step 1 and Step 2 fields - all fields are required
 export const projectSchema = z.object({
@@ -119,6 +121,8 @@ const FormActions: React.FC<FormActionsProps> = ({
 
 const ProjectForm: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [dialogType, setDialogType] = useState<'submit' | 'saveDraft' | null>(null);
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -212,6 +216,8 @@ const ProjectForm: React.FC = () => {
 
   const handleSaveDraft = (): void => {
     console.log('Saving draft...');
+    setDialogType('saveDraft');
+    setIsDialogOpen(true);
     // TODO: Implement save draft functionality
   };
 
@@ -225,9 +231,57 @@ const ProjectForm: React.FC = () => {
   const handleSubmit = (): void => {
     methods.handleSubmit((data: ProjectFormData) => {
       console.log('Form submitted:', data);
+      setDialogType('submit');
+      setIsDialogOpen(true);
       // TODO: Implement form submission
     })();
   };
+
+  const handleDialogClose = (): void => {
+    setIsDialogOpen(false);
+    setDialogType(null);
+  };
+
+  const handleInitiateNewProject = (): void => {
+    setIsDialogOpen(false);
+    setDialogType(null);
+    // TODO: Navigate to new project or reset form
+  };
+
+  const handleGoToProjectBoard = (): void => {
+    setIsDialogOpen(false);
+    setDialogType(null);
+    // TODO: Navigate to project board
+  };
+
+  const getProjectName = (): string => {
+    const formData = methods.getValues();
+    return formData.name || 'Untitled Project';
+  };
+
+  const getProjectStatus = (): string => {
+    return dialogType === 'submit' ? 'Bidding' : 'Draft';
+  };
+
+  const getDialogTitle = (): string => {
+    if (dialogType === 'submit') {
+      return 'Invitations Sent Successfully!';
+    }
+    return 'Draft Saved Successfully!';
+  };
+
+  const getDialogMessage = (): string => {
+    if (dialogType === 'submit') {
+      return 'Vendor invitations have been sent to [1] selected partners.';
+    }
+    return 'Your project draft has been saved successfully.';
+  };
+
+  const successIcon = (
+    <div className={styles.successIcon}>
+      <i className="pi pi-check"></i>
+    </div>
+  );
 
   return (
     <FormProvider {...methods}>
@@ -262,6 +316,46 @@ const ProjectForm: React.FC = () => {
             onNextStep={handleNextStep}
             onSubmit={handleSubmit}
           />
+
+          {dialogType && (
+            <Dialog
+              open={isDialogOpen}
+              title={getDialogTitle()}
+              onClose={handleDialogClose}
+              icon={successIcon}
+              footer={
+                <>
+                  <div className={dialogStyles.footerButtons}>
+                    <Button variant="secondary" onClick={handleInitiateNewProject}>
+                      Initiate New Project
+                    </Button>
+                    <Button variant="primary" onClick={handleGoToProjectBoard}>
+                      Go to Project Board
+                    </Button>
+                  </div>
+                  <button className={dialogStyles.closeLink} onClick={handleDialogClose}>
+                    Close Window
+                  </button>
+                </>
+              }
+            >
+              <div className={styles.dialogContent}>
+                <p className={styles.bodyText}>
+                  {getDialogMessage()}
+                </p>
+                <div className={styles.projectInfo}>
+                  <div className={styles.infoRow}>
+                    <span className={styles.label}>Project Name:</span>
+                    <span className={styles.value}>{getProjectName()}</span>
+                  </div>
+                  <div className={styles.infoRow}>
+                    <span className={styles.label}>Project Status:</span>
+                    <span className={styles.value}>{getProjectStatus()}</span>
+                  </div>
+                </div>
+              </div>
+            </Dialog>
+          )}
         </div>
       </div>
     </FormProvider>
