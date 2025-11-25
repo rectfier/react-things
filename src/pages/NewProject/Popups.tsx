@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { useDialog } from '../../contexts/DialogContext';
-import Button from '../../ui/Button/Button';
 import styles from '../../styles/NewProject.module.scss';
-import dialogStyles from '../../ui/Dialog/Dialog.module.scss';
 
 interface DialogBodyProps {
   projectName: string;
@@ -47,85 +44,4 @@ export const DraftDialogBody: React.FC<DialogBodyProps> = ({ projectName }) => {
     </div>
   );
 };
-
-interface OpenDialogOptions {
-  dialogType: 'submit' | 'saveDraft';
-  projectName: string;
-  onInitiateNewProject?: () => void;
-  onGoToProjectBoard?: () => void;
-}
-
-export const usePopups = () => {
-  const { openDialog, closeDialog } = useDialog();
-
-  const openSubmitDialog = React.useCallback((options: OpenDialogOptions) => {
-    const { projectName, onInitiateNewProject, onGoToProjectBoard } = options;
-    
-    const successIcon = (
-      <div className={styles.successIcon}>
-        <i className="pi pi-check"></i>
-      </div>
-    );
-
-    openDialog({
-      title: 'Invitations Sent Successfully!',
-      icon: successIcon,
-      children: <SubmitDialogBody projectName={projectName} />,
-      footer: (
-        <>
-          <div className={dialogStyles.footerButtons}>
-            <Button variant="secondary" onClick={() => { onInitiateNewProject?.(); closeDialog(); }}>
-              Initiate New Project
-            </Button>
-            <Button variant="primary" onClick={() => { onGoToProjectBoard?.(); closeDialog(); }}>
-              Go to Project Board
-            </Button>
-          </div>
-          <button className={dialogStyles.closeLink} onClick={closeDialog}>
-            Close Window
-          </button>
-        </>
-      ),
-    });
-  }, [openDialog, closeDialog]);
-
-  const openDraftDialog = React.useCallback((options: OpenDialogOptions) => {
-    const { projectName, onInitiateNewProject, onGoToProjectBoard } = options;
-    
-    const successIcon = (
-      <div className={styles.successIcon}>
-        <i className="pi pi-check"></i>
-      </div>
-    );
-
-    openDialog({
-      title: 'Draft Saved Successfully!',
-      icon: successIcon,
-      children: <DraftDialogBody projectName={projectName} />,
-      footer: (
-        <>
-          <div className={dialogStyles.footerButtons}>
-            <Button variant="secondary" onClick={() => { onInitiateNewProject?.(); closeDialog(); }}>
-              Initiate New Project
-            </Button>
-            <Button variant="primary" onClick={() => { onGoToProjectBoard?.(); closeDialog(); }}>
-              Go to Project Board
-            </Button>
-          </div>
-          <button className={dialogStyles.closeLink} onClick={closeDialog}>
-            Close Window
-          </button>
-        </>
-      ),
-    });
-  }, [openDialog, closeDialog]);
-
-  return {
-    openSubmitDialog,
-    openDraftDialog,
-    closeDialog,
-  };
-};
-
-export default usePopups;
 

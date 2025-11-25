@@ -9,9 +9,11 @@ import TabPanel from '../../ui/TabView/TabPanel';
 import StepOneForm from './StepOneForm';
 import StepTwoForm from './StepTwoForm';
 import FormTypeSelection from './FormTypeSelection'; // Import the new component
-import { usePopups } from './Popups';
+import { useDialog } from '../../contexts/DialogContext';
+import { SubmitDialogBody, DraftDialogBody } from './Popups';
 import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
+import dialogStyles from '../../ui/Dialog/Dialog.module.scss';
 
 // Define Zod schema combining Step 1 and Step 2 fields - all fields are required
 export const projectSchema = z.object({
@@ -120,7 +122,7 @@ const FormActions: React.FC<FormActionsProps> = ({
 
 const ProjectForm: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { openSubmitDialog, openDraftDialog } = usePopups();
+  const { openDialog, closeDialog } = useDialog();
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -215,15 +217,38 @@ const ProjectForm: React.FC = () => {
   const handleSaveDraft = (): void => {
     console.log('Saving draft...');
     const projectName = methods.getValues().name || 'Untitled Project';
-    openDraftDialog({
-      dialogType: 'saveDraft',
-      projectName,
-      onInitiateNewProject: () => {
-        // TODO: Navigate to new project or reset form
-      },
-      onGoToProjectBoard: () => {
-        // TODO: Navigate to project board
-      },
+    
+    const successIcon = (
+      <div className={styles.successIcon}>
+        <i className="pi pi-check"></i>
+      </div>
+    );
+    
+    openDialog({
+      title: 'Draft Saved Successfully!',
+      icon: successIcon,
+      children: <DraftDialogBody projectName={projectName} />,
+      footer: (
+        <>
+          <div className={dialogStyles.footerButtons}>
+            <Button variant="secondary" onClick={() => { 
+              closeDialog();
+              // TODO: Navigate to new project or reset form
+            }}>
+              Initiate New Project
+            </Button>
+            <Button variant="primary" onClick={() => { 
+              closeDialog();
+              // TODO: Navigate to project board
+            }}>
+              Go to Project Board
+            </Button>
+          </div>
+          <button className={dialogStyles.closeLink} onClick={closeDialog}>
+            Close Window
+          </button>
+        </>
+      ),
     });
     // TODO: Implement save draft functionality
   };
@@ -239,15 +264,38 @@ const ProjectForm: React.FC = () => {
     methods.handleSubmit((data: ProjectFormData) => {
       console.log('Form submitted:', data);
       const projectName = data.name || 'Untitled Project';
-      openSubmitDialog({
-        dialogType: 'submit',
-        projectName,
-        onInitiateNewProject: () => {
-          // TODO: Navigate to new project or reset form
-        },
-        onGoToProjectBoard: () => {
-          // TODO: Navigate to project board
-        },
+      
+      const successIcon = (
+        <div className={styles.successIcon}>
+          <i className="pi pi-check"></i>
+        </div>
+      );
+      
+      openDialog({
+        title: 'Invitations Sent Successfully!',
+        icon: successIcon,
+        children: <SubmitDialogBody projectName={projectName} />,
+        footer: (
+          <>
+            <div className={dialogStyles.footerButtons}>
+              <Button variant="secondary" onClick={() => { 
+                closeDialog();
+                // TODO: Navigate to new project or reset form
+              }}>
+                Initiate New Project
+              </Button>
+              <Button variant="primary" onClick={() => { 
+                closeDialog();
+                // TODO: Navigate to project board
+              }}>
+                Go to Project Board
+              </Button>
+            </div>
+            <button className={dialogStyles.closeLink} onClick={closeDialog}>
+              Close Window
+            </button>
+          </>
+        ),
       });
       // TODO: Implement form submission
     })();
