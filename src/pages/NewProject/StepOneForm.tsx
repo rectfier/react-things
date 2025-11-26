@@ -4,6 +4,7 @@ import CalendarField from '../../ui/CalendarField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import InputField from '../../ui/InputField';
+import PeoplePicker from '../../ui/PeoplePicker';
 import TextareaField from '../../ui/TextareaField';
 
 import FormField from '../../ui/FormField/FormField';
@@ -14,14 +15,6 @@ import { ProjectFormData, projectSchema } from './NewProject';
 interface StepOneFormProps {}
 
 // Sample mock data for dropdowns
-const ownerOptions: DropdownFieldOption[] = [
-  { label: 'John Smith', value: 'john.smith' },
-  { label: 'Sarah Johnson', value: 'sarah.johnson' },
-  { label: 'Michael Brown', value: 'michael.brown' },
-  { label: 'Emily Davis', value: 'emily.davis' },
-  { label: 'David Wilson', value: 'david.wilson' }
-];
-
 const buStakeholderOptions: DropdownFieldOption[] = [
   { label: 'Global Oncology Marketing & Sales', value: 'global-oncology' },
   { label: 'Cardiovascular Business Unit', value: 'cardiovascular' },
@@ -110,14 +103,12 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             <Controller
               name="owner"
               control={control}
-              render={({ field, fieldState }) => (
-            <DropdownField
+              render={({ field }) => (
+                <PeoplePicker
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
-              options={ownerOptions}
-              placeholder="Select owner"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  onChange={field.onChange}
+                  placeholder="Select owner"
+                  className={styles.fullWidth}
                 />
               )}
             />

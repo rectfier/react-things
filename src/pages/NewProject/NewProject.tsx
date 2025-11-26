@@ -124,6 +124,34 @@ const ProjectForm: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const { openDialog, closeDialog } = useDialog();
 
+  // Example: How to use pnpjs and SharePoint instance from useAppContext hook
+  // Uncomment and use when AppContext is available:
+  // 
+  // import { useAppContext } from '../../contexts/AppContext';
+  // const { sp, context } = useAppContext();
+  //
+  // Example usage:
+  // const fetchProjectData = async () => {
+  //   try {
+  //     const items = await sp.web.lists.getByTitle('Projects').items.get();
+  //     console.log('Projects:', items);
+  //   } catch (error) {
+  //     console.error('Error fetching projects:', error);
+  //   }
+  // };
+  //
+  // const saveProject = async (projectData: ProjectFormData) => {
+  //   try {
+  //     await sp.web.lists.getByTitle('Projects').items.add({
+  //       Title: projectData.name,
+  //       Owner: projectData.owner,
+  //       // ... other fields
+  //     });
+  //   } catch (error) {
+  //     console.error('Error saving project:', error);
+  //   }
+  // };
+
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
