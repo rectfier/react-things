@@ -1,15 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
+import { NormalPeoplePicker, IPersonaProps } from '@fluentui/react';
 import CalendarField from '../../ui/CalendarField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import InputField from '../../ui/InputField';
-import PeoplePicker from '../../ui/PeoplePicker';
 import TextareaField from '../../ui/TextareaField';
 
 import FormField from '../../ui/FormField/FormField';
 
 import styles from '../../styles/Form.module.scss';
+import peoplePickerStyles from '../../styles/NewProject.module.scss';
 import { ProjectFormData, projectSchema } from './NewProject';
 
 interface StepOneFormProps {}
@@ -74,6 +75,37 @@ const regionOptions: MultiSelectOption[] = [
   { label: 'Middle East & Africa', value: 'mea' }
 ];
 
+// Mock people data for suggestions
+const mockPeople: IPersonaProps[] = [
+  { key: 'john.doe', text: 'John Doe', secondaryText: 'john.doe@company.com' },
+  { key: 'jane.smith', text: 'Jane Smith', secondaryText: 'jane.smith@company.com' },
+  { key: 'alice.cooper', text: 'Alice Cooper', secondaryText: 'alice.cooper@company.com' },
+  { key: 'bob.martinez', text: 'Bob Martinez', secondaryText: 'bob.martinez@company.com' },
+  { key: 'carol.white', text: 'Carol White', secondaryText: 'carol.white@company.com' },
+  { key: 'daniel.lee', text: 'Daniel Lee', secondaryText: 'daniel.lee@company.com' },
+  { key: 'fiona.green', text: 'Fiona Green', secondaryText: 'fiona.green@company.com' },
+];
+
+const getPeopleSuggestions = (
+  filterText: string,
+  selectedItems?: IPersonaProps[]
+): IPersonaProps[] => {
+  if (!filterText) {
+    return [];
+  }
+
+  const filteredPeople = mockPeople.filter(
+    (person) =>
+      person.text?.toLowerCase().indexOf(filterText.toLowerCase()) !== -1 ||
+      person.secondaryText?.toLowerCase().indexOf(filterText.toLowerCase()) !== -1
+  );
+
+  // Filter out already selected people
+  return filteredPeople.filter(
+    (person) => !selectedItems?.some((selected) => selected.key === person.key)
+  );
+};
+
 const StepOneForm: React.FC<StepOneFormProps> = () => {
   const { register, control, formState: { errors } } = useFormContext<ProjectFormData>();
 
@@ -103,14 +135,26 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             <Controller
               name="owner"
               control={control}
-              render={({ field }) => (
-                <PeoplePicker
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Select owner"
-                  className={styles.fullWidth}
-                />
-              )}
+              render={({ field, fieldState }) => {
+                const handlePeoplePickerChange = (items?: IPersonaProps[]): void => {
+                  field.onChange(items || []);
+                };
+
+                return (
+                  <div className={peoplePickerStyles.peoplePickerWrapper}>
+                    <NormalPeoplePicker
+                      selectedItems={field.value}
+                      onResolveSuggestions={getPeopleSuggestions}
+                      onChange={handlePeoplePickerChange}
+                      errorMessage={fieldState.error?.message}
+                      itemLimit={1}
+                      inputProps={{
+                        placeholder: 'Select owner',
+                      }}
+                    />
+                  </div>
+                );
+              }}
             />
           </FormField>
           <FormField 

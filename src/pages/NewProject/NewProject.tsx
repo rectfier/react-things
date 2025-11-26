@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { IPersonaProps } from '@fluentui/react';
 import Button from '../../ui/Button/Button';
 import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
@@ -15,11 +16,17 @@ import styles from '../../styles/NewProject.module.scss';
 import formStyles from '../../styles/Form.module.scss';
 import dialogStyles from '../../ui/Dialog/Dialog.module.scss';
 
+// Custom Zod type for IPersonaProps array
+const personaArraySchema = z.custom<IPersonaProps[]>(
+  (val) => Array.isArray(val) && val.length > 0,
+  { message: 'Owner is required' }
+);
+
 // Define Zod schema combining Step 1 and Step 2 fields - all fields are required
 export const projectSchema = z.object({
   // Step 1 - All required fields
   name: z.string().min(1, 'Name is required'),
-  owner: z.string().min(1, 'Owner is required'),
+  owner: personaArraySchema,
   buStakeholder: z.string().min(1, 'BU/Stakeholder is required'),
   team: z.string().min(1, 'Team is required'),
   delegates: z.string().min(1, 'Delegates is required'),
@@ -156,7 +163,7 @@ const ProjectForm: React.FC = () => {
     resolver: zodResolver(projectSchema),
     defaultValues: {
       name: '',
-      owner: '',
+      owner: [] as IPersonaProps[],
       buStakeholder: '',
       team: '',
       delegates: '',

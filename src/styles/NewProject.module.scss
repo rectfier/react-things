@@ -107,3 +107,65 @@
   text-align: center;
 }
 
+.peoplePickerWrapper {
+  width: 100%;
+
+  :global {
+    .ms-BasePicker {
+      width: 100%;
+    }
+
+    .ms-BasePicker-text {
+      display: flex;
+      width: 100%;
+      min-height: 2rem;
+      padding: 0.125rem 0.75rem;
+      font-size: $font-size-input;
+      line-height: 1.5;
+      color: $gray-900;
+      background-color: $off-white;
+      border: 1px solid $gray-200;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+
+      &::after {
+        display: none;
+      }
+
+      &:hover {
+        border-color: $gray-300;
+      }
+    }
+
+    .ms-BasePicker-text.is-focused,
+    .ms-BasePicker-text:focus-within {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+
+    .ms-BasePicker-input {
+      font-size: $font-size-input;
+      color: $gray-900;
+      background-color: transparent;
+      height: auto;
+      min-height: 1.5rem;
+
+      &::placeholder {
+        color: $gray-400;
+      }
+    }
+
+    .ms-PickerPersona-container {
+      background-color: $gray-100;
+      border-radius: 0.25rem;
+      margin: 0.125rem 0.25rem 0.125rem 0;
+    }
+
+    .ms-Persona-primaryText {
+      font-size: $font-size-input;
+      color: $gray-900;
+    }
+  }
+}
