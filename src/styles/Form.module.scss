@@ -118,16 +118,40 @@
 }
 
 // Step Two Form specific styles
-.vendorSelectionLayout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-4;
-  align-items: flex-start;
+.vendorWrapper {
+  display: flex;
+  flex-direction: column; // Stack on mobile
+  gap: $spacing-6;
+  align-items: stretch;
 
   @media (min-width: $breakpoint-lg) {
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: $spacing-6;
+    flex-direction: row;
   }
+}
+
+.vendorLeftSection {
+  flex: 1;
+  min-width: 0; // Allow shrinking if needed, but min-width is set below for larger screens
+  
+  @media (min-width: $breakpoint-lg) {
+    min-width: 792px; // Fixed minimum width as requested
+  }
+}
+
+.vendorRightSection {
+  flex: 1;
+  min-width: 0;
+  
+  // Ensure the card takes full height
+  > * {
+    height: 100%;
+  }
+}
+
+.vendorSelectionLayout {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
 }
 
 .vendorSearchSection {
@@ -270,4 +294,3 @@
   height: 1.25rem;
   flex-shrink: 0;
 }
-

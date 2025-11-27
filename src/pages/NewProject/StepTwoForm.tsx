@@ -174,20 +174,19 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
         </div>
 
         {/* Vendor Selection Section */}
-        <div className={formStyles.formSection}>
-          <h2>Vendor Selection</h2>
-          <FormField
-            label="Vendor Selection"
-            tooltip="Select a vendor from the list"
-            error={errors.selectedVendor?.message}
-            required={!projectSchema.shape.selectedVendor.isOptional()}
-          >
-            <div 
-              className={formStyles.vendorSelectionLayout}
-              aria-invalid={!!errors.selectedVendor}
-              aria-label={errors.selectedVendor?.message}
+        <div className={formStyles.vendorWrapper}>
+          <div className={`${formStyles.formSection} ${formStyles.vendorLeftSection}`}>
+            <h2>Vendor Selection</h2>
+            <FormField
+              label="Vendor Selection"
+              tooltip="Select a vendor from the list"
+              error={errors.selectedVendor?.message}
+              required={!projectSchema.shape.selectedVendor.isOptional()}
             >
-              <div className={formStyles.vendorSearchSection}>
+              <div className={formStyles.vendorSearchSection}
+                aria-invalid={!!errors.selectedVendor}
+                aria-label={errors.selectedVendor?.message}
+              >
                 <div className={formStyles.searchControls}>
                   <span className={formStyles.vendorSelectionTitle}>Search Vendor</span>
                   <div className={formStyles.searchInputContainer}>
@@ -274,20 +273,19 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 </div>
                 )}
               </div>
+            </FormField>
+          </div>
 
-              {/* Vendor Overview Card */}
-              {vendorProfileData && (
-                <div className={formStyles.vendorCardWrapper}>
-                  <VendorOverviewCard
-                    vendorName={vendorProfileData.name}
-                    globalScore={vendorProfileData.globalScore}
-                    summary={vendorProfileData.summary}
-                    onViewProfile={() => console.log('View profile')}
-                  />
-                </div>
-              )}
+          {vendorProfileData && (
+            <div className={formStyles.vendorRightSection}>
+              <VendorOverviewCard
+                vendorName={vendorProfileData.name}
+                globalScore={vendorProfileData.globalScore}
+                summary={vendorProfileData.summary}
+                onViewProfile={() => console.log('View profile')}
+              />
             </div>
-          </FormField>
+          )}
         </div>
 
       </div>
