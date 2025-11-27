@@ -123,6 +123,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('name')}
+              placeholder="Enter project name"
               className={styles.fullWidth}
             />
           </FormField>
@@ -250,6 +251,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('notifications')}
+              placeholder="Enter notification preferences"
               className={styles.fullWidth}
             />
           </FormField>
@@ -281,6 +283,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('plannedExecutionYear')}
+              placeholder="Enter planned execution year"
               className={styles.fullWidth}
             />
           </FormField>
@@ -337,6 +340,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('product')}
+              placeholder="Enter product name"
               className={styles.fullWidth}
             />
           </FormField>
@@ -348,6 +352,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('clientRequestor')}
+              placeholder="Enter client requestor"
               className={styles.fullWidth}
             />
           </FormField>
@@ -359,6 +364,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('otherClientParticipant')}
+              placeholder="Enter other client participants"
               className={styles.fullWidth}
             />
           </FormField>
@@ -370,6 +376,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('buStakeholderAttr')}
+              placeholder="Enter B/U stakeholder"
               className={styles.fullWidth}
             />
           </FormField>
@@ -381,6 +388,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('therapeuticArea')}
+              placeholder="Enter therapeutic area"
               className={styles.fullWidth}
             />
           </FormField>
@@ -392,6 +400,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('researchType')}
+              placeholder="Enter research type"
               className={styles.fullWidth}
             />
           </FormField>
@@ -403,6 +412,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
           >
             <InputField
               {...register('methodology')}
+              placeholder="Enter methodology"
               className={styles.fullWidth}
             />
           </FormField>

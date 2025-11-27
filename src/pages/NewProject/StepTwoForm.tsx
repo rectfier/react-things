@@ -76,6 +76,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             >
               <InputField
                 {...register('estimatedSpendUSD')}
+                placeholder="Enter estimated spend in USD"
                 className={formStyles.fullWidth}
               />
             </FormField>
@@ -99,6 +100,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 <InputField
                   type="number"
                   {...register('estimatedSpendLocal.amount', { valueAsNumber: true })}
+                  placeholder="Enter amount"
                   className={formStyles.fullWidth}
                 />
               </div>
@@ -111,6 +113,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             >
               <InputField
                 {...register('associatedPO')}
+                placeholder="Enter associated PO number"
                 className={formStyles.fullWidth}
               />
             </FormField>
@@ -122,6 +125,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             >
               <InputField
                 {...register('businessQuestion')}
+                placeholder="Enter business question"
                 className={formStyles.fullWidth}
               />
             </FormField>
