@@ -308,32 +308,30 @@
   min-width: 5rem;
 
   :global {
-    > div {
-      .dropdownTrigger {
-        height: 2rem;
-        padding: 0.375rem 0.75rem;
-        font-size: $font-size-sm;
-        color: $gray-700;
+    .dropdownTrigger {
+      height: 2rem;
+      padding: 0.375rem 0.75rem;
+      font-size: $font-size-sm;
+      color: $gray-700;
+      background-color: $gray-100;
+      border: 1px solid $gray-200;
+      border-radius: 0.375rem;
+      box-shadow: none;
+
+      &:hover:not(.dropdownDisabled) {
+        border-color: $gray-300;
         background-color: $gray-100;
-        border: 1px solid $gray-200;
-        border-radius: 0.375rem;
-        box-shadow: none;
-
-        &:hover:not(.dropdownDisabled) {
-          border-color: $gray-300;
-          background-color: $gray-100;
-        }
       }
+    }
 
-      &.dropdownOpen .dropdownTrigger {
-        border-color: $gray-300;
-        box-shadow: none;
-      }
+    &.dropdownOpen .dropdownTrigger {
+      border-color: $gray-300;
+      box-shadow: none;
+    }
 
-      &:focus-within .dropdownTrigger {
-        border-color: $gray-300;
-        box-shadow: none;
-      }
+    &:focus-within .dropdownTrigger {
+      border-color: $gray-300;
+      box-shadow: none;
     }
   }
 }

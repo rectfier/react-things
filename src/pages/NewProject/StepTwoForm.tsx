@@ -99,19 +99,18 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               required={true}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div className={formStyles.currencyDropdown}>
-                  <Controller
-                    name="estimatedSpendLocal.currency"
-                    control={control}
-                    render={({ field }) => (
-                      <DropdownField
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.value)}
-                        options={currencyOptions}
-                      />
-                    )}
-                  />
-                </div>
+                <Controller
+                  name="estimatedSpendLocal.currency"
+                  control={control}
+                  render={({ field }) => (
+                    <DropdownField
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.value)}
+                      options={currencyOptions}
+                      className={formStyles.currencyDropdown}
+                    />
+                  )}
+                />
                 <InputField
                   type="number"
                   {...register('estimatedSpendLocal.value', { valueAsNumber: true })}
