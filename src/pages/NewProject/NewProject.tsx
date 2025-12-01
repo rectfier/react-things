@@ -58,7 +58,7 @@ export const projectSchema = z.object({
   businessQuestion: z.string().min(1, 'Business Question is required'),
   valueToClient: z.string().min(1, 'Value to Client is required'),
   procurementNotification: z.boolean().refine((val) => val !== undefined, { message: 'Procurement Notification is required' }),
-  selectedVendor: z.string().min(1, 'Selected Vendor is required'),
+  selectedVendor: z.array(z.string()).min(1, 'At least one vendor must be selected'),
 });
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
@@ -193,7 +193,7 @@ const ProjectForm: React.FC = () => {
       businessQuestion: '',
       valueToClient: '',
       procurementNotification: false,
-      selectedVendor: '',
+      selectedVendor: [],
     },
     mode: 'onChange',
   });

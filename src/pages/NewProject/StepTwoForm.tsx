@@ -40,12 +40,20 @@ const currencyOptions: DropdownFieldOption[] = [
 ];
 
 const StepTwoForm: React.FC<StepTwoFormProps> = () => {
-  const { register, control, watch, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
-  const selectedVendor = watch('selectedVendor');
-
+  const { register, control, getValues, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
+  
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredVendors, setFilteredVendors] = useState<string[]>(mockVendors);
   const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
+  const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
+
+  // Sync selected vendors from form
+  React.useEffect(() => {
+    const formValue = getValues('selectedVendor');
+    if (Array.isArray(formValue)) {
+      setSelectedVendors(formValue as string[]);
+    }
+  });
 
   React.useEffect(() => {
     if (searchQuery.trim()) {
@@ -61,13 +69,24 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
   }, [searchQuery]);
 
   const handleVendorSelect = (vendor: string) => {
-    setValue('selectedVendor', vendor);
+    const currentVendors = [...selectedVendors];
+    const isSelected = currentVendors.includes(vendor);
+    
+    if (isSelected) {
+      // Remove vendor if already selected
+      const updatedVendors = currentVendors.filter((v: string) => v !== vendor);
+      setValue('selectedVendor', updatedVendors, { shouldValidate: true });
+    } else {
+      // Add vendor if not selected
+      const updatedVendors = [...currentVendors, vendor];
+      setValue('selectedVendor', updatedVendors, { shouldValidate: true });
+    }
     setSearchQuery('');
     setFilteredVendors(mockVendors);
   };
 
-  // Show vendor profile for hovered vendor, or selected vendor if no hover
-  const displayVendorData = hoveredVendor || selectedVendor;
+  // Show vendor profile for hovered vendor, or first selected vendor if no hover
+  const displayVendorData = hoveredVendor || (selectedVendors.length > 0 ? selectedVendors[0] : null);
   const vendorProfileData = displayVendorData ? {
     name: displayVendorData,
     globalScore: 8.1,
@@ -259,13 +278,13 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                   {filteredVendors.map((vendor) => (
                     <div
                       key={vendor}
-                        className={`${formStyles.vendorItem} ${selectedVendor === vendor ? formStyles.vendorItemSelected : ''}`}
+                        className={`${formStyles.vendorItem} ${selectedVendors.includes(vendor) ? formStyles.vendorItemSelected : ''}`}
                       onClick={() => handleVendorSelect(vendor)}
                         onMouseEnter={() => setHoveredVendor(vendor)}
                         onMouseLeave={() => setHoveredVendor(null)}
                     >
                       <span className={formStyles.vendorName}>{vendor}</span>
-                        {selectedVendor === vendor && (
+                        {selectedVendors.includes(vendor) && (
                         <span className={formStyles.checkIcon}>
                           <svg
                             width="16"
