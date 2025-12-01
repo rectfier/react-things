@@ -244,9 +244,7 @@
   }
 }
 
-.vendorList {
-  display: flex;
-  flex-direction: column;
+.vendorTableWrapper {
   max-height: 20rem;
   overflow-y: auto;
   border: 1px solid $gray-200;
@@ -254,42 +252,91 @@
   background-color: $white;
 }
 
-.vendorItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $spacing-2 $spacing-4;
+.vendorTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  thead {
+    position: sticky;
+    top: 0;
+    background-color: $gray-50;
+    z-index: 1;
+
+    tr {
+      border-bottom: 1px solid $gray-200;
+    }
+
+    th {
+      padding: $spacing-3 $spacing-4;
+      text-align: left;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $gray-700;
+      background-color: $gray-50;
+      border-bottom: 1px solid $gray-200;
+
+      &:first-child {
+        border-top-left-radius: 0.5rem;
+      }
+
+      &:last-child {
+        border-top-right-radius: 0.5rem;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $gray-200;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.vendorRow {
   cursor: pointer;
   transition: all 0.15s ease;
   background-color: $white;
-  border-bottom: 1px solid $gray-200;
-  font-size: $font-size-sm;
-
-  &:first-child {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-  }
-
-  &:last-child {
-    border-bottom: none;
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-  }
 
   &:hover {
     background-color: $gray-50;
   }
 
-  &.vendorItemSelected {
+  &.vendorRowSelected {
     background-color: rgba($primary, 0.1);
-    border-color: rgba($primary, 0.2);
   }
+
+  td {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+    color: $gray-900;
+  }
+}
+
+.vendorNameCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-2;
 }
 
 .vendorName {
   font-size: $font-size-sm;
   color: $gray-900;
   font-weight: $font-weight-medium;
+}
+
+.vendorScoreCell {
+  font-weight: $font-weight-medium;
+  color: $primary;
+}
+
+.vendorSpecCell {
+  color: $gray-700;
 }
 
 .checkIcon {

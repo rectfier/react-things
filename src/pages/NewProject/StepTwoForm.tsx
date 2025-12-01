@@ -13,11 +13,31 @@ import { ProjectFormData, projectSchema } from './NewProject';
 
 interface StepTwoFormProps {}
 
-const mockVendors: string[] = [
-  'Vendor A', 'Vendor B', 'Vendor C', 'Vendor D', 'Vendor E',
-  'Vendor F', 'Vendor G', 'Vendor H', 'Vendor I', 'Vendor J',
-  'Vendor K', 'Vendor L', 'Vendor M', 'Vendor N', 'Vendor O',
-  'Vendor P', 'Vendor Q', 'Vendor R'
+interface VendorData {
+  name: string;
+  globalScore: number;
+  specialization: string;
+}
+
+const mockVendors: VendorData[] = [
+  { name: 'Vendor A', globalScore: 8.5, specialization: 'Oncology Research' },
+  { name: 'Vendor B', globalScore: 7.8, specialization: 'Cardiology Studies' },
+  { name: 'Vendor C', globalScore: 9.2, specialization: 'Neurology Trials' },
+  { name: 'Vendor D', globalScore: 8.1, specialization: 'Immunology Research' },
+  { name: 'Vendor E', globalScore: 7.5, specialization: 'Dermatology Studies' },
+  { name: 'Vendor F', globalScore: 8.9, specialization: 'Respiratory Research' },
+  { name: 'Vendor G', globalScore: 7.2, specialization: 'Gastroenterology' },
+  { name: 'Vendor H', globalScore: 8.7, specialization: 'Endocrinology Studies' },
+  { name: 'Vendor I', globalScore: 9.0, specialization: 'Hematology Research' },
+  { name: 'Vendor J', globalScore: 7.9, specialization: 'Rheumatology Trials' },
+  { name: 'Vendor K', globalScore: 8.3, specialization: 'Infectious Disease' },
+  { name: 'Vendor L', globalScore: 7.6, specialization: 'Nephrology Studies' },
+  { name: 'Vendor M', globalScore: 8.8, specialization: 'Ophthalmology Research' },
+  { name: 'Vendor N', globalScore: 7.4, specialization: 'Urology Trials' },
+  { name: 'Vendor O', globalScore: 9.1, specialization: 'Psychiatry Research' },
+  { name: 'Vendor P', globalScore: 8.0, specialization: 'Orthopedics Studies' },
+  { name: 'Vendor Q', globalScore: 7.7, specialization: 'Pediatrics Research' },
+  { name: 'Vendor R', globalScore: 8.6, specialization: 'Geriatrics Trials' }
 ];
 
 const valueToClientOptions: MultiSelectOption[] = [
@@ -43,7 +63,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
   const { register, control, getValues, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
   
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filteredVendors, setFilteredVendors] = useState<string[]>(mockVendors);
+  const [filteredVendors, setFilteredVendors] = useState<VendorData[]>(mockVendors);
   const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
   const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
 
@@ -58,9 +78,10 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
   React.useEffect(() => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      const filtered = mockVendors.filter((vendor: string) => {
-        const vendorLower = String(vendor).toLowerCase();
-        return vendorLower.indexOf(query) !== -1;
+      const filtered = mockVendors.filter((vendor: VendorData) => {
+        const vendorNameLower = vendor.name.toLowerCase();
+        const vendorSpecLower = vendor.specialization.toLowerCase();
+        return vendorNameLower.indexOf(query) !== -1 || vendorSpecLower.indexOf(query) !== -1;
       });
       setFilteredVendors(filtered);
     } else {
@@ -274,37 +295,52 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 </div>
                 
                 {filteredVendors.length > 0 && (
-                <div className={formStyles.vendorList}>
-                  {filteredVendors.map((vendor) => (
-                    <div
-                      key={vendor}
-                        className={`${formStyles.vendorItem} ${selectedVendors.includes(vendor) ? formStyles.vendorItemSelected : ''}`}
-                      onClick={() => handleVendorSelect(vendor)}
-                        onMouseEnter={() => setHoveredVendor(vendor)}
-                        onMouseLeave={() => setHoveredVendor(null)}
-                    >
-                      <span className={formStyles.vendorName}>{vendor}</span>
-                        {selectedVendors.includes(vendor) && (
-                        <span className={formStyles.checkIcon}>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M13.3333 4L6 11.3333L2.66667 8"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                <div className={formStyles.vendorTableWrapper}>
+                  <table className={formStyles.vendorTable}>
+                    <thead>
+                      <tr>
+                        <th>Vendor Name</th>
+                        <th>Global Score</th>
+                        <th>Specialization</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredVendors.map((vendor) => (
+                        <tr
+                          key={vendor.name}
+                          className={`${formStyles.vendorRow} ${selectedVendors.includes(vendor.name) ? formStyles.vendorRowSelected : ''}`}
+                          onClick={() => handleVendorSelect(vendor.name)}
+                          onMouseEnter={() => setHoveredVendor(vendor.name)}
+                          onMouseLeave={() => setHoveredVendor(null)}
+                        >
+                          <td className={formStyles.vendorNameCell}>
+                            <span className={formStyles.vendorName}>{vendor.name}</span>
+                            {selectedVendors.includes(vendor.name) && (
+                              <span className={formStyles.checkIcon}>
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M13.3333 4L6 11.3333L2.66667 8"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </span>
+                            )}
+                          </td>
+                          <td className={formStyles.vendorScoreCell}>{vendor.globalScore}</td>
+                          <td className={formStyles.vendorSpecCell}>{vendor.specialization}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
                 )}
               </div>
