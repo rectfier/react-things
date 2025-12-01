@@ -52,8 +52,8 @@ export const projectSchema = z.object({
   estimatedSpendUSD: z.number().min(0, 'Estimated Spend in USD is required'),
   estimatedSpendLocal: z.object({
     currency: z.string().min(1, 'Currency is required'),
-    amount: z.number().min(0, 'Amount is required'),
-  }).refine((val) => val.currency && val.amount !== undefined, { message: 'Estimated Spend in Local Currency is required' }),
+    value: z.number().min(0, 'Value is required'),
+  }).refine((val) => val.currency && val.value !== undefined, { message: 'Estimated Spend in Local Currency is required' }),
   associatedPO: z.string().min(1, 'Associated PO is required'),
   businessQuestion: z.string().min(1, 'Business Question is required'),
   valueToClient: z.string().min(1, 'Value to Client is required'),
@@ -187,7 +187,7 @@ const ProjectForm: React.FC = () => {
       estimatedSpendUSD: 0,
       estimatedSpendLocal: {
         currency: 'EUR',
-        amount: 0,
+        value: 0,
       },
       associatedPO: '',
       businessQuestion: '',

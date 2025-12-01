@@ -51,6 +51,12 @@
     }
   }
 
+  &.financialGridLowerRow {
+    @media (min-width: $breakpoint-md) {
+      grid-template-columns: 0.51fr 0.34fr 0.15fr;
+    }
+  }
+
   .formField {
     min-width: 0;
     width: 100%;
@@ -103,9 +109,9 @@
 
 .checkboxFieldRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: $spacing-3;
-  height: 2rem;
+  min-height: 2rem;
   margin-top: calc($font-size-sm * 1.5 + $spacing-2); // Align with input fields (label line-height + margin)
 }
 
@@ -114,7 +120,8 @@
   font-weight: $font-weight-semibold;
   color: $gray-900;
   margin: 0;
-  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 // Step Two Form specific styles
@@ -293,4 +300,10 @@
   width: 1.25rem;
   height: 1.25rem;
   flex-shrink: 0;
+}
+
+.currencyDropdown {
+  flex-shrink: 0;
+  width: auto;
+  min-width: 5rem;
 }

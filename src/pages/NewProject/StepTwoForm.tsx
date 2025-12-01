@@ -5,6 +5,8 @@ import Button from '../../ui/Button/Button';
 import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
+import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
+import dropdownStyles from '../../ui/DropdownField.module.scss';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
@@ -25,6 +27,17 @@ const valueToClientOptions: MultiSelectOption[] = [
   { label: 'Risk Mitigation', value: 'risk-mitigation' },
   { label: 'Innovation', value: 'innovation' },
   { label: 'Strategic Alignment', value: 'strategic-alignment' }
+];
+
+const currencyOptions: DropdownFieldOption[] = [
+  { label: 'EUR', value: 'EUR' },
+  { label: 'USD', value: 'USD' },
+  { label: 'GBP', value: 'GBP' },
+  { label: 'JPY', value: 'JPY' },
+  { label: 'CAD', value: 'CAD' },
+  { label: 'AUD', value: 'AUD' },
+  { label: 'CHF', value: 'CHF' },
+  { label: 'CNY', value: 'CNY' },
 ];
 
 const StepTwoForm: React.FC<StepTwoFormProps> = () => {
@@ -83,23 +96,25 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
             <FormField 
               label="Estimated Spend in Local Currency"
               tooltip="Enter the estimated spend in local currency"
-              error={errors.estimatedSpendLocal?.amount?.message || errors.estimatedSpendLocal?.message}
+              error={errors.estimatedSpendLocal?.value?.message || errors.estimatedSpendLocal?.message}
               required={true}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ 
-                  padding: '0.375rem 0.75rem', 
-                  backgroundColor: '#f3f4f6', 
-                  border: '1px solid #e5e7eb', 
-                  borderRadius: '0.375rem',
-                  color: '#374151',
-                  fontSize: '0.875rem'
-                }}>
-                  {watch('estimatedSpendLocal.currency')}
-                </span>
+                <Controller
+                  name="estimatedSpendLocal.currency"
+                  control={control}
+                  render={({ field }) => (
+                    <DropdownField
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.value)}
+                      options={currencyOptions}
+                      className={dropdownStyles.currencyDropdown}
+                    />
+                  )}
+                />
                 <InputField
                   type="number"
-                  {...register('estimatedSpendLocal.amount', { valueAsNumber: true })}
+                  {...register('estimatedSpendLocal.value', { valueAsNumber: true })}
                   placeholder="Enter amount"
                   className={formStyles.fullWidth}
                 />
@@ -117,6 +132,8 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 className={formStyles.fullWidth}
               />
             </FormField>
+          </div>
+          <div className={`${formStyles.formGrid} ${formStyles.financialGridLowerRow}`}>
             <FormField 
               label="Business Question"
               tooltip="Enter the business question"
