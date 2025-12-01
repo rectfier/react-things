@@ -6,7 +6,6 @@ import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
-import dropdownStyles from '../../ui/DropdownField.module.scss';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
 import formStyles from '../../styles/Form.module.scss';
@@ -100,18 +99,19 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
               required={true}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Controller
-                  name="estimatedSpendLocal.currency"
-                  control={control}
-                  render={({ field }) => (
-                    <DropdownField
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.value)}
-                      options={currencyOptions}
-                      className={dropdownStyles.currencyDropdown}
-                    />
-                  )}
-                />
+                <div className={formStyles.currencyDropdown}>
+                  <Controller
+                    name="estimatedSpendLocal.currency"
+                    control={control}
+                    render={({ field }) => (
+                      <DropdownField
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
+                        options={currencyOptions}
+                      />
+                    )}
+                  />
+                </div>
                 <InputField
                   type="number"
                   {...register('estimatedSpendLocal.value', { valueAsNumber: true })}
