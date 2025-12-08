@@ -1,0 +1,27 @@
+@import '../../styles/variables';
+
+.statusTracker {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.loading {
+  font-size: $font-size-sm;
+  color: $gray-500;
+}
+
+.label {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $gray-700;
+}
+
+.value {
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  color: $primary;
+  background-color: rgba($primary, 0.1);
+  padding: $spacing-2 $spacing-4;
+  border-radius: 0.5rem;
+}

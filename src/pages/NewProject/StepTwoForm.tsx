@@ -302,6 +302,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                         <th>Vendor Name</th>
                         <th>Global Score</th>
                         <th>Specialization</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -315,6 +316,10 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                         >
                           <td className={formStyles.vendorNameCell}>
                             <span className={formStyles.vendorName}>{vendor.name}</span>
+                          </td>
+                          <td className={formStyles.vendorScoreCell}>{vendor.globalScore}</td>
+                          <td className={formStyles.vendorSpecCell}>{vendor.specialization}</td>
+                          <td className={formStyles.checkIconCell}>
                             {selectedVendors.includes(vendor.name) && (
                               <span className={formStyles.checkIcon}>
                                 <svg
@@ -335,8 +340,6 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                               </span>
                             )}
                           </td>
-                          <td className={formStyles.vendorScoreCell}>{vendor.globalScore}</td>
-                          <td className={formStyles.vendorSpecCell}>{vendor.specialization}</td>
                         </tr>
                       ))}
                     </tbody>
