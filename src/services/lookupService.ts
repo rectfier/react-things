@@ -1,48 +1,49 @@
 /**
  * Lookup Service
  * 
- * Generic service for fetching dropdown options from APIs.
- * Uses lookupConfig for endpoints and transforms.
+ * Note: The main lookup functionality is now in useLookupOptions hook.
+ * This file is kept for backwards compatibility and direct service calls if needed.
  */
 
 import { DropdownFieldOption } from '../ui/DropdownField';
-import { LookupType, lookupConfigs } from '../config/lookupConfig';
 
-// ============================================
-// Generic Lookup Fetcher
-// ============================================
+// API Response Type (same for all lookups)
+interface LookupApiResponse {
+  Id: number;
+  value: string;
+  isActive: number;
+}
+
+// Transform function
+const transformToDropdownOptions = (data: LookupApiResponse[]): DropdownFieldOption[] => 
+  data
+    .filter(item => item.isActive === 1)
+    .map(item => ({
+      label: item.value,
+      value: item.Id
+    }));
 
 /**
- * Fetch lookup options by type
- * This is the main function used by useLookupOptions hook
+ * Generic fetch lookup function
  */
-export const fetchLookup = async (type: LookupType): Promise<DropdownFieldOption[]> => {
-  const config = lookupConfigs[type];
-  
-  if (!config) {
-    throw new Error(`Unknown lookup type: ${type}`);
-  }
-
-  const response = await fetch(config.endpoint);
+export const fetchLookup = async (endpoint: string): Promise<DropdownFieldOption[]> => {
+  const response = await fetch(endpoint);
   
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${type}`);
+    throw new Error('Failed to fetch lookup data');
   }
 
-  const data = await response.json();
-  
-  // Transform the data using the configured transform function
-  return config.transform(data);
+  const data: LookupApiResponse[] = await response.json();
+  return transformToDropdownOptions(data);
 };
 
-// ============================================
-// Legacy exports (for backwards compatibility)
-// ============================================
+// Legacy exports
+export const fetchTeams = (): Promise<DropdownFieldOption[]> => 
+  fetchLookup('https://jsonplaceholder.typicode.com/users');
 
-export const fetchTeams = (): Promise<DropdownFieldOption[]> => fetchLookup('teams');
-export const fetchDelegates = (): Promise<DropdownFieldOption[]> => fetchLookup('delegates');
+export const fetchDelegates = (): Promise<DropdownFieldOption[]> => 
+  fetchLookup('https://jsonplaceholder.typicode.com/users');
 
-// Export as object
 export const lookupService = {
   fetchLookup,
   fetchTeams,
