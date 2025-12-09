@@ -7,7 +7,7 @@ import StatusTracker from '../../ui/StatusTracker/StatusTracker';
 import Button from '../../ui/Button/Button';
 import { documentService, projectService, Project } from '../../services';
 import { queryKeys } from '../../config/queryKeys';
-import { DocumentType, ProjectStatus, canCompleteProject } from '../../config/projectStatus.config';
+import { DocumentType, ProjectStatus as ProjectStatusType, canCompleteProject } from '../../config/projectStatus.config';
 import styles from './ProjectStatus.module.scss';
 
 const queryClient = new QueryClient({
@@ -82,7 +82,7 @@ const ProjectStatusContent: React.FC = () => {
   };
 
   // Handler: Change project status
-  const handleStatusChange = async (newStatus: ProjectStatus): Promise<void> => {
+  const handleStatusChange = async (newStatus: ProjectStatusType): Promise<void> => {
     try {
       await updateProjectMutation.mutateAsync({
         projectId: PROJECT_ID,

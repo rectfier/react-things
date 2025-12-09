@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DialogProvider } from './contexts/DialogContext';
 import NewProject from './pages/NewProject/NewProject';
 import DialogPage from './pages/Dialog/Dialog';
@@ -9,20 +10,32 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import styles from './styles/App.module.scss';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 30000
+    }
+  }
+});
+
 const App: React.FC = () => {
   return (
-    <DialogProvider>
-      <Router>
-        <div className={styles.appContainer}>
-          <Routes>
-            <Route path="/" element={<div className={styles.homePage}><h1>Home</h1></div>} />
-            <Route path="/new-project" element={<NewProject />} />
-            <Route path="/dialog" element={<DialogPage />} />
-            <Route path="/project-status" element={<ProjectStatus />} />
-          </Routes>
-        </div>
-      </Router>
-    </DialogProvider>
+    <QueryClientProvider client={queryClient}>
+      <DialogProvider>
+        <Router>
+          <div className={styles.appContainer}>
+            <Routes>
+              <Route path="/" element={<div className={styles.homePage}><h1>Home</h1></div>} />
+              <Route path="/new-project" element={<NewProject />} />
+              <Route path="/dialog" element={<DialogPage />} />
+              <Route path="/project-status" element={<ProjectStatus />} />
+            </Routes>
+          </div>
+        </Router>
+      </DialogProvider>
+    </QueryClientProvider>
   );
 };
 

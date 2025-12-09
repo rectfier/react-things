@@ -12,3 +12,6 @@ export type {
   UpdateProjectRequest, 
   UpdateProjectResponse 
 } from './projectService';
+
+// Lookup Service (Dropdowns)
+export { lookupService, fetchLookup, fetchTeams, fetchDelegates } from './lookupService';

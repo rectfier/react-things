@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { NormalPeoplePicker, IPersonaProps } from '@fluentui/react';
 import CalendarField from '../../ui/CalendarField';
-import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
+import DropdownField from '../../ui/DropdownField';
 import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import InputField from '../../ui/InputField';
 import TextareaField from '../../ui/TextareaField';
@@ -12,61 +12,11 @@ import FormField from '../../ui/FormField/FormField';
 import styles from '../../styles/Form.module.scss';
 import peoplePickerStyles from '../../styles/NewProject.module.scss';
 import { ProjectFormData, projectSchema } from './NewProject';
+import useLookupOptions from '../../hooks/useLookupOptions';
 
 interface StepOneFormProps {}
 
-// Sample mock data for dropdowns
-const buStakeholderOptions: DropdownFieldOption[] = [
-  { label: 'Global Oncology Marketing & Sales', value: 'global-oncology' },
-  { label: 'Cardiovascular Business Unit', value: 'cardiovascular' },
-  { label: 'Neurology Division', value: 'neurology' },
-  { label: 'Immunology Unit', value: 'immunology' },
-  { label: 'Rare Diseases', value: 'rare-diseases' }
-];
-
-const teamOptions: DropdownFieldOption[] = [
-  { label: 'Research Team Alpha', value: 'team-alpha' },
-  { label: 'Research Team Beta', value: 'team-beta' },
-  { label: 'Clinical Operations', value: 'clinical-ops' },
-  { label: 'Market Research', value: 'market-research' },
-  { label: 'Data Analytics', value: 'data-analytics' }
-];
-
-const delegatesOptions: DropdownFieldOption[] = [
-  { label: 'Alice Cooper', value: 'alice.cooper' },
-  { label: 'Bob Martinez', value: 'bob.martinez' },
-  { label: 'Carol White', value: 'carol.white' },
-  { label: 'Daniel Lee', value: 'daniel.lee' },
-  { label: 'Fiona Green', value: 'fiona.green' }
-];
-
-const categoryOptions: DropdownFieldOption[] = [
-  { label: 'Market Research', value: 'market-research' },
-  { label: 'Clinical Trial', value: 'clinical-trial' },
-  { label: 'Product Launch', value: 'product-launch' },
-  { label: 'Competitive Analysis', value: 'competitive-analysis' },
-  { label: 'Regulatory Study', value: 'regulatory-study' }
-];
-
-const marketsOptions: DropdownFieldOption[] = [
-  { label: 'Germany', value: 'germany' },
-  { label: 'France', value: 'france' },
-  { label: 'United Kingdom', value: 'uk' },
-  { label: 'Spain', value: 'spain' },
-  { label: 'Italy', value: 'italy' },
-  { label: 'United States', value: 'usa' },
-  { label: 'Canada', value: 'canada' },
-  { label: 'Japan', value: 'japan' }
-];
-
-const respondentTypeOptions: DropdownFieldOption[] = [
-  { label: 'Healthcare Professionals', value: 'hcp' },
-  { label: 'Patients', value: 'patients' },
-  { label: 'Caregivers', value: 'caregivers' },
-  { label: 'Payers', value: 'payers' },
-  { label: 'Key Opinion Leaders', value: 'kol' }
-];
-
+// Regions are static for now (MultiSelect has different format)
 const regionOptions: MultiSelectOption[] = [
   { label: 'North America', value: 'na' },
   { label: 'Europe', value: 'eu' },
@@ -108,6 +58,14 @@ const getPeopleSuggestions = (
 
 const StepOneForm: React.FC<StepOneFormProps> = () => {
   const { register, control, formState: { errors } } = useFormContext<ProjectFormData>();
+
+  // Fetch all dropdown options using the reusable hook
+  const teams = useLookupOptions('teams');
+  const delegates = useLookupOptions('delegates');
+  const categories = useLookupOptions('categories');
+  const markets = useLookupOptions('markets');
+  const buStakeholders = useLookupOptions('buStakeholders');
+  const respondentTypes = useLookupOptions('respondentTypes');
 
   return (
     <div className={styles.form}>
@@ -168,13 +126,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="buStakeholder"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={buStakeholderOptions}
-              placeholder="Select BU/Stakeholder"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={buStakeholders.options}
+                  placeholder={buStakeholders.isLoading ? 'Loading...' : 'Select BU/Stakeholder'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={buStakeholders.isLoading}
                 />
               )}
             />
@@ -189,13 +148,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="team"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={teamOptions}
-              placeholder="Select team"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={teams.options}
+                  placeholder={teams.isLoading ? 'Loading teams...' : 'Select team'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={teams.isLoading}
                 />
               )}
             />
@@ -210,13 +170,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="delegates"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={delegatesOptions}
-              placeholder="Select delegates"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={delegates.options}
+                  placeholder={delegates.isLoading ? 'Loading...' : 'Select delegates'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={delegates.isLoading}
                 />
               )}
             />
@@ -231,13 +192,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="category"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={categoryOptions}
-              placeholder="Select category"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={categories.options}
+                  placeholder={categories.isLoading ? 'Loading...' : 'Select category'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={categories.isLoading}
                 />
               )}
             />
@@ -297,11 +259,11 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="startDate"
               control={control}
               render={({ field }) => (
-            <CalendarField
+                <CalendarField
                   value={field.value || undefined}
                   onChange={(e) => field.onChange(e.value || undefined)}
-              dateFormat="mm/dd/yyyy"
-              className={styles.fullWidth}
+                  dateFormat="mm/dd/yyyy"
+                  className={styles.fullWidth}
                 />
               )}
             />
@@ -316,11 +278,11 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="endDate"
               control={control}
               render={({ field }) => (
-            <CalendarField
+                <CalendarField
                   value={field.value || undefined}
                   onChange={(e) => field.onChange(e.value || undefined)}
-              dateFormat="mm/dd/yyyy"
-              className={styles.fullWidth}
+                  dateFormat="mm/dd/yyyy"
+                  className={styles.fullWidth}
                 />
               )}
             />
@@ -426,13 +388,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="markets"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={marketsOptions}
-              placeholder="Select markets"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={markets.options}
+                  placeholder={markets.isLoading ? 'Loading...' : 'Select markets'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={markets.isLoading}
                 />
               )}
             />
@@ -468,13 +431,14 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="respondentType"
               control={control}
               render={({ field, fieldState }) => (
-            <DropdownField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-              options={respondentTypeOptions}
-              placeholder="Select respondent type"
-              className={styles.fullWidth}
-              invalid={fieldState.invalid}
+                  options={respondentTypes.options}
+                  placeholder={respondentTypes.isLoading ? 'Loading...' : 'Select respondent type'}
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  disabled={respondentTypes.isLoading}
                 />
               )}
             />
