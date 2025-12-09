@@ -1,65 +1,95 @@
 /**
- * Document Service
- * Handles all document-related API calls (Server A)
+ * Document Service (SharePoint)
  * 
- * Replace the mock implementations with real fetch calls when ready
+ * Handles document storage in SharePoint.
+ * - addDocument: uploads file with metadata
+ * - getAllDocs: returns array of document types that exist
  */
 
-// Types
-export interface UploadedDocument {
-  id: string;
-  fileName: string;
-  documentType: string;
-  uploadedAt: string;
-  size: number;
-}
+import { DocumentType } from '../config/projectStatus.config';
 
-export interface DocumentUploadRequest {
+// ============================================
+// Types
+// ============================================
+export interface AddDocumentRequest {
   file: File;
-  documentType: string;
+  documentType: DocumentType;
   projectId: string;
 }
 
-export interface DocumentUploadResponse {
+export interface AddDocumentResponse {
   success: boolean;
-  document: UploadedDocument;
-  message: string;
+  documentType: DocumentType;
+  fileName: string;
 }
 
-// Simulate network delay
-const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+// ============================================
+// MOCK: In-memory storage (simulates SharePoint)
+// ============================================
+const mockStore: Map<string, DocumentType[]> = new Map();
 
-// Generate unique ID
-const generateId = (): string => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+const delay = (ms: number): Promise<void> => 
+  new Promise(resolve => setTimeout(resolve, ms));
+
+// ============================================
+// Service Functions
+// ============================================
 
 /**
- * Upload a document to Server A
+ * Upload document to SharePoint with metadata
+ * Returns success confirmation
  */
-export const uploadDocument = async (request: DocumentUploadRequest): Promise<DocumentUploadResponse> => {
-  // Simulate network latency (500ms - 1500ms)
+export const addDocument = async (
+  request: AddDocumentRequest
+): Promise<AddDocumentResponse> => {
   await delay(500 + Math.random() * 1000);
 
   // Simulate occasional failures (10% chance)
   if (Math.random() < 0.1) {
-    throw new Error('Document upload failed. Server A is temporarily unavailable.');
+    throw new Error('Document upload failed. SharePoint is temporarily unavailable.');
   }
 
-  const document: UploadedDocument = {
-    id: generateId(),
-    fileName: request.file.name,
-    documentType: request.documentType,
-    uploadedAt: new Date().toISOString(),
-    size: request.file.size
-  };
+  // Store doc type (simulates SharePoint storing file with metadata)
+  const existing = mockStore.get(request.projectId) || [];
+  if (!existing.includes(request.documentType)) {
+    mockStore.set(request.projectId, [...existing, request.documentType]);
+  }
 
   return {
     success: true,
-    document,
-    message: `Document "${request.file.name}" uploaded successfully`
+    documentType: request.documentType,
+    fileName: request.file.name
   };
 };
 
-// Export as object for easier mocking in tests
+/**
+ * Get all document types that exist for a project
+ * Returns array of DocumentType strings
+ */
+export const getAllDocs = async (projectId: string): Promise<DocumentType[]> => {
+  await delay(200 + Math.random() * 200);
+  
+  return mockStore.get(projectId) || [];
+};
+
+/**
+ * Delete a document by type
+ */
+export const deleteDocument = async (
+  projectId: string,
+  documentType: DocumentType
+): Promise<{ success: boolean }> => {
+  await delay(300);
+  
+  const existing = mockStore.get(projectId) || [];
+  mockStore.set(projectId, existing.filter(t => t !== documentType));
+  
+  return { success: true };
+};
+
+// Export as object
 export const documentService = {
-  uploadDocument
+  addDocument,
+  getAllDocs,
+  deleteDocument
 };

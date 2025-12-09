@@ -4,55 +4,57 @@ import TabView from '../../ui/TabView/TabView';
 import TabPanel from '../../ui/TabView/TabPanel';
 import FileUpload from '../../ui/FileUpload/FileUpload';
 import StatusTracker from '../../ui/StatusTracker/StatusTracker';
-import { documentService, projectService, Project, UploadedDocument } from '../../services';
+import Button from '../../ui/Button/Button';
+import { documentService, projectService, Project } from '../../services';
 import { queryKeys } from '../../config/queryKeys';
-import { getStatusByDocumentType, getNextStatus } from '../../config/projectStatus.config';
+import { DocumentType, ProjectStatus, canCompleteProject } from '../../config/projectStatus.config';
 import styles from './ProjectStatus.module.scss';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1
+      retry: 1,
+      staleTime: 30000
     }
   }
 });
 
 const PROJECT_ID = 'project-001';
 
-interface UploadHistoryItem {
-  document: UploadedDocument;
-  previousStatus: string;
-  newStatus: string;
-  timestamp: string;
-}
-
 const ProjectStatusContent: React.FC = () => {
   const qc = useQueryClient();
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
-  const [uploadHistory, setUploadHistory] = React.useState<UploadHistoryItem[]>([]);
   const [notification, setNotification] = React.useState<{
     type: 'success' | 'error';
     message: string;
   } | null>(null);
 
-  // Get current project
+  // Query: Get project data
   const { data: project } = useQuery<Project>({
     queryKey: queryKeys.projects.detail(PROJECT_ID),
-    queryFn: () => projectService.getProject(PROJECT_ID),
-    staleTime: Infinity
+    queryFn: () => projectService.getProject(PROJECT_ID)
   });
 
-  // Upload document mutation
+  // Query: Get uploaded document types
+  const { data: uploadedDocs = [] } = useQuery<DocumentType[]>({
+    queryKey: queryKeys.documents.byProject(PROJECT_ID),
+    queryFn: () => documentService.getAllDocs(PROJECT_ID)
+  });
+
+  // Mutation: Upload document to SharePoint
   const uploadMutation = useMutation({
-    mutationFn: documentService.uploadDocument
+    mutationFn: documentService.addDocument,
+    onSuccess: () => {
+      // Invalidate docs query to refetch
+      qc.invalidateQueries({ queryKey: queryKeys.documents.byProject(PROJECT_ID) });
+    }
   });
 
-  // Update project mutation
-  const updateMutation = useMutation({
+  // Mutation: Update project status
+  const updateProjectMutation = useMutation({
     mutationFn: projectService.updateProject,
     onSuccess: (response) => {
-      // Update cache directly with server response
       qc.setQueryData<Project>(
         queryKeys.projects.detail(PROJECT_ID),
         response.project
@@ -60,75 +62,54 @@ const ProjectStatusContent: React.FC = () => {
     }
   });
 
-  const handleUpload = async (file: File, documentType: string): Promise<void> => {
-    try {
-      setNotification(null);
-      const previousStatusId = project?.currentStatusId || 'draft';
+  const showNotification = (type: 'success' | 'error', message: string): void => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
 
-      // Step 1: Upload document
-      const uploadResult = await uploadMutation.mutateAsync({
+  // Handler: Upload document
+  const handleUpload = async (file: File, documentType: DocumentType): Promise<void> => {
+    try {
+      await uploadMutation.mutateAsync({
         file,
         documentType,
         projectId: PROJECT_ID
       });
-
-      // Determine new status
-      const statusForDocument = getStatusByDocumentType(documentType);
-      if (!statusForDocument) {
-        throw new Error(`Unknown document type: ${documentType}`);
-      }
-
-      const nextStatus = getNextStatus(statusForDocument.id);
-      const newStatusId = nextStatus?.id || statusForDocument.id;
-
-      // Step 2: Update project with new status
-      await updateMutation.mutateAsync({
-        projectId: PROJECT_ID,
-        currentStatusId: newStatusId,
-        documents: [...(project?.documents || []), uploadResult.document]
-      });
-
-      // Track in history
-      setUploadHistory(prev => [{
-        document: uploadResult.document,
-        previousStatus: previousStatusId,
-        newStatus: newStatusId,
-        timestamp: new Date().toISOString()
-      }, ...prev]);
-
-      setNotification({
-        type: 'success',
-        message: `Document uploaded! Status: ${newStatusId.replace(/_/g, ' ')}`
-      });
-
-      setTimeout(() => setNotification(null), 5000);
-
+      showNotification('success', `${documentType.replace(/_/g, ' ')} uploaded!`);
     } catch (error) {
-      setNotification({
-        type: 'error',
-        message: error instanceof Error ? error.message : 'Upload failed'
-      });
+      showNotification('error', error instanceof Error ? error.message : 'Upload failed');
     }
   };
 
-  const isProcessing = uploadMutation.isLoading || updateMutation.isLoading;
+  // Handler: Change project status
+  const handleStatusChange = async (newStatus: ProjectStatus): Promise<void> => {
+    try {
+      await updateProjectMutation.mutateAsync({
+        projectId: PROJECT_ID,
+        status: newStatus
+      });
+      showNotification('success', `Status changed to ${newStatus}`);
+    } catch (error) {
+      showNotification('error', error instanceof Error ? error.message : 'Update failed');
+    }
+  };
+
+  const status = project?.status || 'draft';
+  const isProcessing = uploadMutation.isLoading || updateProjectMutation.isLoading;
+  const canComplete = status === 'active' && canCompleteProject(uploadedDocs);
 
   return (
     <div className={styles.projectStatus}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Project Status Management</h1>
-        <StatusTracker projectId={PROJECT_ID} />
+        <h1 className={styles.title}>Project Status</h1>
+        <StatusTracker status={status} uploadedDocs={uploadedDocs} />
       </div>
 
       {notification && (
         <div className={`${styles.notification} ${styles[notification.type]}`}>
           <i className={`pi ${notification.type === 'success' ? 'pi-check-circle' : 'pi-times-circle'}`}></i>
           <span>{notification.message}</span>
-          <button
-            type="button"
-            className={styles.notificationClose}
-            onClick={() => setNotification(null)}
-          >
+          <button type="button" className={styles.closeBtn} onClick={() => setNotification(null)}>
             <i className="pi pi-times"></i>
           </button>
         </div>
@@ -136,35 +117,73 @@ const ProjectStatusContent: React.FC = () => {
 
       <div className={styles.content}>
         <TabView activeIndex={activeTabIndex} onTabChange={(e) => setActiveTabIndex(e.index)}>
-          <TabPanel header="Upload Documents">
+          <TabPanel header="Status Actions">
             <div className={styles.tabContent}>
-              <FileUpload onUpload={handleUpload} isUploading={isProcessing} />
+              <div className={styles.statusActions}>
+                {status === 'draft' && (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleStatusChange('submitted')}
+                    disabled={isProcessing}
+                  >
+                    Submit Project
+                  </Button>
+                )}
 
-              {uploadHistory.length > 0 && (
-                <div className={styles.historySection}>
-                  <h3 className={styles.historyTitle}>Recent Uploads</h3>
-                  <div className={styles.historyList}>
-                    {uploadHistory.map((item) => (
-                      <div key={item.document.id} className={styles.historyItem}>
-                        <i className="pi pi-file"></i>
-                        <div className={styles.historyDetails}>
-                          <span className={styles.historyFileName}>{item.document.fileName}</span>
-                          <span className={styles.historyStatus}>
-                            {item.previousStatus.replace(/_/g, ' ')} → {item.newStatus.replace(/_/g, ' ')}
-                          </span>
-                        </div>
-                        <i className="pi pi-check-circle" style={{ color: '#10b981' }}></i>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                {status === 'submitted' && (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleStatusChange('active')}
+                    disabled={isProcessing}
+                  >
+                    Activate Project
+                  </Button>
+                )}
+
+                {status === 'active' && (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleStatusChange('completed')}
+                    disabled={isProcessing || !canComplete}
+                  >
+                    {canComplete ? 'Complete Project' : 'Upload all docs to complete'}
+                  </Button>
+                )}
+
+                {status === 'completed' && (
+                  <p className={styles.completedText}>✓ Project Completed</p>
+                )}
+              </div>
             </div>
           </TabPanel>
 
-          <TabPanel header="Status">
+          <TabPanel header="Documents" disabled={status !== 'active'}>
             <div className={styles.tabContent}>
-              <StatusTracker projectId={PROJECT_ID} />
+              {status === 'active' ? (
+                <>
+                  <FileUpload
+                    onUpload={handleUpload}
+                    isUploading={uploadMutation.isLoading}
+                    uploadedDocs={uploadedDocs}
+                  />
+
+                  {uploadedDocs.length > 0 && (
+                    <div className={styles.uploadedList}>
+                      <h3>Uploaded Documents</h3>
+                      <ul>
+                        {uploadedDocs.map(doc => (
+                          <li key={doc}>
+                            <i className="pi pi-check-circle"></i>
+                            {doc.replace(/_/g, ' ')}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p>Activate project to upload documents</p>
+              )}
             </div>
           </TabPanel>
         </TabView>

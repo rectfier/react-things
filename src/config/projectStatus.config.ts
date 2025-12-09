@@ -1,111 +1,104 @@
 /**
  * Project Status Configuration
  * 
- * This config maps each status to its requirements.
- * To modify the workflow, simply update this configuration.
+ * Main Status Flow: Draft → Submitted → Active → Completed
  * 
- * Each status:
- * - id: unique identifier
- * - label: display name
- * - order: sequence in the workflow
- * - requiredDocumentType: the document type needed to progress to next status
- * - description: optional description for the status
+ * When status is "Active", document uploads drive sub-progress.
+ * Once all required docs are uploaded, project can be marked "Completed".
  */
 
-export interface StatusConfig {
-  id: string;
+// ============================================
+// Document Types (for Active status progress)
+// ============================================
+export const DOCUMENT_TYPES = [
+  'bidding_document',
+  'vendor_selection_document',
+  'screener_approval_document',
+  'recruitment_document',
+  'medical_review_document',
+  'interview_document',
+  'project_progress_document',
+  'completion_document'
+] as const;
+
+export type DocumentType = typeof DOCUMENT_TYPES[number];
+
+// ============================================
+// Main Project Statuses
+// ============================================
+export const PROJECT_STATUSES = [
+  'draft',
+  'submitted',
+  'active',
+  'completed'
+] as const;
+
+export type ProjectStatus = typeof PROJECT_STATUSES[number];
+
+export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
+  draft: 'Draft',
+  submitted: 'Submitted',
+  active: 'Active',
+  completed: 'Completed'
+};
+
+// ============================================
+// Document Progress (sub-steps within "Active")
+// ============================================
+export interface DocProgressStep {
+  documentType: DocumentType;
   label: string;
   order: number;
-  requiredDocumentType: string;
-  description?: string;
 }
 
-export const PROJECT_STATUSES: StatusConfig[] = [
-  {
-    id: 'draft',
-    label: 'Draft',
-    order: 1,
-    requiredDocumentType: 'draft_document',
-    description: 'Initial project draft'
-  },
-  {
-    id: 'bidding',
-    label: 'Bidding',
-    order: 2,
-    requiredDocumentType: 'bidding_document',
-    description: 'Bidding process in progress'
-  },
-  {
-    id: 'vendor_selected',
-    label: 'Vendor Selected',
-    order: 3,
-    requiredDocumentType: 'vendor_selection_document',
-    description: 'Vendor has been selected'
-  },
-  {
-    id: 'pending_screener_approval',
-    label: 'Pending Screener Approval',
-    order: 4,
-    requiredDocumentType: 'screener_approval_document',
-    description: 'Awaiting screener approval'
-  },
-  {
-    id: 'recruitment',
-    label: 'Recruitment',
-    order: 5,
-    requiredDocumentType: 'recruitment_document',
-    description: 'Recruitment phase'
-  },
-  {
-    id: 'pending_medical_review',
-    label: 'Pending Medical Review',
-    order: 6,
-    requiredDocumentType: 'medical_review_document',
-    description: 'Awaiting medical review'
-  },
-  {
-    id: 'interview_in_progress',
-    label: 'Interview in Progress',
-    order: 7,
-    requiredDocumentType: 'interview_document',
-    description: 'Interviews are being conducted'
-  },
-  {
-    id: 'project_in_progress',
-    label: 'Project in Progress',
-    order: 8,
-    requiredDocumentType: 'project_progress_document',
-    description: 'Project is actively in progress'
-  },
-  {
-    id: 'complete_project',
-    label: 'Complete Project',
-    order: 9,
-    requiredDocumentType: 'completion_document',
-    description: 'Project has been completed'
-  }
+export const DOC_PROGRESS_STEPS: DocProgressStep[] = [
+  { documentType: 'bidding_document', label: 'Bidding', order: 1 },
+  { documentType: 'vendor_selection_document', label: 'Vendor Selection', order: 2 },
+  { documentType: 'screener_approval_document', label: 'Screener Approval', order: 3 },
+  { documentType: 'recruitment_document', label: 'Recruitment', order: 4 },
+  { documentType: 'medical_review_document', label: 'Medical Review', order: 5 },
+  { documentType: 'interview_document', label: 'Interview', order: 6 },
+  { documentType: 'project_progress_document', label: 'Project Progress', order: 7 },
+  { documentType: 'completion_document', label: 'Final Completion', order: 8 }
 ];
 
-// Helper to get status by id
-export const getStatusById = (id: string): StatusConfig | undefined => {
-  return PROJECT_STATUSES.find(status => status.id === id);
+// ============================================
+// Helper Functions
+// ============================================
+
+/**
+ * Get document progress from uploaded doc types
+ * Returns which steps are completed and what's next
+ */
+export const getDocProgress = (uploadedDocs: DocumentType[]): {
+  completedSteps: DocProgressStep[];
+  nextStep: DocProgressStep | null;
+  isAllDocsUploaded: boolean;
+} => {
+  const completedSteps = DOC_PROGRESS_STEPS.filter(
+    step => uploadedDocs.includes(step.documentType)
+  );
+  
+  const nextStep = DOC_PROGRESS_STEPS.find(
+    step => !uploadedDocs.includes(step.documentType)
+  ) || null;
+
+  const isAllDocsUploaded = DOC_PROGRESS_STEPS.every(
+    step => uploadedDocs.includes(step.documentType)
+  );
+
+  return { completedSteps, nextStep, isAllDocsUploaded };
 };
 
-// Helper to get next status
-export const getNextStatus = (currentStatusId: string): StatusConfig | undefined => {
-  const currentStatus = getStatusById(currentStatusId);
-  if (!currentStatus) return undefined;
-  return PROJECT_STATUSES.find(status => status.order === currentStatus.order + 1);
+/**
+ * Check if project can be marked as completed
+ */
+export const canCompleteProject = (uploadedDocs: DocumentType[]): boolean => {
+  return getDocProgress(uploadedDocs).isAllDocsUploaded;
 };
 
-// Helper to get status for a document type
-export const getStatusByDocumentType = (documentType: string): StatusConfig | undefined => {
-  return PROJECT_STATUSES.find(status => status.requiredDocumentType === documentType);
-};
-
-// Document type options for dropdown
-export const DOCUMENT_TYPE_OPTIONS = PROJECT_STATUSES.map(status => ({
-  value: status.requiredDocumentType,
-  label: status.label,
-  statusId: status.id
+// Document type options for UI dropdown
+export const DOCUMENT_TYPE_OPTIONS = DOC_PROGRESS_STEPS.map(step => ({
+  value: step.documentType,
+  label: step.label
 }));

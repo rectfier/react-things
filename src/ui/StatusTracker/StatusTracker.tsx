@@ -1,41 +1,45 @@
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import styles from './StatusTracker.module.scss';
-import { getStatusById } from '../../config/projectStatus.config';
-import { queryKeys } from '../../config/queryKeys';
-import { projectService, Project } from '../../services';
+import { 
+  ProjectStatus, 
+  PROJECT_STATUS_LABELS,
+  DocumentType,
+  getDocProgress,
+  DOC_PROGRESS_STEPS
+} from '../../config/projectStatus.config';
 
 export interface StatusTrackerProps {
-  projectId: string;
+  status: ProjectStatus;
+  uploadedDocs?: DocumentType[];
 }
 
 /**
- * StatusTracker - subscribes to project query and displays current status
- * Automatically updates when project data changes in the cache
+ * StatusTracker - displays project status
+ * When status is "active", also shows document progress
  */
 const StatusTracker = React.forwardRef<HTMLDivElement, StatusTrackerProps>(
-  ({ projectId }, ref) => {
-    const { data: project, isLoading } = useQuery<Project>({
-      queryKey: queryKeys.projects.detail(projectId),
-      queryFn: () => projectService.getProject(projectId),
-      staleTime: Infinity // Don't refetch - we update cache directly
-    });
-
-    const currentStatusId = project?.currentStatusId || 'draft';
-    const currentStatus = getStatusById(currentStatusId);
-
-    if (isLoading) {
-      return (
-        <div ref={ref} className={styles.statusTracker}>
-          <span className={styles.loading}>Loading...</span>
-        </div>
-      );
-    }
+  ({ status, uploadedDocs = [] }, ref) => {
+    const progress = getDocProgress(uploadedDocs);
 
     return (
       <div ref={ref} className={styles.statusTracker}>
-        <span className={styles.label}>Status:</span>
-        <span className={styles.value}>{currentStatus?.label || 'Unknown'}</span>
+        <div className={styles.mainStatus}>
+          <span className={styles.label}>Status:</span>
+          <span className={styles.value}>{PROJECT_STATUS_LABELS[status]}</span>
+        </div>
+
+        {status === 'active' && (
+          <div className={styles.docProgress}>
+            <span className={styles.progressLabel}>
+              Progress: {progress.completedSteps.length} / {DOC_PROGRESS_STEPS.length} documents
+            </span>
+            {progress.nextStep && (
+              <span className={styles.nextStep}>
+                Next: {progress.nextStep.label}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   }

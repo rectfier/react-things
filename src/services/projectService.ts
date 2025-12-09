@@ -1,24 +1,27 @@
 /**
- * Project Service
- * Handles all project-related API calls (Server B)
+ * Project Service (Backend API)
  * 
- * Replace mock implementations with real fetch calls when ready
+ * Handles project CRUD operations.
+ * Status is stored in project, updated via updateProject.
  */
 
-import { UploadedDocument } from './documentService';
+import { ProjectStatus } from '../config/projectStatus.config';
 
+// ============================================
 // Types
+// ============================================
 export interface Project {
   id: string;
-  currentStatusId: string;
-  documents: UploadedDocument[];
+  name: string;
+  status: ProjectStatus;
+  createdAt: string;
   updatedAt: string;
 }
 
 export interface UpdateProjectRequest {
   projectId: string;
-  currentStatusId?: string;
-  documents?: UploadedDocument[];
+  status?: ProjectStatus;
+  name?: string;
 }
 
 export interface UpdateProjectResponse {
@@ -26,41 +29,75 @@ export interface UpdateProjectResponse {
   project: Project;
 }
 
-// Simulate network delay
-const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+// ============================================
+// MOCK: In-memory storage
+// ============================================
+const mockStore: Map<string, Project> = new Map();
+
+const delay = (ms: number): Promise<void> => 
+  new Promise(resolve => setTimeout(resolve, ms));
+
+// ============================================
+// Service Functions
+// ============================================
 
 /**
  * Get project by ID
  */
 export const getProject = async (projectId: string): Promise<Project> => {
-  await delay(200 + Math.random() * 300);
+  await delay(200 + Math.random() * 200);
+
+  let project = mockStore.get(projectId);
   
-  return {
-    id: projectId,
-    currentStatusId: 'draft',
-    documents: [],
-    updatedAt: new Date().toISOString()
-  };
+  if (!project) {
+    // Create new project with default status
+    project = {
+      id: projectId,
+      name: `Project ${projectId}`,
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    mockStore.set(projectId, project);
+  }
+
+  return project;
 };
 
 /**
  * Update project (PUT request)
- * Can update any project field - status, documents, etc.
+ * Can update status, name, or other fields
  */
-export const updateProject = async (request: UpdateProjectRequest): Promise<UpdateProjectResponse> => {
-  await delay(300 + Math.random() * 500);
+export const updateProject = async (
+  request: UpdateProjectRequest
+): Promise<UpdateProjectResponse> => {
+  await delay(300 + Math.random() * 300);
 
   // Simulate occasional failures (5% chance)
   if (Math.random() < 0.05) {
-    throw new Error('Project update failed. Server B is temporarily unavailable.');
+    throw new Error('Failed to update project. Server is temporarily unavailable.');
   }
 
-  const project: Project = {
-    id: request.projectId,
-    currentStatusId: request.currentStatusId || 'draft',
-    documents: request.documents || [],
-    updatedAt: new Date().toISOString()
-  };
+  let project = mockStore.get(request.projectId);
+  
+  if (!project) {
+    project = {
+      id: request.projectId,
+      name: request.name || `Project ${request.projectId}`,
+      status: request.status || 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  } else {
+    project = {
+      ...project,
+      ...(request.status && { status: request.status }),
+      ...(request.name && { name: request.name }),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  mockStore.set(request.projectId, project);
 
   return {
     success: true,
@@ -68,6 +105,7 @@ export const updateProject = async (request: UpdateProjectRequest): Promise<Upda
   };
 };
 
+// Export as object
 export const projectService = {
   getProject,
   updateProject

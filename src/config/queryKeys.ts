@@ -1,6 +1,5 @@
 /**
- * Query Keys
- * Centralized query keys for TanStack Query cache management
+ * Query Keys for TanStack Query
  */
 
 export const queryKeys = {

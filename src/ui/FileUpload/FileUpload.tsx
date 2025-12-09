@@ -1,27 +1,26 @@
 import * as React from 'react';
 import styles from './FileUpload.module.scss';
 import Button from '../Button/Button';
-import { DOCUMENT_TYPE_OPTIONS } from '../../config/projectStatus.config';
+import { DOCUMENT_TYPE_OPTIONS, DocumentType } from '../../config/projectStatus.config';
 
 export interface FileUploadProps {
-  onUpload: (file: File, documentType: string) => void;
+  onUpload: (file: File, documentType: DocumentType) => void;
   isUploading?: boolean;
   disabled?: boolean;
-}
-
-export interface UploadedFileInfo {
-  file: File;
-  documentType: string;
-  status: 'pending' | 'uploading' | 'success' | 'error';
-  error?: string;
+  uploadedDocs?: DocumentType[];
 }
 
 const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
-  ({ onUpload, isUploading = false, disabled = false }, ref) => {
+  ({ onUpload, isUploading = false, disabled = false, uploadedDocs = [] }, ref) => {
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [selectedDocumentType, setSelectedDocumentType] = React.useState<string>('');
+    const [selectedDocumentType, setSelectedDocumentType] = React.useState<DocumentType | ''>('');
     const [isDragOver, setIsDragOver] = React.useState(false);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+    // Filter out already uploaded doc types
+    const availableOptions = DOCUMENT_TYPE_OPTIONS.filter(
+      opt => !uploadedDocs.includes(opt.value)
+    );
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>): void => {
       const files = event.target.files;
@@ -33,35 +32,15 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
       event.preventDefault();
       setIsDragOver(false);
-      
       const files = event.dataTransfer.files;
       if (files && files.length > 0) {
         setSelectedFile(files[0]);
       }
     };
 
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
-      event.preventDefault();
-      setIsDragOver(true);
-    };
-
-    const handleDragLeave = (event: React.DragEvent<HTMLDivElement>): void => {
-      event.preventDefault();
-      setIsDragOver(false);
-    };
-
-    const handleBrowseClick = (): void => {
-      fileInputRef.current?.click();
-    };
-
-    const handleDocumentTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-      setSelectedDocumentType(event.target.value);
-    };
-
     const handleUpload = (): void => {
       if (selectedFile && selectedDocumentType) {
         onUpload(selectedFile, selectedDocumentType);
-        // Reset form after initiating upload
         setSelectedFile(null);
         setSelectedDocumentType('');
         if (fileInputRef.current) {
@@ -94,11 +73,13 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           <select
             className={styles.select}
             value={selectedDocumentType}
-            onChange={handleDocumentTypeChange}
-            disabled={isUploading || disabled}
+            onChange={(e) => setSelectedDocumentType(e.target.value as DocumentType | '')}
+            disabled={isUploading || disabled || availableOptions.length === 0}
           >
-            <option value="">Select document type...</option>
-            {DOCUMENT_TYPE_OPTIONS.map(option => (
+            <option value="">
+              {availableOptions.length === 0 ? 'All documents uploaded' : 'Select document type...'}
+            </option>
+            {availableOptions.map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -109,12 +90,12 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         <div
           className={`${styles.dropzone} ${isDragOver ? styles.dragOver : ''} ${disabled ? styles.disabled : ''}`}
           onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onClick={handleBrowseClick}
+          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+          onDragLeave={(e) => { e.preventDefault(); setIsDragOver(false); }}
+          onClick={() => fileInputRef.current?.click()}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && handleBrowseClick()}
+          onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
         >
           <input
             ref={fileInputRef}
@@ -126,9 +107,8 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
           <div className={styles.dropzoneContent}>
             <i className="pi pi-cloud-upload"></i>
             <p className={styles.dropzoneText}>
-              Drag & drop a file here, or <span className={styles.browseLink}>browse</span>
+              Drag & drop or <span className={styles.browseLink}>browse</span>
             </p>
-            <p className={styles.dropzoneHint}>Supports any file type</p>
           </div>
         </div>
 
@@ -146,7 +126,6 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
               className={styles.removeButton}
               onClick={handleRemoveFile}
               disabled={isUploading}
-              aria-label="Remove file"
             >
               <i className="pi pi-times"></i>
             </button>
@@ -160,7 +139,7 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
             disabled={!canUpload}
             icon={isUploading ? 'pi-spin pi-spinner' : 'pi-upload'}
           >
-            {isUploading ? 'Uploading...' : 'Upload Document'}
+            {isUploading ? 'Uploading...' : 'Upload'}
           </Button>
         </div>
       </div>

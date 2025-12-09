@@ -33,6 +33,7 @@
   span {
     flex: 1;
     font-size: $font-size-sm;
+    text-transform: capitalize;
   }
 
   &.success {
@@ -46,7 +47,7 @@
   }
 }
 
-.notificationClose {
+.closeBtn {
   padding: 0;
   border: none;
   background: transparent;
@@ -69,53 +70,51 @@
   padding: $spacing-6;
 }
 
-.historySection {
+.statusActions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  align-items: flex-start;
+}
+
+.completedText {
+  font-size: $font-size-lg;
+  color: #10b981;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+}
+
+.uploadedList {
   margin-top: $spacing-8;
   padding-top: $spacing-6;
   border-top: 1px solid $gray-200;
-}
 
-.historyTitle {
-  font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: $gray-900;
-  margin: 0 0 $spacing-4;
-}
-
-.historyList {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-2;
-}
-
-.historyItem {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-3;
-  background-color: $gray-50;
-  border-radius: 0.5rem;
-
-  > i:first-child {
-    color: $primary;
+  h3 {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    margin: 0 0 $spacing-4;
   }
-}
 
-.historyDetails {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-1;
-}
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
 
-.historyFileName {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: $gray-900;
-}
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-sm;
+    color: $gray-700;
+    text-transform: capitalize;
 
-.historyStatus {
-  font-size: $font-size-xs;
-  color: $gray-500;
-  text-transform: capitalize;
+    i {
+      color: #10b981;
+    }
+  }
 }
