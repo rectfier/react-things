@@ -18,11 +18,11 @@ interface StepOneFormProps {}
 
 // Regions are static for now (MultiSelect has different format)
 const regionOptions: MultiSelectOption[] = [
-  { label: 'North America', value: 'na' },
-  { label: 'Europe', value: 'eu' },
-  { label: 'Asia Pacific', value: 'apac' },
-  { label: 'Latin America', value: 'latam' },
-  { label: 'Middle East & Africa', value: 'mea' }
+  { label: 'North America', value: 'na', category: "South America" },
+  { label: 'Europe', value: 'eu', category: 'Europe' },
+  { label: 'Asia Pacific', value: 'apac', category: 'Asia Pacific' },
+  { label: 'Latin America', value: 'latam', category: 'Latin America' },
+  { label: 'Middle East & Africa', value: 'mea', category: 'Middle East & Africa' }
 ];
 
 // Mock people data for suggestions
@@ -151,7 +151,8 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
                 <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={teams.options}
+                  options={regionOptions}
+                  filter={true}
                   placeholder={teams.isLoading ? 'Loading teams...' : 'Select team'}
                   className={styles.fullWidth}
                   invalid={fieldState.invalid}

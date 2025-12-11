@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect, forwardRef } from 'react';
+import * as React from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import styles from './DropdownField.module.scss';
 
 export interface DropdownFieldOption {
   label: string;
   value: string | number;
+  category?: string;
 }
 
 export interface DropdownFieldChangeEvent {
@@ -22,12 +24,19 @@ export interface DropdownFieldProps {
   invalid?: boolean;
 }
 
+interface GroupedOptions {
+  category: string | null;
+  options: DropdownFieldOption[];
+}
+
 const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
-  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false, invalid = false }, _ref) => {
+  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false, filter = false, invalid = false }, _ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
+    const [filterText, setFilterText] = useState('');
     const dropdownRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<HTMLUListElement>(null);
+    const filterInputRef = useRef<HTMLInputElement>(null);
 
     // Find selected option using a loop for older browser compatibility
     let selectedOption: DropdownFieldOption | undefined;
@@ -38,11 +47,63 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
       }
     }
 
+    // Filter options based on filterText
+    const filteredOptions: DropdownFieldOption[] = [];
+    if (filter && filterText.trim() !== '') {
+      const lowerFilter = filterText.toLowerCase();
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].label.toLowerCase().indexOf(lowerFilter) !== -1) {
+          filteredOptions.push(options[i]);
+        }
+      }
+    } else {
+      for (let i = 0; i < options.length; i++) {
+        filteredOptions.push(options[i]);
+      }
+    }
+
+    // Group options by category
+    const groupedOptions: GroupedOptions[] = [];
+    const categoryMap: { [key: string]: DropdownFieldOption[] } = {};
+    const uncategorized: DropdownFieldOption[] = [];
+
+    for (let i = 0; i < filteredOptions.length; i++) {
+      const opt = filteredOptions[i];
+      if (opt.category) {
+        if (!categoryMap[opt.category]) {
+          categoryMap[opt.category] = [];
+        }
+        categoryMap[opt.category].push(opt);
+      } else {
+        uncategorized.push(opt);
+      }
+    }
+
+    // Add uncategorized first
+    if (uncategorized.length > 0) {
+      groupedOptions.push({ category: null, options: uncategorized });
+    }
+
+    // Add categorized options
+    const categoryKeys = Object.keys(categoryMap);
+    for (let i = 0; i < categoryKeys.length; i++) {
+      groupedOptions.push({ category: categoryKeys[i], options: categoryMap[categoryKeys[i]] });
+    }
+
+    // Flatten for keyboard navigation (only clickable options)
+    const flatOptions: DropdownFieldOption[] = [];
+    for (let i = 0; i < groupedOptions.length; i++) {
+      for (let j = 0; j < groupedOptions[i].options.length; j++) {
+        flatOptions.push(groupedOptions[i].options[j]);
+      }
+    }
+
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
           setIsOpen(false);
           setFocusedIndex(-1);
+          setFilterText('');
         }
       };
 
@@ -55,6 +116,13 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
       };
     }, [isOpen]);
 
+    // Focus filter input when dropdown opens
+    useEffect(() => {
+      if (isOpen && filter && filterInputRef.current) {
+        filterInputRef.current.focus();
+      }
+    }, [isOpen, filter]);
+
     useEffect(() => {
       if (isOpen && listRef.current && focusedIndex >= 0) {
         const items = listRef.current.querySelectorAll('li');
@@ -66,12 +134,16 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
 
     const handleToggle = () => {
       if (!disabled) {
-        setIsOpen(!isOpen);
+        const newIsOpen = !isOpen;
+        setIsOpen(newIsOpen);
         setFocusedIndex(-1);
+        if (!newIsOpen) {
+          setFilterText('');
+        }
       }
     };
 
-    const handleSelect = (option: DropdownFieldOption, event: React.MouseEvent) => {
+    const handleSelect = (option: DropdownFieldOption, event: React.MouseEvent | React.KeyboardEvent) => {
       if (onChange) {
         onChange({
           value: option.value,
@@ -80,6 +152,12 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
       }
       setIsOpen(false);
       setFocusedIndex(-1);
+      setFilterText('');
+    };
+
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFilterText(e.target.value);
+      setFocusedIndex(-1);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -87,17 +165,28 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
 
       switch (e.key) {
         case 'Enter':
-        case ' ':
           e.preventDefault();
           if (!isOpen) {
             setIsOpen(true);
-          } else if (focusedIndex >= 0 && options[focusedIndex]) {
-            handleSelect(options[focusedIndex], e as any);
+          } else if (focusedIndex >= 0 && flatOptions[focusedIndex]) {
+            handleSelect(flatOptions[focusedIndex], e);
+          }
+          break;
+        case ' ':
+          // Only toggle if not in filter mode or filter input is not focused
+          if (!filter || document.activeElement !== filterInputRef.current) {
+            e.preventDefault();
+            if (!isOpen) {
+              setIsOpen(true);
+            } else if (focusedIndex >= 0 && flatOptions[focusedIndex]) {
+              handleSelect(flatOptions[focusedIndex], e);
+            }
           }
           break;
         case 'Escape':
           setIsOpen(false);
           setFocusedIndex(-1);
+          setFilterText('');
           break;
         case 'ArrowDown':
           e.preventDefault();
@@ -105,7 +194,7 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
             setIsOpen(true);
           } else {
             setFocusedIndex(prev => 
-              prev < options.length - 1 ? prev + 1 : prev
+              prev < flatOptions.length - 1 ? prev + 1 : prev
             );
           }
           break;
@@ -118,8 +207,19 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
         case 'Tab':
           setIsOpen(false);
           setFocusedIndex(-1);
+          setFilterText('');
           break;
       }
+    };
+
+    // Helper to get flat index for an option
+    const getFlatIndex = (option: DropdownFieldOption): number => {
+      for (let i = 0; i < flatOptions.length; i++) {
+        if (flatOptions[i].value === option.value) {
+          return i;
+        }
+      }
+      return -1;
     };
 
     return (
@@ -158,24 +258,56 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
             </svg>
           </span>
         </div>
-        {isOpen && options.length > 0 && (
-          <ul
-            ref={listRef}
-            className={styles.dropdownPanel}
-            role="listbox"
-          >
-            {options.map((option, index) => (
-              <li
-                key={option.value}
-                className={`${styles.dropdownOption} ${option.value === value ? styles.optionSelected : ''} ${index === focusedIndex ? styles.optionFocused : ''}`}
-                onClick={(e) => handleSelect(option, e)}
-                role="option"
-                aria-selected={option.value === value}
+        {isOpen && (
+          <div className={styles.dropdownPanel}>
+            {filter && (
+              <div className={styles.filterContainer}>
+                <input
+                  ref={filterInputRef}
+                  type="text"
+                  className={styles.filterInput}
+                  placeholder="Search..."
+                  value={filterText}
+                  onChange={handleFilterChange}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            )}
+            {flatOptions.length > 0 ? (
+              <ul
+                ref={listRef}
+                className={styles.optionsList}
+                role="listbox"
               >
-                {option.label}
-              </li>
-            ))}
-          </ul>
+                {groupedOptions.map((group) => (
+                  <React.Fragment key={group.category || '__uncategorized__'}>
+                    {group.category && (
+                      <li className={styles.categoryHeader}>
+                        {group.category}
+                      </li>
+                    )}
+                    {group.options.map((option) => {
+                      const flatIndex = getFlatIndex(option);
+                      const hasCategory = group.category !== null;
+                      return (
+                        <li
+                          key={option.value}
+                          className={`${styles.dropdownOption} ${hasCategory ? styles.optionIndented : ''} ${option.value === value ? styles.optionSelected : ''} ${flatIndex === focusedIndex ? styles.optionFocused : ''}`}
+                          onClick={(e) => handleSelect(option, e)}
+                          role="option"
+                          aria-selected={option.value === value}
+                        >
+                          {option.label}
+                        </li>
+                      );
+                    })}
+                  </React.Fragment>
+                ))}
+              </ul>
+            ) : (
+              <div className={styles.noResults}>No results found</div>
+            )}
+          </div>
         )}
       </div>
     );

@@ -59,8 +59,13 @@ const transformToDropdownOptions = (data: LookupApiResponse[]): DropdownFieldOpt
 // ============================================
 const fetchLookup = async (type: LookupType): Promise<DropdownFieldOption[]> => {
   const endpoint = lookupEndpoints[type];
-  
-  const response = await fetch(endpoint);
+
+  const response = await fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+    },
+  });
   
   if (!response.ok) {
     throw new Error(`Failed to fetch ${type}`);
