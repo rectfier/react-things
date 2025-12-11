@@ -200,5 +200,17 @@
     color: $gray-500;
     font-size: $font-size-sm;
   }
+
+  .multiselectOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .checkmark {
+    color: $primary;
+    font-weight: $font-weight-semibold;
+  }
 }
 

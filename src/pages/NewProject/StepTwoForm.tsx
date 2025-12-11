@@ -4,7 +4,6 @@ import { useFormContext, Controller } from 'react-hook-form';
 import Button from '../../ui/Button/Button';
 import InputField from '../../ui/InputField';
 import CheckboxField from '../../ui/CheckboxField';
-import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
 import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import FormField from '../../ui/FormField/FormField';
 import VendorOverviewCard from './VendorOverviewCard';
@@ -40,7 +39,7 @@ const mockVendors: VendorData[] = [
   { name: 'Vendor R', globalScore: 8.6, specialization: 'Geriatrics Trials' }
 ];
 
-const valueToClientOptions: MultiSelectOption[] = [
+const valueToClientOptions: DropdownFieldOption[] = [
   { label: 'Cost Savings', value: 'cost-savings' },
   { label: 'Process Efficiency', value: 'process-efficiency' },
   { label: 'Risk Mitigation', value: 'risk-mitigation' },
@@ -195,13 +194,14 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 name="valueToClient"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <MultiSelectField
+                  <DropdownField
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
                     options={valueToClientOptions}
                     placeholder="Select value to client"
                     className={formStyles.fullWidth}
                     invalid={fieldState.invalid}
+                    multiselect
                   />
                 )}
               />

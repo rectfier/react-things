@@ -22,6 +22,7 @@ export interface DropdownFieldProps {
   disabled?: boolean;
   filter?: boolean;
   invalid?: boolean;
+  multiselect?: boolean;
 }
 
 interface GroupedOptions {
@@ -30,7 +31,7 @@ interface GroupedOptions {
 }
 
 const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
-  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false, filter = false, invalid = false }, _ref) => {
+  ({ value, options = [], onChange, placeholder = 'Select...', className = '', disabled = false, filter = false, invalid = false, multiselect = false }, _ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
     const [filterText, setFilterText] = useState('');
@@ -38,12 +39,27 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
     const listRef = useRef<HTMLUListElement>(null);
     const filterInputRef = useRef<HTMLInputElement>(null);
 
+    // For multiselect: convert comma-separated string to array
+    const valueArray: string[] = multiselect && typeof value === 'string' && value
+      ? value.split(',').map(v => v.trim()).filter(Boolean)
+      : [];
+
     // Find selected option using a loop for older browser compatibility
     let selectedOption: DropdownFieldOption | undefined;
     for (let i = 0; i < options.length; i++) {
       if (options[i].value === value) {
         selectedOption = options[i];
         break;
+      }
+    }
+
+    // For multiselect: get selected labels
+    const selectedLabels: string[] = [];
+    if (multiselect) {
+      for (let i = 0; i < options.length; i++) {
+        if (valueArray.indexOf(String(options[i].value)) !== -1) {
+          selectedLabels.push(options[i].label);
+        }
       }
     }
 
@@ -144,15 +160,37 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
     };
 
     const handleSelect = (option: DropdownFieldOption, event: React.MouseEvent | React.KeyboardEvent) => {
-      if (onChange) {
-        onChange({
-          value: option.value,
-          originalEvent: event
-        });
+      if (multiselect) {
+        const currentValues = [...valueArray];
+        const optionValueStr = String(option.value);
+        const index = currentValues.indexOf(optionValueStr);
+
+        if (index === -1) {
+          currentValues.push(optionValueStr);
+        } else {
+          currentValues.splice(index, 1);
+        }
+
+        const newValue = currentValues.join(', ');
+
+        if (onChange) {
+          onChange({
+            value: newValue,
+            originalEvent: event
+          });
+        }
+        // Keep open for multiple selection
+      } else {
+        if (onChange) {
+          onChange({
+            value: option.value,
+            originalEvent: event
+          });
+        }
+        setIsOpen(false);
+        setFocusedIndex(-1);
+        setFilterText('');
       }
-      setIsOpen(false);
-      setFocusedIndex(-1);
-      setFilterText('');
     };
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,8 +275,8 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
           aria-haspopup="listbox"
           aria-invalid={invalid}
         >
-          <span className={`${styles.dropdownLabel} ${!selectedOption ? styles.dropdownPlaceholder : ''}`}>
-            {selectedOption ? selectedOption.label : placeholder}
+          <span className={`${styles.dropdownLabel} ${multiselect ? (selectedLabels.length === 0 ? styles.dropdownPlaceholder : '') : (!selectedOption ? styles.dropdownPlaceholder : '')}`}>
+            {multiselect ? (selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder) : (selectedOption ? selectedOption.label : placeholder)}
           </span>
           <span className={styles.dropdownArrow}>
             <svg
@@ -259,7 +297,7 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
           </span>
         </div>
         {isOpen && (
-          <div className={styles.dropdownPanel}>
+          <div className={styles.dropdownPanel} role="listbox" aria-multiselectable={multiselect}>
             {filter && (
               <div className={styles.filterContainer}>
                 <input
@@ -277,7 +315,6 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
               <ul
                 ref={listRef}
                 className={styles.optionsList}
-                role="listbox"
               >
                 {groupedOptions.map((group) => (
                   <React.Fragment key={group.category || '__uncategorized__'}>
@@ -289,15 +326,25 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
                     {group.options.map((option) => {
                       const flatIndex = getFlatIndex(option);
                       const hasCategory = group.category !== null;
+                      const isSelected = multiselect
+                        ? valueArray.indexOf(String(option.value)) !== -1
+                        : option.value === value;
                       return (
                         <li
                           key={option.value}
-                          className={`${styles.dropdownOption} ${hasCategory ? styles.optionIndented : ''} ${option.value === value ? styles.optionSelected : ''} ${flatIndex === focusedIndex ? styles.optionFocused : ''}`}
+                          className={`${styles.dropdownOption} ${hasCategory ? styles.optionIndented : ''} ${isSelected ? styles.optionSelected : ''} ${flatIndex === focusedIndex ? styles.optionFocused : ''}`}
                           onClick={(e) => handleSelect(option, e)}
                           role="option"
-                          aria-selected={option.value === value}
+                          aria-selected={isSelected}
                         >
-                          {option.label}
+                          {multiselect ? (
+                            <span className={styles.multiselectOption}>
+                              <span>{option.label}</span>
+                              {isSelected && <span className={styles.checkmark}>✓</span>}
+                            </span>
+                          ) : (
+                            option.label
+                          )}
                         </li>
                       );
                     })}

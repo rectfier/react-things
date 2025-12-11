@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { NormalPeoplePicker, IPersonaProps } from '@fluentui/react';
 import CalendarField from '../../ui/CalendarField';
-import DropdownField from '../../ui/DropdownField';
-import MultiSelectField, { MultiSelectOption } from '../../ui/MultiSelectField';
+import DropdownField, { DropdownFieldOption } from '../../ui/DropdownField';
 import InputField from '../../ui/InputField';
 import TextareaField from '../../ui/TextareaField';
 
@@ -16,8 +15,8 @@ import useLookupOptions from '../../hooks/useLookupOptions';
 
 interface StepOneFormProps {}
 
-// Regions are static for now (MultiSelect has different format)
-const regionOptions: MultiSelectOption[] = [
+// Regions are static for now (DropdownField multiselect format)
+const regionOptions: DropdownFieldOption[] = [
   { label: 'North America', value: 'na', category: "South America" },
   { label: 'Europe', value: 'eu', category: 'Europe' },
   { label: 'Asia Pacific', value: 'apac', category: 'Asia Pacific' },
@@ -411,12 +410,13 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               name="regions"
               control={control}
               render={({ field, fieldState }) => (
-                <MultiSelectField
+                <DropdownField
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
                   options={regionOptions}
                   placeholder="Select regions"
                   className={styles.fullWidth}
+                  multiselect
                   invalid={fieldState.invalid}
                 />
               )}
