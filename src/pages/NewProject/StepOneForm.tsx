@@ -24,6 +24,23 @@ const regionOptions: DropdownFieldOption[] = [
   { label: 'Middle East & Africa', value: 'mea', category: 'Middle East & Africa' }
 ];
 
+// TEST: Dummy product options for multiselect testing
+const productOptions: DropdownFieldOption[] = [
+  { label: 'Product Alpha', value: 1 },
+  { label: 'Product Beta', value: 2 },
+  { label: 'Product Gamma', value: 3 },
+  { label: 'Product Delta', value: 4 },
+  { label: 'Product Epsilon', value: 5 },
+];
+
+// TEST: Dummy team options for single select testing
+const teamOptions: DropdownFieldOption[] = [
+  { label: 'Engineering Team', value: 101 },
+  { label: 'Design Team', value: 102 },
+  { label: 'Marketing Team', value: 103 },
+  { label: 'Sales Team', value: 104 },
+];
+
 // Mock people data for suggestions
 const mockPeople: IPersonaProps[] = [
   { key: 'john.doe', text: 'John Doe', secondaryText: 'john.doe@company.com' },
@@ -140,7 +157,7 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             />
           </FormField>
           <FormField 
-            label="Team" 
+            label="Team (TEST: Single Select)" 
             tooltip="Select the team"
             error={errors.team?.message}
             required={!projectSchema.shape.team.isOptional()}
@@ -152,15 +169,15 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
                 <DropdownField
                   value={field.value}
                   onChange={(e) => {
-                    field.onChange(e.formattedNames); // Set name
-                    setValue('teamId', String(e.value)); // Set ID
+                    console.log('=== SINGLE SELECT onChange ===', e);
+                    field.onChange(e.value);  // Store label
+                    setValue('teamId', String(e.id)); // Store ID
                   }}
-                  options={regionOptions}
+                  options={teamOptions}
                   filter={true}
-                  placeholder={teams.isLoading ? 'Loading teams...' : 'Select team'}
+                  placeholder="Select team"
                   className={styles.fullWidth}
                   invalid={fieldState.invalid}
-                  disabled={teams.isLoading}
                 />
               )}
             />
@@ -336,15 +353,29 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
         <h2>Attributes</h2>
         <div className={`${styles.formGrid} ${styles.threeColumns}`}>
           <FormField 
-            label="Product"
-            tooltip="Enter the product name"
+            label="Product (TEST: Multiselect)"
+            tooltip="Select products"
             error={errors.product?.message}
             required={!projectSchema.shape.product.isOptional()}
           >
-            <InputField
-              {...register('product')}
-              placeholder="Enter product name"
-              className={styles.fullWidth}
+            <Controller
+              name="product"
+              control={control}
+              render={({ field, fieldState }) => (
+                <DropdownField
+                  value={field.value}
+                  onChange={(e) => {
+                    console.log('=== MULTISELECT onChange ===', e);
+                    field.onChange(e.value);  // Store pipe-separated labels
+                    setValue('productId', String(e.id)); // Store comma-separated IDs
+                  }}
+                  options={productOptions}
+                  placeholder="Select products"
+                  className={styles.fullWidth}
+                  invalid={fieldState.invalid}
+                  multiselect
+                />
+              )}
             />
           </FormField>
           <FormField 

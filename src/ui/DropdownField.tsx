@@ -9,10 +9,12 @@ export interface DropdownFieldOption {
 }
 
 export interface DropdownFieldChangeEvent {
-  value: string | number | null;
+  value: string | null;      // Primary: label (single) or comma-separated labels (multiselect)
+  id: string | number | null; // Secondary: ID (single) or comma-separated IDs (multiselect)
   originalEvent: React.MouseEvent | React.KeyboardEvent;
-  selectedLabels: string[];  // Array of selected label strings
-  formattedNames: string;    // Labels joined by " | " for multi-select, or single label
+  selectedLabels: string[];   // Array of selected label strings
+  selectedIds: (string | number)[];  // Array of selected IDs
+  formattedNames: string;     // Labels joined by " | " for multi-select, or single label
 }
 
 export interface DropdownFieldProps {
@@ -41,29 +43,22 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
     const listRef = useRef<HTMLUListElement>(null);
     const filterInputRef = useRef<HTMLInputElement>(null);
 
-    // For multiselect: convert comma-separated string to array
+    // For multiselect: convert pipe-separated labels to array
     const valueArray: string[] = multiselect && typeof value === 'string' && value
-      ? value.split(',').map(v => v.trim()).filter(Boolean)
+      ? value.split('|').map(v => v.trim()).filter(Boolean)
       : [];
 
-    // Find selected option using a loop for older browser compatibility
+    // Find selected option by LABEL (primary identifier)
     let selectedOption: DropdownFieldOption | undefined;
     for (let i = 0; i < options.length; i++) {
-      if (options[i].value === value) {
+      if (options[i].label === value) {
         selectedOption = options[i];
         break;
       }
     }
 
-    // For multiselect: get selected labels
-    const selectedLabels: string[] = [];
-    if (multiselect) {
-      for (let i = 0; i < options.length; i++) {
-        if (valueArray.indexOf(String(options[i].value)) !== -1) {
-          selectedLabels.push(options[i].label);
-        }
-      }
-    }
+    // For multiselect: valueArray already contains labels
+    const selectedLabels: string[] = multiselect ? [...valueArray] : [];
 
     // Filter options based on filterText
     const filteredOptions: DropdownFieldOption[] = [];
@@ -163,32 +158,35 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
 
     const handleSelect = (option: DropdownFieldOption, event: React.MouseEvent | React.KeyboardEvent) => {
       if (multiselect) {
-        const currentValues = [...valueArray];
-        const optionValueStr = String(option.value);
-        const index = currentValues.indexOf(optionValueStr);
+        // Work with labels as the primary identifier
+        const currentLabels = [...valueArray];
+        const optionLabel = option.label;
+        const index = currentLabels.indexOf(optionLabel);
 
         if (index === -1) {
-          currentValues.push(optionValueStr);
+          currentLabels.push(optionLabel);
         } else {
-          currentValues.splice(index, 1);
+          currentLabels.splice(index, 1);
         }
 
-        const newValue = currentValues.join(',');
+        const newValue = currentLabels.join(' | ');
+        const formattedNames = currentLabels.join(' | ');
 
-        // Get selected labels
-        const selectedLabels: string[] = [];
+        // Get selected IDs for secondary use
+        const selectedIds: (string | number)[] = [];
         for (let i = 0; i < options.length; i++) {
-          if (currentValues.indexOf(String(options[i].value)) !== -1) {
-            selectedLabels.push(options[i].label);
+          if (currentLabels.indexOf(options[i].label) !== -1) {
+            selectedIds.push(options[i].value);
           }
         }
-        const formattedNames = selectedLabels.join(' | ');
 
         if (onChange) {
           onChange({
             value: newValue,
+            id: selectedIds.join(','),
             originalEvent: event,
-            selectedLabels,
+            selectedLabels: currentLabels,
+            selectedIds,
             formattedNames
           });
         }
@@ -196,9 +194,11 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
       } else {
         if (onChange) {
           onChange({
-            value: option.value,
+            value: option.label,  // Primary: label
+            id: option.value,     // Secondary: ID
             originalEvent: event,
             selectedLabels: [option.label],
+            selectedIds: [option.value],
             formattedNames: option.label
           });
         }
@@ -343,8 +343,8 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
                       const flatIndex = getFlatIndex(option);
                       const hasCategory = group.category !== null;
                       const isSelected = multiselect
-                        ? valueArray.indexOf(String(option.value)) !== -1
-                        : option.value === value;
+                        ? valueArray.indexOf(option.label) !== -1
+                        : option.label === value;
                       return (
                         <li
                           key={option.value}

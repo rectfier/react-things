@@ -197,7 +197,7 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                   <DropdownField
                     value={field.value}
                     onChange={(e) => {
-                      field.onChange(e.formattedNames); // Set name
+                      field.onChange(e.value); // Store comma-separated values for multiselect
                       setValue('valueToClientId', String(e.value)); // Set ID
                     }}
                     options={valueToClientOptions}
