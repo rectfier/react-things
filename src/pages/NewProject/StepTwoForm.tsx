@@ -196,7 +196,10 @@ const StepTwoForm: React.FC<StepTwoFormProps> = () => {
                 render={({ field, fieldState }) => (
                   <DropdownField
                     value={field.value}
-                    onChange={(e) => field.onChange(e.value)}
+                    onChange={(e) => {
+                      field.onChange(e.formattedNames); // Set name
+                      setValue('valueToClientId', String(e.value)); // Set ID
+                    }}
                     options={valueToClientOptions}
                     placeholder="Select value to client"
                     className={formStyles.fullWidth}

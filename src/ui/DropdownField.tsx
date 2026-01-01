@@ -11,6 +11,8 @@ export interface DropdownFieldOption {
 export interface DropdownFieldChangeEvent {
   value: string | number | null;
   originalEvent: React.MouseEvent | React.KeyboardEvent;
+  selectedLabels: string[];  // Array of selected label strings
+  formattedNames: string;    // Labels joined by " | " for multi-select, or single label
 }
 
 export interface DropdownFieldProps {
@@ -95,15 +97,15 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
       }
     }
 
-    // Add uncategorized first
-    if (uncategorized.length > 0) {
-      groupedOptions.push({ category: null, options: uncategorized });
-    }
-
     // Add categorized options
     const categoryKeys = Object.keys(categoryMap);
     for (let i = 0; i < categoryKeys.length; i++) {
       groupedOptions.push({ category: categoryKeys[i], options: categoryMap[categoryKeys[i]] });
+    }
+
+    // Add uncategorized only if there are no categories (show normally when no grouping)
+    if (uncategorized.length > 0 && categoryKeys.length === 0) {
+      groupedOptions.push({ category: null, options: uncategorized });
     }
 
     // Flatten for keyboard navigation (only clickable options)
@@ -171,12 +173,23 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
           currentValues.splice(index, 1);
         }
 
-        const newValue = currentValues.join(', ');
+        const newValue = currentValues.join(',');
+
+        // Get selected labels
+        const selectedLabels: string[] = [];
+        for (let i = 0; i < options.length; i++) {
+          if (currentValues.indexOf(String(options[i].value)) !== -1) {
+            selectedLabels.push(options[i].label);
+          }
+        }
+        const formattedNames = selectedLabels.join(' | ');
 
         if (onChange) {
           onChange({
             value: newValue,
-            originalEvent: event
+            originalEvent: event,
+            selectedLabels,
+            formattedNames
           });
         }
         // Keep open for multiple selection
@@ -184,9 +197,12 @@ const DropdownField = forwardRef<HTMLDivElement, DropdownFieldProps>(
         if (onChange) {
           onChange({
             value: option.value,
-            originalEvent: event
+            originalEvent: event,
+            selectedLabels: [option.label],
+            formattedNames: option.label
           });
         }
+
         setIsOpen(false);
         setFocusedIndex(-1);
         setFilterText('');

@@ -101,4 +101,57 @@ export const useLookupOptions = (type: LookupType): UseLookupOptionsResult => {
   };
 };
 
+// ============================================
+// Helper Functions
+// ============================================
+
+/**
+ * Extracts selection information (IDs and names) from dropdown values
+ * 
+ * @param selectedValue - The current value from the dropdown (ID or comma-separated IDs)
+ * @param options - Available dropdown options
+ * @param isMultiselect - Whether this is a multiselect dropdown
+ * @returns Object with formatted IDs and names
+ */
+export interface SelectionInfo {
+  ids: string;      // "1,2,3" for multi, "1" for single
+  names: string;    // "Name A | Name B | Name C" for multi, "Name A" for single
+}
+
+export const getSelectionInfo = (
+  selectedValue: string | number | null,
+  options: DropdownFieldOption[],
+  isMultiselect: boolean = false
+): SelectionInfo => {
+  if (!selectedValue) {
+    return { ids: '', names: '' };
+  }
+
+  if (isMultiselect && typeof selectedValue === 'string') {
+    // Parse comma-separated IDs
+    const selectedIds = selectedValue.split(',').map(v => v.trim()).filter(Boolean);
+    
+    const selectedOptions = options.filter(opt => 
+      selectedIds.includes(String(opt.value))
+    );
+    
+    const ids = selectedOptions.map(opt => String(opt.value)).join(',');
+    const names = selectedOptions.map(opt => opt.label).join(' | ');
+    
+    return { ids, names };
+  } else {
+    // Single select
+    const selectedOption = options.find(opt => opt.value === selectedValue);
+    
+    if (selectedOption) {
+      return {
+        ids: String(selectedOption.value),
+        names: selectedOption.label
+      };
+    }
+  }
+
+  return { ids: '', names: '' };
+};
+
 export default useLookupOptions;

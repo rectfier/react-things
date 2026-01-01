@@ -56,11 +56,10 @@ const getPeopleSuggestions = (
 };
 
 const StepOneForm: React.FC<StepOneFormProps> = () => {
-  const { register, control, formState: { errors } } = useFormContext<ProjectFormData>();
+  const { register, control, setValue, formState: { errors } } = useFormContext<ProjectFormData>();
 
   // Fetch all dropdown options using the reusable hook
   const teams = useLookupOptions('teams');
-  const delegates = useLookupOptions('delegates');
   const categories = useLookupOptions('categories');
   const markets = useLookupOptions('markets');
   const buStakeholders = useLookupOptions('buStakeholders');
@@ -127,7 +126,10 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               render={({ field, fieldState }) => (
                 <DropdownField
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
+                  onChange={(e) => {
+                    field.onChange(e.formattedNames); // Set name
+                    setValue('buStakeholderId', String(e.value)); // Set ID
+                  }}
                   options={buStakeholders.options}
                   placeholder={buStakeholders.isLoading ? 'Loading...' : 'Select BU/Stakeholder'}
                   className={styles.fullWidth}
@@ -149,7 +151,10 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               render={({ field, fieldState }) => (
                 <DropdownField
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
+                  onChange={(e) => {
+                    field.onChange(e.formattedNames); // Set name
+                    setValue('teamId', String(e.value)); // Set ID
+                  }}
                   options={regionOptions}
                   filter={true}
                   placeholder={teams.isLoading ? 'Loading teams...' : 'Select team'}
@@ -169,17 +174,50 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
             <Controller
               name="delegates"
               control={control}
-              render={({ field, fieldState }) => (
-                <DropdownField
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
-                  options={delegates.options}
-                  placeholder={delegates.isLoading ? 'Loading...' : 'Select delegates'}
-                  className={styles.fullWidth}
-                  invalid={fieldState.invalid}
-                  disabled={delegates.isLoading}
-                />
-              )}
+              render={({ fieldState }) => {
+                // PnPjs v4 ensureUser returns: LoginName, Email, Title directly on the response
+                // We map to: id (LoginName), email (Email), name (Title)
+                const handlePeoplePickerChange = async (items?: IPersonaProps[]): Promise<void> => {
+                  if (!items || items.length === 0) {
+                    setValue('delegates', []);
+                    return;
+                  }
+
+                  const delegatesArray: { id: string; email: string; name: string }[] = [];
+
+                  for (const item of items) {
+                    // TODO: Get sp from context: const { sp } = useAppContext();
+                    // const user = await sp.web.ensureUser(item.secondaryText as string);
+                    // delegatesArray.push({
+                    //   id: user.LoginName,
+                    //   email: user.Email,
+                    //   name: user.Title,
+                    // });
+
+                    // Temporary: use picker values directly until sp context is available
+                    delegatesArray.push({
+                      id: String(item.key || ''),
+                      email: item.secondaryText || '',
+                      name: item.text || '',
+                    });
+                  }
+
+                  setValue('delegates', delegatesArray);
+                };
+
+                return (
+                  <div className={peoplePickerStyles.peoplePickerWrapper}>
+                    <NormalPeoplePicker
+                      onResolveSuggestions={getPeopleSuggestions}
+                      onChange={handlePeoplePickerChange}
+                      errorMessage={fieldState.error?.message}
+                      inputProps={{
+                        placeholder: 'Select delegates',
+                      }}
+                    />
+                  </div>
+                );
+              }}
             />
           </FormField>
           <FormField 
@@ -194,7 +232,10 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               render={({ field, fieldState }) => (
                 <DropdownField
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
+                  onChange={(e) => {
+                    field.onChange(e.formattedNames); // Set name
+                    setValue('categoryId', String(e.value)); // Set ID
+                  }}
                   options={categories.options}
                   placeholder={categories.isLoading ? 'Loading...' : 'Select category'}
                   className={styles.fullWidth}
@@ -390,7 +431,10 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               render={({ field, fieldState }) => (
                 <DropdownField
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
+                  onChange={(e) => {
+                    field.onChange(e.formattedNames); // Set name
+                    setValue('marketsId', String(e.value)); // Set ID
+                  }}
                   options={markets.options}
                   placeholder={markets.isLoading ? 'Loading...' : 'Select markets'}
                   className={styles.fullWidth}
@@ -434,7 +478,10 @@ const StepOneForm: React.FC<StepOneFormProps> = () => {
               render={({ field, fieldState }) => (
                 <DropdownField
                   value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
+                  onChange={(e) => {
+                    field.onChange(e.formattedNames); // Set name
+                    setValue('respondentTypeId', String(e.value)); // Set ID
+                  }}
                   options={respondentTypes.options}
                   placeholder={respondentTypes.isLoading ? 'Loading...' : 'Select respondent type'}
                   className={styles.fullWidth}

@@ -22,14 +22,18 @@ const personaArraySchema = z.custom<IPersonaProps[]>(
   { message: 'Owner is required' }
 );
 
-// Define Zod schema combining Step 1 and Step 2 fields - all fields are required
-export const projectSchema = z.object({
+// Define input schema (what user fills in forms)
+const projectInputSchema = z.object({
   // Step 1 - All required fields
   name: z.string().optional(),
   owner: personaArraySchema.optional(),
   buStakeholder: z.string().optional(),
   team: z.string().optional(),
-  delegates: z.string().optional(),
+  delegates: z.array(z.object({
+    id: z.string(),
+    email: z.string(),
+    name: z.string(),
+  })).optional(),
   category: z.string().optional(),
   notifications: z.string().optional(),
   description: z.string().optional(),
@@ -60,6 +64,19 @@ export const projectSchema = z.object({
   procurementNotification: z.boolean().refine((val) => val !== undefined, { message: 'Procurement Notification is required' }),
   selectedVendor: z.array(z.string()).min(1, 'At least one vendor must be selected'),
 });
+
+// Define ID fields schema (for API payload)
+const projectIdFieldsSchema = z.object({
+  buStakeholderId: z.string().optional(),
+  teamId: z.string().optional(),
+  categoryId: z.string().optional(),
+  marketsId: z.string().optional(),
+  respondentTypeId: z.string().optional(),
+  valueToClientId: z.string().optional(),
+});
+
+// Merge both schemas for complete payload type safety
+export const projectSchema = projectInputSchema.merge(projectIdFieldsSchema);
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
 
@@ -165,9 +182,12 @@ const ProjectForm: React.FC = () => {
       name: '',
       owner: [] as IPersonaProps[],
       buStakeholder: '',
+      buStakeholderId: '',
       team: '',
-      delegates: '',
+      teamId: '',
+      delegates: [],
       category: '',
+      categoryId: '',
       notifications: '',
       description: '',
       plannedExecutionYear: '',
@@ -181,8 +201,10 @@ const ProjectForm: React.FC = () => {
       researchType: '',
       methodology: '',
       markets: '',
+      marketsId: '',
       regions: '',
       respondentType: '',
+      respondentTypeId: '',
       notes: '',
       estimatedSpendUSD: 0,
       estimatedSpendLocal: {
@@ -192,6 +214,7 @@ const ProjectForm: React.FC = () => {
       associatedPO: '',
       businessQuestion: '',
       valueToClient: '',
+      valueToClientId: '',
       procurementNotification: false,
       selectedVendor: [],
     },

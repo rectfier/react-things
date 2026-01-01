@@ -5,6 +5,9 @@
   "dependencies": {
     "@fluentui/react": "^8.106.5",
     "@hookform/resolvers": "^5.2.2",
+    "@pnp/logging": "^4.17.0",
+    "@pnp/queryable": "^4.17.0",
+    "@pnp/sp": "^4.17.0",
     "@tanstack/react-query": "^4.42.0",
     "primeicons": "^6.0.1",
     "primereact": "^9.6.0",
